@@ -1,0 +1,90 @@
+GET https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/rest-api/read.png
+
+
+###
+
+# prebuilt-read
+# Request Create analyzeDocument Docs: https://learn.microsoft.com/ko-kr/azure/ai-services/document-intelligence/how-to-guides/use-sdk-rest-api?view=doc-intel-4.0.0&tabs=windows&pivots=programming-language-rest-api#post-request
+# modelId Docs: https://learn.microsoft.com/ko-kr/azure/ai-services/document-intelligence/model-overview?view=doc-intel-4.0.0
+POST {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/documentintelligence/documentModels/prebuilt-read:analyze
+     ?_overload=analyzeDocument
+     &api-version=2024-11-30
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
+
+{
+    "urlSource": "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/rest-api/read.png"
+}
+
+###
+
+# Request Get analyzeResults Docs: https://learn.microsoft.com/ko-kr/azure/ai-services/document-intelligence/how-to-guides/use-sdk-rest-api?view=doc-intel-4.0.0&tabs=windows&pivots=programming-language-rest-api#get-request
+GET {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/documentintelligence/documentModels/prebuilt-read/analyzeResults/2bb4b3fb-7e18-4dc9-a8df-a9ecaf20ce70
+    ?api-version=2024-11-30
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
+
+###
+
+# prebuilt-layout
+POST {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/documentintelligence/documentModels/prebuilt-layout:analyze
+     ?_overload=analyzeDocument
+     &api-version=2024-11-30
+     &queryFields=name,document
+     &features=ocrHighResolution,styleFont,formulas,barcodes,languages,keyValuePairs,queryFields
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
+
+{
+    "urlSource": "https://documentintelligence.ai.azure.com/documents/samples/layout/layout-checklist.jpg"
+}
+
+###
+
+GET {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/documentintelligence/documentModels/prebuilt-layout/analyzeResults/79d0c386-cf05-4e76-8d8d-7fbbd1ea3c37
+    ?api-version=2024-11-30
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
+
+###
+
+# prebuilt-document
+POST {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/formrecognizer/documentModels/prebuilt-document:analyze
+     ?api-version=2023-07-31
+     &stringIndexType=utf16CodeUnit
+     &features=ocrHighResolution,styleFont,formulas,barcodes,languages
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
+
+{
+    "urlSource": "https://documentintelligence.ai.azure.com/documents/samples/document/generaldoc.pdf"
+}
+
+###
+
+GET {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/formrecognizer/documentModels/prebuilt-document/analyzeResults/0cba08c5-2c0b-4855-981e-678840a88a6f
+    ?api-version=2023-07-31
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
+
+
+###
+
+# prebuilt-creditCard
+POST {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/documentintelligence/documentModels/prebuilt-creditCard:analyze
+     ?api-version=2024-11-30
+     &stringIndexType=utf16CodeUnit
+     &features=ocrHighResolution,styleFont,formulas,barcodes,languages
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
+
+{
+    "urlSource": "https://documentintelligence.ai.azure.com/documents/samples/prebuilt/credit-card-horizontal.png"
+}
+
+###
+
+GET {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT_URL}}/documentintelligence/documentModels/prebuilt-creditCard/analyzeResults/9c8f7111-fdcc-42bc-b763-9bf4e28ad592
+    ?api-version=2024-11-30
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_DOCUMENT_INTELLIGENCE_API_KEY}}
