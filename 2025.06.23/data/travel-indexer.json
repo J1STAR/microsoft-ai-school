@@ -1,0 +1,87 @@
+{
+  "name": "travel-indexer",
+  "description": null,
+  "dataSourceName": "travel-dataset",
+  "skillsetName": null,
+  "targetIndexName": "travel-index",
+  "disabled": null,
+  "schedule": null,
+  "parameters": {
+    "batchSize": null,
+    "maxFailedItems": null,
+    "maxFailedItemsPerBatch": null,
+    "base64EncodeKeys": null,
+    "configuration": {
+      "indexedFileNameExtensions": ".csv",
+      "parsingMode": "delimitedText",
+      "firstLineContainsHeaders": true,
+      "dataToExtract": "contentAndMetadata",
+      "allowSkillsetToReadFileData": false
+    }
+  },
+  "fieldMappings": [
+    {
+      "sourceFieldName": "관광지명",
+      "targetFieldName": "name",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "주소",
+      "targetFieldName": "address",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "위도",
+      "targetFieldName": "latitude",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "경도",
+      "targetFieldName": "longitude",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "문화재구분",
+      "targetFieldName": "type",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "문화재번호",
+      "targetFieldName": "type_number",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "전화번호",
+      "targetFieldName": "telephone",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "관광테마",
+      "targetFieldName": "theme",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "주차장 여부",
+      "targetFieldName": "has_parkinglot",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "주차 대수",
+      "targetFieldName": "parkinglot_count",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "기타_홈페이지 주소",
+      "targetFieldName": "homepage",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "상세내용",
+      "targetFieldName": "description",
+      "mappingFunction": null
+    }
+  ],
+  "outputFieldMappings": [],
+  "cache": null,
+  "encryptionKey": null
+}
