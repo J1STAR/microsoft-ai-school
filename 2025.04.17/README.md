@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.04.17](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.04.17)
+
 # 2025년 4월 17일 학습 기록
 
 이 디렉토리의 학습 자료는 여러 개의 분리된 데이터 소스를 `Pandas`를 사용하여 통합하고, 이를 기반으로 의미 있는 정보를 추출하는 데이터 분석 프로젝트를 다룹니다. '유성우 미션'이라는 시나리오를 통해 데이터 병합(merge), 변환(transformation), 필터링(filtering) 기술을 학습합니다.

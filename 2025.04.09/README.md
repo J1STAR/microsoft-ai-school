@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.04.09](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.04.09)
+
 # 2025년 4월 9일 학습 기록
 
 이 디렉토리는 새로운 프로젝트 시작을 위한 초기 환경 설정과 웹 및 Python의 기초를 다루는 파일들을 포함합니다. HTML 파일 구조 학습, Python 코드 실행 환경 점검, 버전 관리 시스템을 위한 초기 파일 생성을 실습합니다.

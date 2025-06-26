@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.05.19](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.19)
+
 # 2025년 5월 19일 학습 기록
 
 이 디렉토리의 학습 자료는 웹에서 데이터를 수집하는 **웹 크롤링(Web Crawling)** 기술과, 정답 없이 데이터의 숨겨진 구조를 찾는 **비지도 학습(Unsupervised Learning)**의 대표적인 알고리즘인 **K-Means 군집화**를 다룹니다.

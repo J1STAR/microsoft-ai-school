@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.05.08](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.08)
+
 # 2025년 5월 8일 학습 기록
 
 이 디렉토리는 컴퓨터 비전 라이브러리인 `OpenCV`의 기초부터 심화 기능까지 단계별로 학습하는 실습 코드를 포함합니다. 각 챕터(`ch`)별로 나누어진 Python 스크립트를 통해 이미지 및 비디오 처리의 핵심 기술을 익힙니다.

@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.04.10](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.04.10)
+
 # 2025년 4월 10일 학습 기록
 
 이 디렉토리의 학습 자료는 Python의 가장 기본적인 문법을 이해하고 실습하는 데 중점을 둡니다. Jupyter Notebook 환경에서 코드를 실행하며 Python의 기초를 다룹니다.

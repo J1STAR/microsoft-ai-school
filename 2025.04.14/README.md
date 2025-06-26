@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.04.14](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.04.14)
+
 # 2025년 4월 14일 학습 기록
 
 이 디렉토리의 학습 자료는 Python의 주요 자료 구조(튜플, 세트, 딕셔너리)와 코드 재사용성을 높이는 모듈화 개념을 다룹니다.

@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.05.15](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.15)
+
 # 2025년 5월 15일 학습 기록
 
 이 디렉토리의 학습 자료는 머신러닝의 핵심 분야 중 하나인 **회귀(Regression)** 모델링을 다룹니다. `Scikit-learn` 라이브러리를 사용하여 단순 선형 회귀부터 다중 회귀, 다항 회귀, 규제가 있는 회귀 모델(Ridge, Lasso)까지 다양한 기법을 학습하고, 모델의 성능을 평가하는 방법을 실습합니다.

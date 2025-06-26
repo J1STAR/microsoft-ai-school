@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.06.19](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.19)
+
 # 2025년 6월 19일 학습 기록: Azure OpenAI Service 기능 심화
 
 이 디렉토리는 전날에 이어, **Azure OpenAI Service**가 제공하는 다양한 고급 기능들을 심도 있게 다루는 워크샵 실습 자료를 포함하고 있습니다. 기본적인 텍스트 생성을 넘어, 프롬프트 엔지니어링, 코드 및 이미지 생성, 그리고 자체 데이터 연동(RAG)까지 LLM의 활용 범위를 넓히는 것을 목표로 합니다.

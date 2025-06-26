@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.05.20](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.20)
+
 # 2025년 5월 20일 학습 기록
 
 이 디렉토리의 학습 자료는 **고급 웹 크롤링** 기술을 다룹니다. 자바스크립트(JavaScript)로 동적으로 생성되는 콘텐츠를 수집하기 위한 `Selenium` 사용법과, 서비스에서 공식적으로 제공하는 **OpenAPI**를 활용하여 데이터를 수집하는 방법을 학습합니다.

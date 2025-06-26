@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.05.21](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.21)
+
 # 2025년 5월 21일 학습 기록
 
 이 디렉토리는 "밑바닥부터 시작하는 딥러닝" 교재의 실습 코드를 포함하고 있으며, `TensorFlow`나 `PyTorch`와 같은 딥러닝 프레임워크 없이 오직 `NumPy`만을 사용하여 신경망(Neural Network)의 핵심 원리를 구현하고 학습하는 데 중점을 둡니다.

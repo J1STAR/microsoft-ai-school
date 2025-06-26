@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.06.23](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.23)
+
 # 2025년 6월 23일 학습 기록
 
 이 디렉토리는 **OpenAI API**의 심화 기능과 이를 활용한 고급 애플리케이션 구축을 다룹니다. 특히, 외부 라이브러리(Azure Cognitive Search 등)에 의존하지 않고 직접 **RAG(검색 증강 생성)** 시스템의 핵심 구성요소를 구현하는 방법과, 텍스트를 넘어 **음성(Speech)** 데이터를 다루는 방법을 학습합니다.

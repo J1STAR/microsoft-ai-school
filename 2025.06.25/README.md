@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.06.25](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.25)
+
 # 📅 2025년 6월 25일: Azure AI Document Intelligence를 활용한 문서 분석 🧠
 
 이 디렉토리의 학습 목표는 **Azure AI Document Intelligence** 서비스를 사용하여 이미지나 PDF와 같은 다양한 문서에서 텍스트와 구조를 추출하는 방법을 배우는 것입니다. `document_intelligence.py` 스크립트와 `document_intelligence.http` 파일을 통해 서비스의 핵심 기능을 실습합니다.

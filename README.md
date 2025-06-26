@@ -2,6 +2,59 @@
 
 이 저장소는 Microsoft AI School 과정에 참여하며 **Python 기초부터 시작해 데이터 분석, 머신러닝, 딥러닝, 그리고 최신 Azure AI 서비스를 활용한 AI 애플리케이션 개발까지**의 전 과정을 기록한 개인 학습 아카이브입니다. 각 날짜별 디렉터리는 하나의 독립된 학습 주제를 다루고 있으며, 상세한 설명과 코드를 포함하고 있습니다.
 
+---
+
+## 🚀 시작하기 전에: 필수 환경 설정
+
+이 프로젝트의 일부, 특히 Azure AI 서비스를 사용하는 실습 코드를 실행하기 위해서는 API 키와 같은 민감한 정보를 담은 `.env` 파일이 필요합니다. 아래 안내에 따라 프로젝트를 실행할 환경을 먼저 설정해주세요.
+
+`.env` 파일은 GitHub와 같은 공개된 장소에 올리면 안 되므로, 이 저장소의 `.gitignore` 파일에 이미 등록되어 있습니다.
+
+### 1. `.env` 파일 생성
+
+프로젝트 루트 디렉토리(이 `README.md` 파일이 있는 위치)에 `.env` 라는 이름으로 새 파일을 만들고, 필요한 서비스에 맞춰 아래 내용을 복사하여 붙여넣으세요. `여기에...` 부분은 실제 자신의 Azure 서비스에서 발급받은 값으로 반드시 대체해야 합니다.
+
+```env
+# 예시: 2025.06.25, 2025.06.26 실습에서 사용된 환경 변수
+
+# Azure AI Document Intelligence
+DOCUEMNT_INTELLIGENCE_ENDPOINT_URL="여기에_Document_Intelligence_엔드포인트_URL_입력"
+DOCUEMNT_INTELLIGENCE_API_KEY="여기에_Document_Intelligence_API_키_입력"
+
+# Azure AI Language Service
+AZURE_LANGUAGE_ENDPOINT_URL="여기에_Language_서비스_엔드포인트_URL_입력"
+AZURE_LANGUAGE_API_KEY="여기에_Language_서비스_API_키_입력"
+```
+
+### 2. Python 코드에서 사용법
+
+Python 코드에서는 `python-dotenv` 라이브러리를 사용하여 `.env` 파일에 정의된 값들을 환경 변수로 불러옵니다.
+
+먼저, 터미널에서 아래 명령어를 실행하여 라이브러리를 설치합니다.
+```bash
+pip install python-dotenv
+```
+
+그 다음, Python 코드의 시작 부분에서 `load_dotenv()`를 호출하면, `os.getenv()`를 통해 `.env` 파일에 정의된 값을 가져와 사용할 수 있습니다.
+
+```python
+# 예시: 2025.06.25/document_intelligence.py
+import os
+from dotenv import load_dotenv
+
+# .env 파일에서 환경 변수를 로드합니다.
+load_dotenv()
+
+# os.getenv()를 사용하여 환경 변수 값을 가져옵니다.
+DOCUEMNT_INTELLIGENCE_ENDPOINT_URL = os.getenv("DOCUEMNT_INTELLIGENCE_ENDPOINT_URL")
+DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
+
+# 이제 코드 내에서 변수들을 사용할 수 있습니다.
+# ...
+```
+
+---
+
 ## 🗺️ 학습 로드맵
 
 아래 표는 전체 학습 과정을 요약한 로드맵입니다. 각 날짜를 클릭하면 해당 학습 내용을 상세히 확인할 수 있습니다.
@@ -36,7 +89,3 @@
 | [2025.06.24](./2025.06.24/) | **[Project]** `Gradio`와 `Azure OpenAI`를 결합한 다기능(채팅, 이미지, RAG) AI 앱 개발 | `Gradio`, `Azure OpenAI` |
 | [2025.06.25](./2025.06.25/) | **[Project]** `Azure Document Intelligence` REST API를 활용한 OCR 및 문서 분석 | `Azure AI Services` |
 | [2025.06.26](./2025.06.26/) | **[Project]** `Document Intelligence`와 `Gradio`를 결합한 OCR 앱 및 **AI 언어 서비스** 활용 | `Gradio`, `Azure AI Services` |
-
----
-
-> 각 디렉토리에는 해당 날짜의 학습 목표, 상세 내용, 파일 목록, 코드 해설 등을 기술한 `README.md` 파일이 포함되어 있어, 코드와 함께 학습의 맥락을 이해하는 데 도움을 줍니다.

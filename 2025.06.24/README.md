@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.06.24](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.24)
+
 # 2025년 6월 24일 학습 기록
 
 이 디렉토리는 `Azure OpenAI Service`의 다양한 기능을 통합하고, `Gradio`를 사용하여 상호작용 가능한 웹 UI를 구축하는 복합적인 애플리케이션 개발 프로젝트를 담고 있습니다. 주요 기능은 다음과 같습니다.

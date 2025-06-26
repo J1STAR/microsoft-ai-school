@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.05.27](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.27)
+
 # 2025년 5월 27일 학습 기록
 
 이 디렉토리는 딥러닝을 활용한 **이미지 분류(Image Classification)** 프로젝트를 다룹니다. 특히, 사전 훈련된(pre-trained) 모델을 기반으로 새로운 데이터셋에 맞게 모델을 미세 조정하는 **전이 학습(Transfer Learning)** 기법을 중점적으로 학습합니다.

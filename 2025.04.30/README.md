@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.04.30](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.04.30)
+
 # 2025년 4월 30일 학습 기록
 
 이 디렉토리는 데이터 과학 및 머신러닝의 다양한 주제를 다루는 여러 학습 자료와 프로젝트를 포함하고 있습니다. 데이터 전처리, 이미지 분류, 시각화 등 여러 분야의 Jupyter Notebook 예제를 통해 실용적인 기술을 학습합니다.

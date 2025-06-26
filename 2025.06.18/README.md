@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.06.18](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.18)
+
 # 2025년 6월 18일 학습 기록
 
 이 디렉토리의 학습 자료는 **Azure OpenAI Service**를 활용하여 지능형 애플리케이션을 개발하는 첫걸음을 다룹니다. 기본적인 API 사용법부터 시작하여, LLM(거대 언어 모델)을 활용한 질의응답, 요약, 콘텐츠 생성 등 다양한 작업을 Python 코드로 수행하는 방법을 학습합니다.

@@ -1,3 +1,5 @@
+### [microsoft-ai-school/2025.05.16](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.16)
+
 # 2025년 5월 16일 학습 기록
 
 이 디렉토리의 학습 자료는 머신러닝의 핵심 분야인 **분류(Classification)** 모델링을 다룹니다. `Scikit-learn` 라이브러리를 사용하여 붓꽃(Iris) 품종 예측과 로켓 발사 성공 예측 같은 실제 문제를 해결하며 분류 모델 구축의 전 과정을 학습합니다.
