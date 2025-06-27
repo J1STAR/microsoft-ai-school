@@ -1,0 +1,23 @@
+# Azure Speech Service
+
+# 음성을 인식하고 텍스트로 번역(STT)
+# 문서: https://learn.microsoft.com/ko-kr/azure/ai-services/speech-service/get-started-speech-to-text?tabs=linux%2Cterminal&pivots=programming-language-rest
+POST https://{{$dotenv AZURE_SPEECH_REGION}}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1
+     ?language=en-US
+     &format=detailed
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_SPEECH_API_KEY}}
+Content-Type: audio/wav
+
+< ./data/whatstheweatherlike.wav
+
+###
+
+# 텍스트를 음성으로 변환(TTS)
+# 문서: https://learn.microsoft.com/ko-kr/azure/ai-services/speech-service/get-started-text-to-speech?tabs=linux%2Cterminal&pivots=programming-language-rest
+POST https://{{$dotenv AZURE_SPEECH_REGION}}.tts.speech.microsoft.com/cognitiveservices/v1
+Ocp-Apim-Subscription-Key: {{$dotenv AZURE_SPEECH_API_KEY}}
+Content-Type: application/ssml+xml
+X-Microsoft-OutputFormat: audio-16khz-128kbitrate-mono-mp3
+User-Agent: curl
+
+< ./data/speech/text_to_speech.xml
