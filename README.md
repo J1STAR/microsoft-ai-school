@@ -89,3 +89,4 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.06.24](./2025.06.24/) | **[Project]** `Gradio`와 `Azure OpenAI`를 결합한 다기능(채팅, 이미지, RAG) AI 앱 개발 | `Gradio`, `Azure OpenAI` |
 | [2025.06.25](./2025.06.25/) | **[Project]** `Azure Document Intelligence` REST API를 활용한 OCR 및 문서 분석 | `Azure AI Services` |
 | [2025.06.26](./2025.06.26/) | **[Project]** `Document Intelligence`와 `Gradio`를 결합한 OCR 앱 및 **AI 언어 서비스** 활용 | `Gradio`, `Azure AI Services` |
+| [2025.06.27](./2025.06.27/) | **[Project]** `Azure Speech`(STT/TTS) 및 `Custom NER`을 활용한 대화형 AI 개발 | `Gradio`, `Azure AI Services` |
