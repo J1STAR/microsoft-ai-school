@@ -9,7 +9,7 @@ from typing import Dict, Any, Optional, Tuple
 load_dotenv()
 
 
-def transcribe_audio(audio_path: Optional[str]) -> Optional[Dict[str, Any]]:
+def transcribe_audio(audio_path: Optional[str], language: str = "en-US") -> Optional[Dict[str, Any]]:
     """
     Azure Speech Service를 사용하여 오디오 파일을 텍스트로 변환합니다.
 
@@ -30,7 +30,7 @@ def transcribe_audio(audio_path: Optional[str]) -> Optional[Dict[str, Any]]:
         raise gr.Error("환경 변수 파일(.env)에 Azure Speech API 키와 지역을 설정해야 합니다.")
 
     # 2025.06.27/speech.http 파일의 설정을 참조합니다.
-    url = f"https://{speech_region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US&format=detailed"
+    url = f"https://{speech_region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language={language}&format=detailed"
 
     headers = {
         "Ocp-Apim-Subscription-Key": speech_key,
@@ -124,10 +124,12 @@ def synthesize_speech(text: str, voice_name: str) -> Optional[str]:
         "User-Agent": "curl",
     }
 
+    language = "-".join(voice_name.split("-")[0:2])
+
     # SSML(Speech Synthesis Markup Language) 본문을 생성합니다.
     ssml_body = f"""
-    <speak version='1.0' xml:lang='en-US'>
-        <voice xml:lang='en-US' name='{voice_name}'>
+    <speak version='1.0' xml:lang='{language}'>
+        <voice xml:lang='{language}' name='{voice_name}'>
             {text}
         </voice>
     </speak>
