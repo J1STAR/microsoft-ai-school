@@ -1,0 +1,13 @@
+spx config @key --set SPEECH-KEY
+spx config @region --set SPEECH-REGION
+
+# TTS
+spx synthesize --text "안녕? 반가워. 너 오늘 컨디션은 어때?" --audio output test.wav --voice ko-KR-YuJinNeural
+
+
+# STT
+spx recognize --file ./test.wav --language ko-KR
+
+
+# translate
+spx translate --source ko-KR --target en-US --file ./test.wav
