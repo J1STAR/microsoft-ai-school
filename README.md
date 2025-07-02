@@ -4,13 +4,92 @@
 
 ---
 
-## 🚀 시작하기 전에: 필수 환경 설정
+## 🚀 시작하기 전에: 개발 환경 설정
 
-이 프로젝트의 일부, 특히 Azure AI 서비스를 사용하는 실습 코드를 실행하기 위해서는 API 키와 같은 민감한 정보를 담은 `.env` 파일이 필요합니다. 아래 안내에 따라 프로젝트를 실행할 환경을 먼저 설정해주세요.
+이 프로젝트의 코드를 원활하게 실행하기 위해서는 아래 3단계에 따라 개발 환경을 설정하는 것이 좋습니다.
+
+1.  **[런타임 관리]** `mise`를 사용하여 올바른 버전의 Python을 설치하고 활성화합니다.
+2.  **[의존성 관리]** `uv`를 사용하여 프로젝트에 필요한 파이썬 패키지들을 설치합니다.
+3.  **[환경 변수 설정]** `.env` 파일을 생성하여 Azure 서비스 API 키 등 민감한 정보를 설정합니다.
+
+---
+
+### 1. 📦 런타임 환경 관리 (mise)
+
+이 프로젝트는 특정 버전의 Python(예: 3.12.9)에서 실행되도록 구성되어 있습니다. 여러 프로젝트를 진행하다 보면 각기 다른 버전의 Python, Node.js 등이 필요할 때가 많습니다. [mise](https://github.com/jdx/mise)는 이러한 다양한 툴들의 버전을 프로젝트별로 손쉽게 관리해주는 도구입니다.
+
+프로젝트 루트 디렉터리의 `.mise.toml` 파일을 읽어, 해당 디렉터리에 들어왔을 때 자동으로 지정된 버전의 Python을 사용하도록 환경을 설정해줍니다. 이를 통해 "내 컴퓨터에서는 되는데, 다른 사람 컴퓨터에서는 안 돼요"와 같은 문제를 방지할 수 있습니다.
+
+#### `mise` 설치
+
+`mise`가 설치되어 있지 않다면, 아래 방법으로 설치합니다.
+
+```bash
+# macOS / Linux
+curl https://mise.run | sh
+
+
+# Windows
+winget install jdx.mise
+# 또는 scoop install mise 또는 choco install mise
+```
+
+`mise`가 셸에 올바르게 연동되면, 이 프로젝트 디렉터리로 이동(`cd`)하는 것만으로 `.mise.toml`에 명시된 Python 버전이 자동으로 활성화됩니다.
+
+#### 대체 도구
+
+`mise`와 유사한 기능을 하는 다른 도구들로는 `asdf`, `pyenv`, `nvm` (Node.js 전용) 등이 있습니다.
+
+---
+
+### 2. ⚡️ 의존성 관리 및 실행 환경 (uv)
+
+`mise`를 통해 올바른 Python 버전이 활성화되었다면, 다음으로 [uv](https://github.com/astral-sh/uv)를 사용하여 파이썬 패키지 의존성을 관리합니다. `uv`는 기존의 `pip`과 `venv`를 대체하는 매우 빠른 통합 도구입니다. 모든 의존성은 `pyproject.toml` 파일에 정의되어 있습니다.
+
+#### `uv` 설치
+
+`uv`가 설치되어 있지 않다면, 아래 방법 중 하나로 설치합니다.
+
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# 또는 pip 사용
+pip install uv
+```
+
+#### 프로젝트 환경 설정
+
+프로젝트를 실행하기 위한 가상 환경을 만들고 의존성을 설치하는 과정은 다음과 같습니다.
+
+```bash
+# 1. 가상 환경 생성 (이름: .venv)
+uv venv
+
+# 2. 가상 환경 활성화
+# macOS / Linux
+source .venv/bin/activate
+# Windows
+.venv\Scripts\activate
+
+# 3. pyproject.toml 기반으로 의존성 설치
+uv pip install -e .
+```
+
+`uv pip install -e .` 명령은 `pyproject.toml`에 명시된 모든 의존성을 가상 환경에 설치합니다. 이후 `pyproject.toml`이 변경되면 `uv pip sync`를 실행하여 가상 환경을 최신 상태로 동기화할 수 있습니다.
+
+---
+
+### 3. 🔑 환경 변수 설정 (.env)
+
+마지막으로, Azure AI 서비스를 사용하는 실습 코드를 실행하기 위해 API 키와 같은 민감한 정보를 담은 `.env` 파일을 설정합니다.
 
 `.env` 파일은 GitHub와 같은 공개된 장소에 올리면 안 되므로, 이 저장소의 `.gitignore` 파일에 이미 등록되어 있습니다.
 
-### 1. `.env` 파일 생성
+#### `.env` 파일 생성
 
 프로젝트 루트 디렉토리(이 `README.md` 파일이 있는 위치)에 `.env` 라는 이름으로 새 파일을 만들고, 필요한 서비스에 맞춰 아래 내용을 복사하여 붙여넣으세요. `여기에...` 부분은 실제 자신의 Azure 서비스에서 발급받은 값으로 반드시 대체해야 합니다.
 
@@ -26,16 +105,11 @@ AZURE_LANGUAGE_ENDPOINT_URL="여기에_Language_서비스_엔드포인트_URL_�
 AZURE_LANGUAGE_API_KEY="여기에_Language_서비스_API_키_입력"
 ```
 
-### 2. Python 코드에서 사용법
+#### Python 코드에서 사용법
 
-Python 코드에서는 `python-dotenv` 라이브러리를 사용하여 `.env` 파일에 정의된 값들을 환경 변수로 불러옵니다.
+Python 코드에서는 `python-dotenv` 라이브러리를 사용하여 `.env` 파일에 정의된 값들을 환경 변수로 불러옵니다. (`uv`로 의존성을 설치했다면 이 라이브러리는 이미 설치되어 있습니다.)
 
-먼저, 터미널에서 아래 명령어를 실행하여 라이브러리를 설치합니다.
-```bash
-pip install python-dotenv
-```
-
-그 다음, Python 코드의 시작 부분에서 `load_dotenv()`를 호출하면, `os.getenv()`를 통해 `.env` 파일에 정의된 값을 가져와 사용할 수 있습니다.
+코드의 시작 부분에서 `load_dotenv()`를 호출하면, `os.getenv()`를 통해 `.env` 파일에 정의된 값을 가져와 사용할 수 있습니다.
 
 ```python
 # 예시: 2025.06.25/document_intelligence.py
