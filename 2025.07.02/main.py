@@ -20,7 +20,12 @@ from services.face_service import FaceService  # Azure AI Face 서비스와 통�
 
 def vision_api_call(
     image_path: str, features: list[str]
-) -> tuple[str | tuple[str, list] | None, str, str]:
+) -> tuple[
+    str | tuple[str, list] | None,
+    str | tuple[str, list] | None,
+    str,
+    str,
+]:
     """
     Azure Vision 서비스를 호출하여 이미지를 분석하고, 그 결과를 Gradio UI에 맞게 가공합니다.
 
@@ -29,37 +34,37 @@ def vision_api_call(
     1. 사용자가 업로드한 이미지와 선택한 분석 기능을 입력으로 받습니다.
     2. 입력값이 유효한지 검사합니다 (이미지가 있는지, 기능이 선택되었는지).
     3. `VisionService`를 통해 Azure에 이미지 분석을 요청합니다.
-    4. API 응답을 받아 'denseCaptions'(이미지 영역별 상세 설명)과 'tags'(이미지 전체 태그)를 추출합니다.
-    5. 'denseCaptions' 결과는 원본 이미지 위에 바운딩 박스와 텍스트로 표시될 수 있도록 데이터를 가공합니다.
+    4. API 응답을 받아 'denseCaptions'와 'objects', 'tags'를 추출합니다.
+    5. 'denseCaptions'와 'objects' 결과는 각각 별도의 이미지 위에 바운딩 박스로 표시되도록 데이터를 가공합니다.
     6. 'tags' 결과는 사용자가 보기 편하도록 마크다운(Markdown) 목록 형태로 만듭니다.
-    7. 가공된 결과들을 웹 UI의 각 출력 컴포넌트(주석 이미지, 태그 목록, 원본 응답)에 맞게 반환합니다.
+    7. 가공된 결과들을 웹 UI의 각 출력 컴포넌트에 맞게 반환합니다.
 
     Args:
         image_path (str): Gradio의 Image 컴포넌트를 통해 사용자가 업로드한 이미지 파일이 임시 저장된 경로입니다.
         features (list[str]): 사용자가 UI에서 체크박스로 선택한 분석 기능들의 목록입니다. 예: ["tags", "caption"].
 
     Returns:
-        tuple: 세 개의 값을 담은 튜플을 반환하며, 각 값은 Gradio UI의 특정 출력 컴포넌트로 전달됩니다.
-            - (str | tuple | None): 주석이 달린 이미지를 위한 데이터입니다. (이미지 경로, [[박스 좌표, 텍스트], ...]) 형태의 튜플이거나, 오류 발생 시 None이 될 수 있습니다.
+        tuple: 네 개의 값을 담은 튜플을 반환하며, 각 값은 Gradio UI의 특정 출력 컴포넌트로 전달됩니다.
+            - (str | tuple | None): Dense Captions 주석 이미지를 위한 데이터입니다.
+            - (str | tuple | None): Objects 주석 이미지를 위한 데이터입니다.
             - (str): 이미지 태그를 보여주기 위한 마크다운 형식의 텍스트입니다.
             - (str): API로부터 받은 원본 JSON 응답을 그대로 보여주는 텍스트입니다.
     """
     # --- 1. 입력 유효성 검사 ---
     # 사용자가 이미지를 업로드하지 않고 버튼을 눌렀을 경우를 처리합니다.
     if not image_path:
-        # 각 출력 영역에 맞는 기본 메시지를 반환하여 사용자에게 안내합니다.
-        return None, "### 이미지 태그\n", "이미지를 먼저 업로드해주세요."
-    
+        return None, None, "### 이미지 태그\n", "이미지를 먼저 업로드해주세요."
+
     # 이미지는 업로드했지만 분석 기능을 하나도 선택하지 않은 경우를 처리합니다.
     if not features:
         return (
             image_path,  # 분석은 못하지만, 업로드된 이미지는 그대로 보여줍니다.
+            image_path,
             "### 이미지 태그\n",
             "하나 이상의 분석 기능을 선택해주세요.",
         )
 
     # --- 2. Vision 서비스 호출 및 예외 처리 ---
-    # VisionService 객체를 생성하여 Azure 서비스에 연결할 준비를 합니다.
     vision_service = VisionService()
     try:
         # 준비된 서비스 객체를 통해 이미지 분석을 요청합니다.
@@ -67,52 +72,51 @@ def vision_api_call(
     except Exception as e:
         # API 호출 중 네트워크 오류, 인증 실패 등 예기치 않은 문제가 발생하면 앱이 중단되지 않도록 처리합니다.
         # 사용자에게 에러가 발생했음을 알리는 메시지를 각 출력창에 표시합니다.
-        return None, "### 오류 발생", f"서비스 호출 중 오류가 발생했습니다: {e}"
+        return None, None, "### 오류 발생", f"서비스 호출 중 오류가 발생했습니다: {e}"
 
-    # --- 3. API 응답 결과 가공: Dense Captions ---
-    # 'denseCaptions'는 이미지의 여러 영역에 대해 각각 설명을 제공하는 기능입니다.
-    # 이 결과를 이미지 위에 네모 상자(바운딩 박스)와 함께 표시하기 위해 데이터를 가공합니다.
-    annotations = []  # 주석 정보를 담을 빈 리스트를 준비합니다.
-    
+    # --- 3. API 응답 결과 가공: Bounding Box 시각화 ---
+    # 'denseCaptions' 결과 처리
+    dense_captions_annotations = []
     # 사용자가 'denseCaptions' 기능을 요청했고, 실제 응답에도 해당 결과가 있는지 확인합니다.
     if "denseCaptions" in features and result.get("denseCaptionsResult"):
-        # 결과에 포함된 모든 캡션에 대해 반복 작업을 수행합니다.
         for caption in result["denseCaptionsResult"]["values"]:
-            box = caption["boundingBox"]  # 캡션이 적용되는 영역의 좌표 정보
-            # Gradio의 `AnnotatedImage`는 (x_min, y_min, x_max, y_max) 형식의 좌표를 사용합니다.
-            # API가 주는 좌표는 (x_min, y_min, 너비, 높이) 형식이므로 변환이 필요합니다.
+            box = caption["boundingBox"]
             x, y, w, h = box["x"], box["y"], box["w"], box["h"]
             annotation_box = (x, y, x + w, y + h)
-            # 변환된 좌표와 캡션 텍스트를 짝지어 리스트에 추가합니다.
-            annotations.append((annotation_box, caption["text"]))
-    
-    # 원본 이미지 경로와 가공된 주석 리스트를 튜플로 묶어 `AnnotatedImage` 컴포넌트에 전달할 최종 데이터를 만듭니다.
-    annotated_image = (image_path, annotations)
+            dense_captions_annotations.append((annotation_box, caption["text"]))
+
+    dense_captions_output = (image_path, dense_captions_annotations)
+
+    # 'objects' 결과 처리
+    objects_annotations = []
+    # 사용자가 'objects' 기능을 요청했고, 실제 응답에도 해당 결과가 있는지 확인합니다.
+    if "objects" in features and result.get("objectsResult"):
+        for obj in result["objectsResult"]["values"]:
+            if obj.get("tags"):
+                box = obj["boundingBox"]
+                label = obj["tags"][0]["name"]
+                x, y, w, h = box["x"], box["y"], box["w"], box["h"]
+                annotation_box = (x, y, x + w, y + h)
+                objects_annotations.append((annotation_box, label))
+
+    objects_output = (image_path, objects_annotations)
 
     # --- 4. API 응답 결과 가공: Tags ---
-    # 'tags'는 이미지 전체를 설명하는 키워드들입니다.
-    # 사용자가 보기 좋게 마크다운 목록으로 만듭니다.
     tags_markdown = "### 이미지 태그\n"
-    
-    # 사용자가 'tags' 기능을 요청했고, 실제 응답에도 결과가 있는지 확인합니다.
     if "tags" in features and result.get("tagsResult"):
-        # 각 태그를 ' - `태그이름` (정확도: XX.XX%) ' 형식의 문자열로 만듭니다.
         tags_list = [
             f"- `{tag['name']}` (정확도: {tag['confidence']:.2%})"
             for tag in result["tagsResult"]["values"]
         ]
-        # 만들어진 문자열 리스트를 줄바꿈(\n)으로 합쳐 하나의 긴 텍스트로 만듭니다.
         tags_markdown += "\n".join(tags_list)
     else:
-        # 태그 정보가 없는 경우 안내 메시지를 추가합니다.
         tags_markdown += "_태그를 찾을 수 없거나 'tags' 기능이 선택되지 않았습니다._"
 
     # --- 5. 원본 응답 준비 및 최종 반환 ---
-    # API로부터 받은 원본 JSON 데이터를 사람이 읽기 쉬운 형태로 변환하여, 상세 분석이 필요한 사용자를 위해 제공합니다.
     raw_json_output = pformat(result)
 
-    # 세 종류의 결과물을 튜플로 묶어 반환합니다. 이 값들은 UI의 각 출력 컴포넌트에 순서대로 전달됩니다.
-    return annotated_image, tags_markdown, raw_json_output
+    # 네 종류의 결과물을 튜플로 묶어 반환합니다.
+    return dense_captions_output, objects_output, tags_markdown, raw_json_output
 
 
 def face_api_call(
@@ -206,9 +210,17 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
                 # 오른쪽 결과 표시 영역
                 with gr.Column(scale=2):
                     # `gr.AnnotatedImage`는 이미지 위에 바운딩 박스와 라벨을 표시할 수 있는 특별한 출력 컴포넌트입니다.
-                    vision_output_image = gr.AnnotatedImage(
-                        label="영역별 상세 설명 (Dense Captions) 분석 결과"
-                    )
+                    # 결과 표시 영역을 탭으로 분리하여 각 시각화 결과를 명확하게 보여줍니다.
+                    with gr.Tabs():
+                        with gr.TabItem("영역별 상세 설명 (Dense Captions)"):
+                            vision_dense_captions_output = gr.AnnotatedImage(
+                                label="Dense Captions 분석 결과"
+                            )
+                        with gr.TabItem("객체 탐지 (Objects)"):
+                            vision_objects_output = gr.AnnotatedImage(
+                                label="Objects 분석 결과"
+                            )
+                    
                     # `gr.Markdown`은 텍스트를 서식과 함께 보여주는 출력 컴포넌트입니다. 여기서는 태그 결과를 보여줍니다.
                     vision_tags_output = gr.Markdown(label="이미지 태그")
                     # `gr.Textbox`는 텍스트를 보여주는 출력 컴포넌트입니다.
@@ -254,7 +266,12 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
     analyze_button.click(
         fn=vision_api_call,  # 클릭 시 `vision_api_call` 함수를 실행합니다.
         inputs=[vision_image_input, vision_features],  # 함수의 입력으로 `vision_image_input`과 `vision_features`의 현재 값을 전달합니다.
-        outputs=[vision_output_image, vision_tags_output, vision_raw_output],  # 함수가 반환한 결과들을 순서대로 각 출력 컴포넌트에 전달하여 화면을 업데이트합니다.
+        outputs=[
+            vision_dense_captions_output,
+            vision_objects_output,
+            vision_tags_output,
+            vision_raw_output,
+        ],  # 함수가 반환한 결과들을 순서대로 각 출력 컴포넌트에 전달하여 화면을 업데이트합니다.
     )
 
     # '얼굴 감지' 버튼에 대한 이벤트 핸들러입니다.
