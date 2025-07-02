@@ -50,9 +50,10 @@
 
 ### 이미지 분석 결과 시각화 (`main.py`)
 
-`vision_api_call` 함수는 단순히 API 응답을 텍스트로 출력하는 것을 넘어, 사용자가 결과를 쉽게 이해하도록 시각적으로 가공하는 중요한 역할을 합니다.
+`vision_api_call` 함수는 단순히 API 응답을 텍스트로 출력하는 것을 넘어, 사용자가 결과를 쉽게 이해하도록 시각적으로 가공하는 중요한 역할을 합니다. 특히 여러 분석 결과가 하나의 이미지 위에 겹쳐 어지럽게 보일 수 있는 문제를 해결하기 위해, **각 분석 결과를 별도의 탭으로 분리하여** 명확하게 보여줍니다.
 
--   `denseCaptionsResult`가 있으면, 각 캡션의 바운딩 박스 좌표와 텍스트를 추출하여 Gradio의 `AnnotatedImage`가 이해할 수 있는 형식 `(이미지, [(박스, 라벨), ...])`으로 변환합니다.
+-   `denseCaptionsResult`가 있으면, '영역별 상세 설명' 탭의 이미지 위에 각 설명과 바운딩 박스를 표시합니다.
+-   `objectsResult`가 있으면, '객체 탐지' 탭의 이미지 위에 감지된 각 객체와 그 이름을 바운딩 박스로 표시합니다.
 -   `tagsResult`가 있으면, 각 태그의 이름과 신뢰도 점수를 마크다운 목록 형식으로 예쁘게 정리합니다.
 
 ```python
@@ -60,19 +61,35 @@
 
 def vision_api_call(
     image_path: str, features: list[str]
-) -> tuple[str | tuple[str, list] | None, str, str]:
+) -> tuple[
+    str | tuple[str, list] | None,
+    str | tuple[str, list] | None,
+    str,
+    str,
+]:
     # ... (서비스 호출 로직) ...
 
     # Dense Captions 결과 가공
-    annotations = []
+    dense_captions_annotations = []
     if "denseCaptions" in features and result.get("denseCaptionsResult"):
         for caption in result["denseCaptionsResult"]["values"]:
             box = caption["boundingBox"]
             x, y, w, h = box["x"], box["y"], box["w"], box["h"]
             annotation_box = (x, y, x + w, y + h)
-            annotations.append((annotation_box, caption["text"]))
+            dense_captions_annotations.append((annotation_box, caption["text"]))
     
-    annotated_image = (image_path, annotations)
+    dense_captions_output = (image_path, dense_captions_annotations)
+
+    # Objects 결과 가공
+    objects_annotations = []
+    if "objects" in features and result.get("objectsResult"):
+        for object in result["objectsResult"]["values"]:
+            box = object["boundingBox"]
+            x, y, w, h = box["x"], box["y"], box["w"], box["h"]
+            annotation_box = (x, y, x + w, y + h)
+            objects_annotations.append((annotation_box, object["name"]))
+    
+    objects_output = (image_path, objects_annotations)
 
     # Tags 결과 가공
     tags_markdown = "### 이미지 태그\n"
@@ -82,9 +99,8 @@ def vision_api_call(
             for tag in result["tagsResult"]["values"]
         ]
         tags_markdown += "\n".join(tags_list)
-    # ...
     
-    return annotated_image, tags_markdown, pformat(result)
+    return dense_captions_output, objects_output, tags_markdown, pformat(result)
 ```
 
 #### ✨ 실행 결과 1: 이미지 태그 분석
@@ -93,14 +109,20 @@ def vision_api_call(
 
 ![이미지 태그 분석 결과](results/gradio_vision_rest_api_imageTags_실습결과1.png)
 
-#### ✨ 실행 결과 2: 영역별 상세 설명 분석
+#### ✨ 실행 결과 2: 객체 탐지 분석
 
-'denseCaptions' 기능을 선택하면, 이미지의 각 주요 영역에 네모난 바운딩 박스가 그려지고 그 위에 해당 영역에 대한 설명이 표시됩니다. 이를 통해 이미지의 어느 부분이 어떤 내용인지 한눈에 파악할 수 있습니다.
+'objects' 기능을 선택하면, '객체 탐지' 탭에 이미지 속에서 인식된 각 사물(person, seating 등)의 위치가 바운딩 박스와 라벨로 명확하게 표시됩니다.
+
+![객체 탐지 분석 결과](results/gradio_vision_rest_api_객체탐지_시각화.png)
+
+#### ✨ 실행 결과 3: 영역별 상세 설명 분석
+
+'denseCaptions' 기능을 선택하면, '영역별 상세 설명' 탭에서 이미지의 각 주요 영역에 대한 설명이 바운딩 박스와 함께 시각화됩니다.
 
 ![영역별 상세 설명 분석 결과 1](results/gradio_vision_rest_api_denseCaptions_실습결과1.png)
 ![영역별 상세 설명 분석 결과 2](results/gradio_vision_rest_api_denseCaptions_실습결과2.png)
 
-#### ✨ 실행 결과 3: 얼굴 속성 분석
+#### ✨ 실행 결과 4: 얼굴 속성 분석
 
 'Face Detection' 탭에서 이미지를 분석하면, API가 반환하는 얼굴의 위치, 나이, 마스크 착용 여부 등의 상세 정보가 우측 'API 응답' 영역에 JSON 형식으로 출력됩니다.
 
@@ -112,4 +134,4 @@ def vision_api_call(
 
 이번 세션을 통해 Azure의 강력한 AI 서비스를 Python 코드 몇 줄만으로 활용하고, 이를 Gradio라는 도구를 통해 누구나 쉽게 사용할 수 있는 웹 애플리케이션으로 만드는 과정을 경험했습니다.
 
-특히 API가 반환하는 정형 데이터(JSON)를 그대로 보여주는 것에서 한 걸음 더 나아가, **사용자의 관점에서 정보를 재가공하고 시각화하는 것**이 얼마나 사용자 경험을 향상시키는지 체감할 수 있었습니다. 잘 만들어진 서비스 클래스와 직관적인 UI의 조합은 복잡한 기술을 최종 사용자가 쉽게 접근하고 활용할 수 있게 만드는 핵심 요소임을 확인했습니다. 
+특히 API가 반환하는 정형 데이터(JSON)를 그대로 보여주는 것에서 한 걸음 더 나아가, **사용자의 관점에서 정보를 재가공하고 시각화하는 것**이 얼마나 사용자 경험을 향상시키는지 체감할 수 있었습니다. 처음에는 모든 시각화 결과를 한 곳에 표시했지만, 정보가 너무 많아 오히려 이해하기 어렵다는 피드백을 통해 **각 분석 결과를 별도의 탭으로 분리하는 개선**을 진행했습니다. 이 과정을 통해 좋은 UI/UX는 단순히 기능을 제공하는 것을 넘어, 사용자가 정보를 명확하고 쾌적하게 소비할 수 있도록 설계해야 함을 깨달았습니다. 
