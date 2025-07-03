@@ -25,6 +25,7 @@ def vision_api_call(
     vision_image_upload: str,
     features: list[str],
     smart_crops_aspect_ratios: str,
+    gender_neutral_caption: bool,
 ) -> tuple[
     str | tuple[str, list] | None,
     str | tuple[str, list] | None,
@@ -50,6 +51,7 @@ def vision_api_call(
         vision_image_upload (str): 사용자가 '이미지 업로드' 탭에서 업로드한 이미지의 임시 파일 경로입니다.
         features (list[str]): 사용자가 UI에서 체크박스로 선택한 분석 기능들의 목록입니다. 예: ["tags", "caption"].
         smart_crops_aspect_ratios (str): 'smartCrops' 기능에 사용할 종횡비 목록입니다. 쉼표로 구분합니다.
+        gender_neutral_caption (bool): 'caption' 기능에 사용할 성 중립성 캡션 여부입니다.
 
     Returns:
         tuple: 다섯 개의 값을 담은 튜플을 반환하며, 각 값은 Gradio UI의 특정 출력 컴포넌트로 전달됩니다.
@@ -80,7 +82,12 @@ def vision_api_call(
     vision_service = VisionService()
     try:
         # 준비된 서비스 객체를 통해 이미지 분석을 요청합니다.
-        result = vision_service.analyze_image(image_path, features, smart_crops_aspect_ratios=smart_crops_aspect_ratios)
+        result = vision_service.analyze_image(
+            image_path,
+            features,
+            smart_crops_aspect_ratios=smart_crops_aspect_ratios,
+            gender_neutral_caption=gender_neutral_caption,
+        )
     except Exception as e:
         # API 호출 중 네트워크 오류, 인증 실패 등 예기치 않은 문제가 발생하면 앱이 중단되지 않도록 처리합니다.
         # 사용자에게 에러가 발생했음을 알리는 메시지를 각 출력창에 표시합니다.
@@ -205,6 +212,22 @@ def update_smart_crops_visibility(features: list[str]) -> dict:
     return gr.update(visible="smartCrops" in features)
 
 
+def update_gender_neutral_caption_visibility(features: list[str]) -> dict:
+    """
+    'caption' 기능 선택 여부에 따라 '성 중립성 캡션' 체크박스의 가시성을 동적으로 조절합니다.
+
+    Gradio의 .change() 이벤트에 연결되어, 체크박스 선택이 변경될 때마다 호출됩니다.
+
+    Args:
+        features (list[str]): 현재 선택된 기능들의 목록입니다.
+
+    Returns:
+        dict: '성 중립성 캡션' 체크박스의 `visible` 속성을 업데이트하기 위한
+              Gradio 업데이트 객체를 반환합니다.
+    """
+    return gr.update(visible="caption" in features or "denseCaptions" in features)
+
+
 # --- Gradio UI 구성 ---
 # `gr.Blocks`는 Gradio 앱의 전체 레이아웃을 구성하는 최상위 컨테이너입니다.
 # `theme`으로 앱의 전체적인 색상과 스타일을 지정하고, `title`로 웹 브라우저 탭에 표시될 제목을 설정합니다.
@@ -252,6 +275,12 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
                         ],
                         label="분석할 기능 선택",
                         value=["tags", "caption", "objects"],  # 앱이 시작될 때 기본으로 선택될 값들입니다.
+                    )
+
+                    vision_gender_neutral_caption = gr.Checkbox(
+                        label="성 중립성 캡션",
+                        value=False,
+                        visible=False,
                     )
 
                     vision_smart_crops_aspect_ratios = gr.Textbox(
@@ -332,6 +361,12 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
         outputs=[vision_smart_crops_aspect_ratios],
     )
 
+    vision_features.change(
+        fn=update_gender_neutral_caption_visibility,
+        inputs=[vision_features],
+        outputs=[vision_gender_neutral_caption],
+    )
+
     analyze_button.click(
         fn=vision_api_call,  # 클릭 시 `vision_api_call` 함수를 실행합니다.
         inputs=[
@@ -339,6 +374,7 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
             vision_image_upload,
             vision_features,
             vision_smart_crops_aspect_ratios,
+            vision_gender_neutral_caption,
         ],  # 함수의 입력으로 두 이미지 입력 컴포넌트와 `vision_features`의 현재 값을 전달합니다.
         outputs=[
             vision_dense_captions_output,
