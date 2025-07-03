@@ -239,9 +239,45 @@ with gr.Blocks(...) as demo:
 
 ![스마트 크롭 분석 결과](results/gradio_vision_rest_api_smartCrops_결과.png)
 
+### ✨ 기능 개선 3: 다중 입력 방식 지원 (URL 또는 파일 업로드)
+
+사용자 편의성을 높이기 위해 기존의 파일 업로드 방식에 더해, **웹 이미지 URL을 직접 입력하여 분석**할 수 있는 기능을 추가했습니다. 이를 통해 사용자는 이미지를 컴퓨터에 저장하지 않고도 간편하게 분석을 요청할 수 있습니다.
+
+-   **UI 분리**: 이미지 입력을 받는 UI를 '이미지 Url'과 '이미지 업로드' 두 개의 탭으로 명확히 분리하여 사용자가 원하는 입력 방식을 쉽게 선택할 수 있도록 개선했습니다.
+-   **입력 우선순위 로직**: `vision_api_call` 함수는 두 가지 입력을 모두 받도록 수정되었습니다. 사용자가 파일을 업로드하면 업로드된 이미지를 우선적으로 사용하고, 파일이 없을 경우에만 URL 탭에 입력된 주소를 사용하도록 하여 혼선을 방지합니다.
+-   **URL 이미지 스트림 처리**: URL로 이미지를 처리해야 하는 경우(특히 `smartCrops` 기능), `requests` 라이브러리로 이미지 데이터를 스트림으로 가져온 뒤 `Pillow`로 열어 처리하도록 구현했습니다. 이는 파일을 로컬에 저장하는 중간 과정 없이 메모리에서 바로 이미지를 다룰 수 있어 효율적입니다.
+
+```python
+# main.py
+
+# 1. 두 가지 입력(URL, 업로드)을 모두 받도록 함수 시그니처 수정
+def vision_api_call(
+    vision_image_url: str,
+    vision_image_upload: str,
+    # ...
+):
+    # 2. 업로드된 이미지를 우선으로 사용하고, 없으면 URL을 사용
+    image_path = vision_image_upload if vision_image_upload else vision_image_url
+    if not image_path:
+        return None, None, None, "### 이미지 태그\n", "이미지를 먼저 업로드하거나 URL을 입력해주세요."
+
+    # ...
+
+    # 3. 'smartCrops' 처리 시, URL 여부에 따라 다르게 이미지를 open
+    if "smartCrops" in features and result.get("smartCropsResult"):
+        # URL이면 requests로, 파일이면 경로로 직접 이미지를 엽니다.
+        source_image = Image.open(image_path) if vision_image_upload else Image.open(requests.get(image_path, stream=True).raw)
+        for crop in result["smartCropsResult"]["values"]:
+            # ...
+            cropped_img = source_image.crop((x, y, x + w, y + h))
+            cropped_images_output.append(cropped_img)
+    
+    # ...
+```
+
 ### 💡 학습 정리 (7월 3일)
 
-이번 기능 개선을 통해 **사용자 경험(UX) 중심의 개발**이 왜 중요한지를 실감했습니다. 단순히 기능을 추가하는 것을 넘어, 사용자의 작업 흐름을 고려하여 UI를 동적으로 만들고(`update_smart_crops_visibility`), 분석 결과를 보다 직관적인 형태(`Gallery`)로 제공함으로써 애플리케이션의 가치를 크게 향상시킬 수 있었습니다.
+이번 기능 개선을 통해 **사용자 경험(UX) 중심의 개발**이 왜 중요한지를 실감했습니다. 단순히 기능을 추가하는 것을 넘어, 사용자의 작업 흐름을 고려하여 UI를 동적으로 만들고(`update_smart_crops_visibility`), 분석 결과를 보다 직관적인 형태(`Gallery`)로 제공하며, 다양한 입력 방식(`URL 입력`)을 지원함으로써 애플리케이션의 가치를 크게 향상시킬 수 있었습니다.
 
 특히 API가 제공하는 데이터를 그대로 보여주는 것과, 그 데이터를 가공하여 사용자에게 '쓸모있는' 결과물로 만들어주는 것은 큰 차이가 있음을 깨달았습니다. 이러한 디테일한 개선 과정들이 모여 사용자가 만족하는 서비스를 만들게 된다는 점을 학습했습니다.
 
@@ -249,9 +285,8 @@ with gr.Blocks(...) as demo:
 
 ## 👨‍💻 About Me
 
-|  |  |
-| :--- | :--- |
-| **Name** | HanByeol Jang (장한별) |
-| **Email** | 📧 j.1star.0726@gmail.com |
-| **GitHub** | <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/github.svg" alt="GitHub" height="16"/> [J1STAR](https://github.com/J1STAR) |
-| **LinkedIn** | <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg" alt="LinkedIn" height="16"/> [HanByeol Jang](https://www.linkedin.com/in/hanbyeol-jang-44174a199/) |
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
