@@ -7,16 +7,22 @@ Gradio 라이브러리를 사용하여 사용자가 쉽게 이미지를 업로�
 """
 
 # 표준 라이브러리
-from pprint import pformat  # pprint는 'pretty-print'의 약자로, 복잡한 데이터 구조(예: 딕셔너리, 리스트)를 사람이 보기 좋게 출력할 때 사용합니다.
+from pprint import (
+    pformat,
+)  # pprint는 'pretty-print'의 약자로, 복잡한 데이터 구조(예: 딕셔너리, 리스트)를 사람이 보기 좋게 출력할 때 사용합니다.
 import requests  # HTTP 요청을 보내기 위한 라이브러리입니다.
 
 # 서드파티 라이브러리
 import gradio as gr  # Gradio는 몇 줄의 코드만으로 머신러닝 모델을 위한 웹 UI를 빠르고 쉽게 만들 수 있게 해주는 라이브러리입니다.
-from PIL import Image  # Pillow 라이브러리에서 Image 모듈을 가져옵니다. 이미지 열기, 자르기 등 다양한 이미지 처리 작업을 위해 사용됩니다.
+from PIL import (
+    Image,
+)  # Pillow 라이브러리에서 Image 모듈을 가져옵니다. 이미지 열기, 자르기 등 다양한 이미지 처리 작업을 위해 사용됩니다.
 
 # 사용자 정의 모듈
 # 우리가 직접 만든 서비스 클래스를 가져옵니다.
-from services.vision_service import VisionService  # Azure AI Vision 서비스와 통신하는 클래스
+from services.vision_service import (
+    VisionService,
+)  # Azure AI Vision 서비스와 통신하는 클래스
 from services.face_service import FaceService  # Azure AI Face 서비스와 통신하는 클래스
 
 
@@ -66,7 +72,13 @@ def vision_api_call(
     image_path = vision_image_upload if vision_image_upload else vision_image_url
     # 사용자가 이미지를 업로드하지 않고 버튼을 눌렀을 경우를 처리합니다.
     if not image_path:
-        return None, None, None, "### 이미지 태그\n", "이미지를 먼저 업로드하거나 URL을 입력해주세요."
+        return (
+            None,
+            None,
+            None,
+            "### 이미지 태그\n",
+            "이미지를 먼저 업로드하거나 URL을 입력해주세요.",
+        )
 
     # 이미지는 업로드했지만 분석 기능을 하나도 선택하지 않은 경우를 처리합니다.
     if not features:
@@ -91,7 +103,13 @@ def vision_api_call(
     except Exception as e:
         # API 호출 중 네트워크 오류, 인증 실패 등 예기치 않은 문제가 발생하면 앱이 중단되지 않도록 처리합니다.
         # 사용자에게 에러가 발생했음을 알리는 메시지를 각 출력창에 표시합니다.
-        return None, None, None, "### 오류 발생", f"서비스 호출 중 오류가 발생했습니다: {e}"
+        return (
+            None,
+            None,
+            None,
+            "### 오류 발생",
+            f"서비스 호출 중 오류가 발생했습니다: {e}",
+        )
 
     # --- 3. API 응답 결과 가공: Bounding Box 시각화 ---
     # 'denseCaptions' 결과 처리
@@ -124,7 +142,11 @@ def vision_api_call(
     cropped_images_output = []
     # 사용자가 'smartCrops' 기능을 요청했고, 실제 응답에도 해당 결과가 있는지 확인합니다.
     if "smartCrops" in features and result.get("smartCropsResult"):
-        source_image = Image.open(image_path) if vision_image_upload else Image.open(requests.get(image_path, stream=True).raw)
+        source_image = (
+            Image.open(image_path)
+            if vision_image_upload
+            else Image.open(requests.get(image_path, stream=True).raw)
+        )
         for crop in result["smartCropsResult"]["values"]:
             box = crop["boundingBox"]
             x, y, w, h = box["x"], box["y"], box["w"], box["h"]
@@ -147,7 +169,13 @@ def vision_api_call(
     raw_json_output = pformat(result)
 
     # 다섯 종류의 결과물을 튜플로 묶어 반환합니다.
-    return dense_captions_output, objects_output, cropped_images_output, tags_markdown, raw_json_output
+    return (
+        dense_captions_output,
+        objects_output,
+        cropped_images_output,
+        tags_markdown,
+        raw_json_output,
+    )
 
 
 def face_api_call(
@@ -274,7 +302,9 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
                             "people",
                         ],
                         label="분석할 기능 선택",
-                        value=["tags", "caption", "objects"],  # 앱이 시작될 때 기본으로 선택될 값들입니다.
+                        value=[
+                            "objects",
+                        ],  # 앱이 시작될 때 기본으로 선택될 값들입니다.
                     )
 
                     vision_gender_neutral_caption = gr.Checkbox(
@@ -293,7 +323,7 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
 
                     # `gr.Button`은 사용자가 클릭할 수 있는 버튼입니다. `variant="primary"`는 버튼을 강조색으로 표시합니다.
                     analyze_button = gr.Button("이미지 분석", variant="primary")
-                
+
                 # 오른쪽 결과 표시 영역
                 with gr.Column(scale=2):
                     # `gr.AnnotatedImage`는 이미지 위에 바운딩 박스와 라벨을 표시할 수 있는 특별한 출력 컴포넌트입니다.
@@ -312,7 +342,7 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
                             vision_cropped_images_output = gr.Gallery(
                                 label="Cropped Images 결과"
                             )
-                    
+
                     # `gr.Markdown`은 텍스트를 서식과 함께 보여주는 출력 컴포넌트입니다. 여기서는 태그 결과를 보여줍니다.
                     vision_tags_output = gr.Markdown(label="이미지 태그")
                     # `gr.Textbox`는 텍스트를 보여주는 출력 컴포넌트입니다.
@@ -330,23 +360,31 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
                     # `open=True`는 기본적으로 펼쳐진 상태로 시작하도록 합니다.
                     with gr.Accordion("얼굴 감지 옵션", open=True):
                         # `gr.Checkbox`는 단일 선택/해제 옵션을 제공합니다.
-                        face_id_checkbox = gr.Checkbox(
-                            label="얼굴 ID 반환", value=True
-                        )
+                        face_id_checkbox = gr.Checkbox(label="얼굴 ID 반환", value=True)
                         face_landmarks_checkbox = gr.Checkbox(
                             label="얼굴 특징점 반환", value=False
                         )
                         # 얼굴 속성들을 선택할 수 있는 체크박스 그룹입니다.
                         face_attributes_checkbox_group = gr.CheckboxGroup(
                             choices=[
-                                "accessories", "age", "blur", "exposure", "facialHair",
-                                "glasses", "hair", "headPose", "mask", "noise",
-                                "occlusion", "qualityForRecognition", "smile",
+                                "accessories",
+                                "age",
+                                "blur",
+                                "exposure",
+                                "facialHair",
+                                "glasses",
+                                "hair",
+                                "headPose",
+                                "mask",
+                                "noise",
+                                "occlusion",
+                                "qualityForRecognition",
+                                "smile",
                             ],
                             label="반환할 얼굴 속성",
                         )
                     detect_button = gr.Button("얼굴 감지", variant="primary")
-                
+
                 with gr.Column(scale=2):
                     # 얼굴 감지 결과를 보여줄 텍스트 상자입니다.
                     face_output = gr.Textbox(
