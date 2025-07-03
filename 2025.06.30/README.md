@@ -105,3 +105,13 @@ send_button.click(
 이번 세션에서는 여러 AI 서비스를 조합하여 시너지를 내는 방법을 실습했습니다. 개별적으로 작동하던 **채팅, STT, TTS 기능을 하나의 애플리케이션으로 통합**함으로써, 사용자에게 훨씬 더 직관적이고 편리한 '대화형 AI' 경험을 제공할 수 있음을 확인했습니다.
 
 또한, 기존에 작성했던 코드를 모듈로 만들어 재사용하는 방식을 통해, 복잡한 애플리케이션을 효율적으로 개발하고 유지보수하는 능력을 길렀습니다. 이는 실제 소프트웨어 개발 현장에서 매우 중요한 역량입니다. 이번 프로젝트를 통해 AI 기술을 실제 사용 사례에 적용하는 통합적인 시각을 갖게 되었습니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

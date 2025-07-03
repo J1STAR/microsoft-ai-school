@@ -39,3 +39,13 @@
     - 모델 직렬화 (`pickle`)
 
 이 디렉토리의 자료들은 분류 문제 정의부터 모델 선택, 성능 검증, 최적화, 저장까지 머신러닝 분류 프로젝트의 핵심 파이프라인을 깊이 있게 다루고 있습니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

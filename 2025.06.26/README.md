@@ -133,3 +133,13 @@ Ocp-Apim-Subscription-Key: {{$dotenv AZURE_LANGUAGE_API_KEY}}
 ## 💡 학습 정리
 
 이번 세션을 통해 Azure의 강력한 AI 서비스 두 가지(Document Intelligence, AI Language)를 연동하여 실제적인 문제를 해결하는 방법을 배웠습니다. 특히, **보건 의료**와 같이 특정 도메인에 특화된 AI 모델을 API로 쉽게 활용할 수 있다는 점을 확인했습니다. 단순히 API를 호출하는 것을 넘어, Gradio를 통해 시각적인 결과물을 만들어내는 과정은 AI 서비스를 어떻게 최종 사용자에게 효과적으로 전달할 수 있는지에 대한 중요한 경험이 되었습니다. 이로써 OCR 기술과 일반 및 도메인 특화 NLP 기술을 결합한 통합적인 AI 솔루션 개발의 기초를 다졌습니다.
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>

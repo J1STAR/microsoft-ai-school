@@ -46,3 +46,13 @@
     - 군집 성능 평가 (실루엣 분석)
 
 이 디렉토리의 자료들은 외부에서 데이터를 직접 수집하고, 레이블이 없는 데이터로부터 의미 있는 패턴이나 그룹을 발견하는 데이터 분석의 중요한 두 축을 다루고 있습니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

@@ -39,3 +39,13 @@
     - 비트와이즈 연산 및 마스킹
 
 이 디렉토리의 자료들은 컴퓨터 비전 분야의 입문자가 OpenCV를 사용하여 이미지 데이터를 다루고 분석하는 기초를 탄탄히 다질 수 있도록 구성되어 있습니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

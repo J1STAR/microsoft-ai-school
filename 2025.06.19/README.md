@@ -48,3 +48,13 @@
     - 검색 증강 생성 (Retrieval-Augmented Generation, RAG)
 
 이 디렉토리의 자료들은 Azure OpenAI Service의 다재다능한 기능들을 활용하여, 단순한 챗봇을 넘어 개발, 디자인, 정보 검색 등 다양한 영역에서 활용 가능한 AI 솔루션을 구축하는 방법을 보여줍니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

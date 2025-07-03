@@ -45,3 +45,13 @@
     - **빠른 프로토타이핑 (Rapid Prototyping)**: `Gradio`를 통해 아이디어나 모델을 빠르게 시각화하고 검증.
 
 이 디렉토리의 자료들은 모델을 훈련시키는 것에서 한 걸음 더 나아가, 그 결과를 다른 사람들에게 보여주고 직접 사용해볼 수 있도록 만드는 '모델 서빙(Model Serving)'의 첫 단계를 경험하는 데 큰 의미가 있습니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

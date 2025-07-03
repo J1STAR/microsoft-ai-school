@@ -123,3 +123,13 @@ if __name__ == "__main__":
 ## 💡 학습 정리
 
 이번 세션에서는 Azure의 음성 및 언어 서비스를 활용하여 한 단계 더 나아간 AI 애플리케이션을 개발했습니다. 미리 정의된 모델을 사용하는 것을 넘어, **사용자 지정(Custom) 모델**을 통해 특정 비즈니스 요구사항에 맞는 솔루션을 만드는 방법을 배웠습니다. 특히 Custom NER은 금융, 법률, 의료 등 특정 도메인의 문서 처리 자동화에 매우 강력한 도구임을 확인했습니다. 또한, 동적 API 연동과 비동기 처리 패턴을 구현하며 실제 프로덕션 환경에서 마주할 수 있는 기술적인 과제들을 해결하는 경험을 쌓았습니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

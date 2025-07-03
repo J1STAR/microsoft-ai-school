@@ -171,7 +171,6 @@ def vision_api_call(
 특히 API가 반환하는 정형 데이터(JSON)를 그대로 보여주는 것에서 한 걸음 더 나아가, **사용자의 관점에서 정보를 재가공하고 시각화하는 것**이 얼마나 사용자 경험을 향상시키는지 체감할 수 있었습니다. 처음에는 모든 시각화 결과를 한 곳에 표시했지만, 정보가 너무 많아 오히려 이해하기 어렵다는 피드백을 통해 **각 분석 결과를 별도의 탭으로 분리하는 개선**을 진행했습니다. 이 과정을 통해 좋은 UI/UX는 단순히 기능을 제공하는 것을 넘어, 사용자가 정보를 명확하고 쾌적하게 소비할 수 있도록 설계해야 함을 깨달았습니다.
 
 ---
----
 
 # 📅 2025년 7월 3일: 기능 개선 및 고도화
 
@@ -245,3 +244,14 @@ with gr.Blocks(...) as demo:
 이번 기능 개선을 통해 **사용자 경험(UX) 중심의 개발**이 왜 중요한지를 실감했습니다. 단순히 기능을 추가하는 것을 넘어, 사용자의 작업 흐름을 고려하여 UI를 동적으로 만들고(`update_smart_crops_visibility`), 분석 결과를 보다 직관적인 형태(`Gallery`)로 제공함으로써 애플리케이션의 가치를 크게 향상시킬 수 있었습니다.
 
 특히 API가 제공하는 데이터를 그대로 보여주는 것과, 그 데이터를 가공하여 사용자에게 '쓸모있는' 결과물로 만들어주는 것은 큰 차이가 있음을 깨달았습니다. 이러한 디테일한 개선 과정들이 모여 사용자가 만족하는 서비스를 만들게 된다는 점을 학습했습니다.
+
+---
+
+## 👨‍💻 About Me
+
+|  |  |
+| :--- | :--- |
+| **Name** | HanByeol Jang (장한별) |
+| **Email** | 📧 j.1star.0726@gmail.com |
+| **GitHub** | <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/github.svg" alt="GitHub" height="16"/> [J1STAR](https://github.com/J1STAR) |
+| **LinkedIn** | <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg" alt="LinkedIn" height="16"/> [HanByeol Jang](https://www.linkedin.com/in/hanbyeol-jang-44174a199/) |

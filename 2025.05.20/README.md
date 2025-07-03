@@ -46,3 +46,13 @@
 - **핵심 개념**: 동적/정적 웹 페이지, 웹 드라이버, 명시적/암시적 대기, API, 자연어 처리
 
 이 디렉토리의 자료들은 현대 웹 환경의 복잡한 데이터를 수집하고, 이를 실제 분석 및 서비스에 활용할 수 있는 수준의 고급 크롤링 기술과 데이터 처리 능력을 함양하는 데 초점을 맞추고 있습니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 

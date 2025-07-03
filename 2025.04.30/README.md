@@ -45,3 +45,13 @@
 - **머신러닝/딥러닝 프레임워크**: Scikit-learn, TensorFlow, PyTorch 등 (교재 내용에 따라 다름)
 
 이 디렉토리는 특정 날짜의 단일 미션이라기보다는, 앞으로의 AI 관련 학습을 위한 포괄적인 자료 저장소 및 실습 환경의 역할을 하는 것으로 보입니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="mailto:j.1star.0726@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/></a>
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a> 
