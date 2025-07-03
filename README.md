@@ -166,9 +166,9 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.05.27](./2025.05.27/) | **[DL]** 이미지 분류 프로젝트: `TensorFlow`와 **전이 학습(Transfer Learning)** 활용 | `TensorFlow`, `Keras` |
 | [2025.05.28](./2025.05.28/) | **[Deployment]** `Gradio`를 활용한 머신러닝 모델 데모 웹 앱 제작 | `Gradio` |
 | azure-ai-services | 
-| [2025.06.18](./2025.06.18/) | **[Azure AI]** `Azure OpenAI Service` 기반 지능형 앱 개발 입문, RAG 개념 소개 | `Azure OpenAI` |
-| [2025.06.19](./2025.06.19/) | **[Azure AI]** Azure OpenAI 심화: 프롬프트 엔지니어링, DALL-E, RAG 시스템 구축 | `Azure OpenAI`, `DALL-E` |
-| [2025.06.23](./2025.06.23/) | **[OpenAI API]** RAG 시스템 직접 구축, Function Calling, 음성 API(Whisper, TTS) 활용 | `OpenAI API`, `Whisper`, `TTS` |
+| [2025.06.18](./2025.06.18/) | **[Azure OpenAI]** `Azure OpenAI Service` 기반 지능형 앱 개발 입문, RAG 개념 소개 | `Azure OpenAI` |
+| [2025.06.19](./2025.06.19/) | **[Azure OpenAI]** Azure OpenAI 심화: 프롬프트 엔지니어링, DALL-E, RAG 시스템 구축 | `Azure OpenAI`, `DALL-E` |
+| [2025.06.23](./2025.06.23/) | **[Azure OpenAI]** RAG 시스템 직접 구축, Function Calling, 음성 API(Whisper, TTS) 활용 | `Azure OpenAI`, `Whisper`, `TTS` |
 | azure-ai-services-advanced | 
 | [2025.06.24](./2025.06.24/) | **[Project]** `Gradio`와 `Azure OpenAI`를 결합한 다기능(채팅, 이미지, RAG) AI 앱 개발 | `Gradio`, `Azure OpenAI` |
 | [2025.06.25](./2025.06.25/) | **[Project]** `Azure Document Intelligence` REST API를 활용한 OCR 및 문서 분석 | `Azure AI Services` |
