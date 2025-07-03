@@ -11,6 +11,7 @@ from pprint import pformat  # pprint는 'pretty-print'의 약자로, 복잡한 �
 
 # 서드파티 라이브러리
 import gradio as gr  # Gradio는 몇 줄의 코드만으로 머신러닝 모델을 위한 웹 UI를 빠르고 쉽게 만들 수 있게 해주는 라이브러리입니다.
+from PIL import Image  # Pillow 라이브러리에서 Image 모듈을 가져옵니다. 이미지 열기, 자르기 등 다양한 이미지 처리 작업을 위해 사용됩니다.
 
 # 사용자 정의 모듈
 # 우리가 직접 만든 서비스 클래스를 가져옵니다.
@@ -19,10 +20,11 @@ from services.face_service import FaceService  # Azure AI Face 서비스와 통�
 
 
 def vision_api_call(
-    image_path: str, features: list[str]
+    image_path: str, features: list[str], smart_crops_aspect_ratios: str
 ) -> tuple[
     str | tuple[str, list] | None,
     str | tuple[str, list] | None,
+    list[Image.Image] | None,
     str,
     str,
 ]:
@@ -34,32 +36,35 @@ def vision_api_call(
     1. 사용자가 업로드한 이미지와 선택한 분석 기능을 입력으로 받습니다.
     2. 입력값이 유효한지 검사합니다 (이미지가 있는지, 기능이 선택되었는지).
     3. `VisionService`를 통해 Azure에 이미지 분석을 요청합니다.
-    4. API 응답을 받아 'denseCaptions'와 'objects', 'tags'를 추출합니다.
+    4. API 응답을 받아 'denseCaptions'와 'objects', 'smartCrops'를 추출합니다.
     5. 'denseCaptions'와 'objects' 결과는 각각 별도의 이미지 위에 바운딩 박스로 표시되도록 데이터를 가공합니다.
-    6. 'tags' 결과는 사용자가 보기 편하도록 마크다운(Markdown) 목록 형태로 만듭니다.
+    6. 'smartCrops' 결과는 API에서 제안하는 영역을 실제로 잘라내어 이미지 목록으로 만듭니다.
     7. 가공된 결과들을 웹 UI의 각 출력 컴포넌트에 맞게 반환합니다.
 
     Args:
         image_path (str): Gradio의 Image 컴포넌트를 통해 사용자가 업로드한 이미지 파일이 임시 저장된 경로입니다.
         features (list[str]): 사용자가 UI에서 체크박스로 선택한 분석 기능들의 목록입니다. 예: ["tags", "caption"].
+        smart_crops_aspect_ratios (str): 'smartCrops' 기능에 사용할 종횡비 목록입니다. 쉼표로 구분합니다.
 
     Returns:
-        tuple: 네 개의 값을 담은 튜플을 반환하며, 각 값은 Gradio UI의 특정 출력 컴포넌트로 전달됩니다.
+        tuple: 다섯 개의 값을 담은 튜플을 반환하며, 각 값은 Gradio UI의 특정 출력 컴포넌트로 전달됩니다.
             - (str | tuple | None): Dense Captions 주석 이미지를 위한 데이터입니다.
             - (str | tuple | None): Objects 주석 이미지를 위한 데이터입니다.
+            - (list[Image.Image] | None): 잘라낸 이미지(Cropped Images) 목록입니다.
             - (str): 이미지 태그를 보여주기 위한 마크다운 형식의 텍스트입니다.
             - (str): API로부터 받은 원본 JSON 응답을 그대로 보여주는 텍스트입니다.
     """
     # --- 1. 입력 유효성 검사 ---
     # 사용자가 이미지를 업로드하지 않고 버튼을 눌렀을 경우를 처리합니다.
     if not image_path:
-        return None, None, "### 이미지 태그\n", "이미지를 먼저 업로드해주세요."
+        return None, None, None, "### 이미지 태그\n", "이미지를 먼저 업로드해주세요."
 
     # 이미지는 업로드했지만 분석 기능을 하나도 선택하지 않은 경우를 처리합니다.
     if not features:
         return (
             image_path,  # 분석은 못하지만, 업로드된 이미지는 그대로 보여줍니다.
             image_path,
+            [],
             "### 이미지 태그\n",
             "하나 이상의 분석 기능을 선택해주세요.",
         )
@@ -68,11 +73,11 @@ def vision_api_call(
     vision_service = VisionService()
     try:
         # 준비된 서비스 객체를 통해 이미지 분석을 요청합니다.
-        result = vision_service.analyze_image(image_path, features)
+        result = vision_service.analyze_image(image_path, features, smart_crops_aspect_ratios=smart_crops_aspect_ratios)
     except Exception as e:
         # API 호출 중 네트워크 오류, 인증 실패 등 예기치 않은 문제가 발생하면 앱이 중단되지 않도록 처리합니다.
         # 사용자에게 에러가 발생했음을 알리는 메시지를 각 출력창에 표시합니다.
-        return None, None, "### 오류 발생", f"서비스 호출 중 오류가 발생했습니다: {e}"
+        return None, None, None, "### 오류 발생", f"서비스 호출 중 오류가 발생했습니다: {e}"
 
     # --- 3. API 응답 결과 가공: Bounding Box 시각화 ---
     # 'denseCaptions' 결과 처리
@@ -101,6 +106,18 @@ def vision_api_call(
 
     objects_output = (image_path, objects_annotations)
 
+    # 'smartCrops' 결과 처리
+    cropped_images_output = []
+    # 사용자가 'smartCrops' 기능을 요청했고, 실제 응답에도 해당 결과가 있는지 확인합니다.
+    if "smartCrops" in features and result.get("smartCropsResult"):
+        source_image = Image.open(image_path)
+        for crop in result["smartCropsResult"]["values"]:
+            box = crop["boundingBox"]
+            x, y, w, h = box["x"], box["y"], box["w"], box["h"]
+            # PIL의 crop 메서드는 (left, upper, right, lower) 형식의 튜플을 인자로 받습니다.
+            cropped_img = source_image.crop((x, y, x + w, y + h))
+            cropped_images_output.append(cropped_img)
+
     # --- 4. API 응답 결과 가공: Tags ---
     tags_markdown = "### 이미지 태그\n"
     if "tags" in features and result.get("tagsResult"):
@@ -115,8 +132,8 @@ def vision_api_call(
     # --- 5. 원본 응답 준비 및 최종 반환 ---
     raw_json_output = pformat(result)
 
-    # 네 종류의 결과물을 튜플로 묶어 반환합니다.
-    return dense_captions_output, objects_output, tags_markdown, raw_json_output
+    # 다섯 종류의 결과물을 튜플로 묶어 반환합니다.
+    return dense_captions_output, objects_output, cropped_images_output, tags_markdown, raw_json_output
 
 
 def face_api_call(
@@ -165,6 +182,22 @@ def face_api_call(
         return f"서비스 호출 중 오류가 발생했습니다: {e}"
 
 
+def update_smart_crops_visibility(features: list[str]) -> dict:
+    """
+    'smartCrops' 기능 선택 여부에 따라 'Aspect Ratios' 입력 필드의 가시성을 동적으로 조절합니다.
+
+    Gradio의 .change() 이벤트에 연결되어, 체크박스 선택이 변경될 때마다 호출됩니다.
+
+    Args:
+        features (list[str]): 현재 선택된 기능들의 목록입니다.
+
+    Returns:
+        dict: 'Aspect Ratios' Textbox 컴포넌트의 `visible` 속성을 업데이트하기 위한
+              Gradio 업데이트 객체를 반환합니다.
+    """
+    return gr.update(visible="smartCrops" in features)
+
+
 # --- Gradio UI 구성 ---
 # `gr.Blocks`는 Gradio 앱의 전체 레이아웃을 구성하는 최상위 컨테이너입니다.
 # `theme`으로 앱의 전체적인 색상과 스타일을 지정하고, `title`로 웹 브라우저 탭에 표시될 제목을 설정합니다.
@@ -204,6 +237,15 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
                         label="분석할 기능 선택",
                         value=["tags", "caption", "objects"],  # 앱이 시작될 때 기본으로 선택될 값들입니다.
                     )
+
+                    vision_smart_crops_aspect_ratios = gr.Textbox(
+                        label="Aspect Ratios",
+                        value="1.25,0.75",
+                        interactive=True,
+                        placeholder="Define an aspect ratio (defined as width / height) in the range [0.75,1.80]",
+                        visible=False,
+                    )
+
                     # `gr.Button`은 사용자가 클릭할 수 있는 버튼입니다. `variant="primary"`는 버튼을 강조색으로 표시합니다.
                     analyze_button = gr.Button("이미지 분석", variant="primary")
                 
@@ -219,6 +261,11 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
                         with gr.TabItem("객체 탐지 (Objects)"):
                             vision_objects_output = gr.AnnotatedImage(
                                 label="Objects 분석 결과"
+                            )
+
+                        with gr.TabItem("Cropped Images(Smart Crops)"):
+                            vision_cropped_images_output = gr.Gallery(
+                                label="Cropped Images 결과"
                             )
                     
                     # `gr.Markdown`은 텍스트를 서식과 함께 보여주는 출력 컴포넌트입니다. 여기서는 태그 결과를 보여줍니다.
@@ -263,12 +310,23 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
 
     # --- 이벤트 핸들러 연결 ---
     # `analyze_button.click(...)`은 '이미지 분석' 버튼이 클릭되었을 때 어떤 동작을 할지 정의합니다.
+    vision_features.change(
+        fn=update_smart_crops_visibility,
+        inputs=[vision_features],
+        outputs=[vision_smart_crops_aspect_ratios],
+    )
+
     analyze_button.click(
         fn=vision_api_call,  # 클릭 시 `vision_api_call` 함수를 실행합니다.
-        inputs=[vision_image_input, vision_features],  # 함수의 입력으로 `vision_image_input`과 `vision_features`의 현재 값을 전달합니다.
+        inputs=[
+            vision_image_input,
+            vision_features,
+            vision_smart_crops_aspect_ratios,
+        ],  # 함수의 입력으로 `vision_image_input`과 `vision_features`의 현재 값을 전달합니다.
         outputs=[
             vision_dense_captions_output,
             vision_objects_output,
+            vision_cropped_images_output,
             vision_tags_output,
             vision_raw_output,
         ],  # 함수가 반환한 결과들을 순서대로 각 출력 컴포넌트에 전달하여 화면을 업데이트합니다.

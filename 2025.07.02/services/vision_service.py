@@ -52,7 +52,7 @@ class VisionService:
         features: List[str],
         language: str = "en",
         gender_neutral_caption: bool = False,
-        smart_crops_aspect_ratios: Optional[List[float]] = None,
+        smart_crops_aspect_ratios: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         지정된 이미지(URL 또는 로컬 파일)를 분석합니다.
@@ -66,7 +66,9 @@ class VisionService:
                                   예: ["tags", "read", "caption", "objects"]
             language (str, optional): 분석 결과의 언어를 지정합니다. 기본값은 'en'(영어)입니다.
             gender_neutral_caption (bool, optional): 생성되는 캡션을 성 중립적으로 만들지 여부입니다. 기본값은 False입니다.
-            smart_crops_aspect_ratios (Optional[List[float]], optional): 'smartCrops' 기능 사용 시, 원하는 종횡비를 지정합니다. 기본값은 None입니다.
+            smart_crops_aspect_ratios (Optional[str], optional): 'smartCrops' 기능 사용 시, 
+                                                                원하는 종횡비를 쉼표로 구분된 문자열로 지정합니다. 
+                                                                예: "1.0,1.5". 기본값은 None입니다.
 
         Returns:
             Dict[str, Any]: 이미지 분석 결과를 담고 있는 딕셔너리(JSON 형태)입니다.
@@ -98,10 +100,8 @@ class VisionService:
         }
         
         # 스마트 크롭 종횡비가 지정된 경우에만 파라미터에 추가합니다.
-        if smart_crops_aspect_ratios:
-            params["smartcrops-aspect-ratios"] = ",".join(
-                map(str, smart_crops_aspect_ratios)
-            )
+        if "smartCrops" in features and smart_crops_aspect_ratios:
+            params["smartcrops-aspect-ratios"] = smart_crops_aspect_ratios
 
         # --- 3. API 요청 실행 ---
         if is_url:
