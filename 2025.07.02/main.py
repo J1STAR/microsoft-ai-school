@@ -8,6 +8,7 @@ Gradio 라이브러리를 사용하여 사용자가 쉽게 이미지를 업로�
 
 # 표준 라이브러리
 from pprint import pformat  # pprint는 'pretty-print'의 약자로, 복잡한 데이터 구조(예: 딕셔너리, 리스트)를 사람이 보기 좋게 출력할 때 사용합니다.
+import requests  # HTTP 요청을 보내기 위한 라이브러리입니다.
 
 # 서드파티 라이브러리
 import gradio as gr  # Gradio는 몇 줄의 코드만으로 머신러닝 모델을 위한 웹 UI를 빠르고 쉽게 만들 수 있게 해주는 라이브러리입니다.
@@ -20,7 +21,10 @@ from services.face_service import FaceService  # Azure AI Face 서비스와 통�
 
 
 def vision_api_call(
-    image_path: str, features: list[str], smart_crops_aspect_ratios: str
+    vision_image_url: str,
+    vision_image_upload: str,
+    features: list[str],
+    smart_crops_aspect_ratios: str,
 ) -> tuple[
     str | tuple[str, list] | None,
     str | tuple[str, list] | None,
@@ -33,8 +37,8 @@ def vision_api_call(
 
     이 함수는 웹 UI에서 '이미지 분석' 버튼을 클릭했을 때 실행됩니다.
     주요 역할은 다음과 같습니다:
-    1. 사용자가 업로드한 이미지와 선택한 분석 기능을 입력으로 받습니다.
-    2. 입력값이 유효한지 검사합니다 (이미지가 있는지, 기능이 선택되었는지).
+    1. 사용자가 업로드한 이미지 또는 입력한 URL과 선택한 분석 기능을 입력으로 받습니다.
+    2. 입력값이 유효한지 검사합니다 (이미지나 URL이 있는지, 기능이 선택되었는지).
     3. `VisionService`를 통해 Azure에 이미지 분석을 요청합니다.
     4. API 응답을 받아 'denseCaptions'와 'objects', 'smartCrops'를 추출합니다.
     5. 'denseCaptions'와 'objects' 결과는 각각 별도의 이미지 위에 바운딩 박스로 표시되도록 데이터를 가공합니다.
@@ -42,7 +46,8 @@ def vision_api_call(
     7. 가공된 결과들을 웹 UI의 각 출력 컴포넌트에 맞게 반환합니다.
 
     Args:
-        image_path (str): Gradio의 Image 컴포넌트를 통해 사용자가 업로드한 이미지 파일이 임시 저장된 경로입니다.
+        vision_image_url (str): 사용자가 '이미지 Url' 탭에 입력한 URL입니다.
+        vision_image_upload (str): 사용자가 '이미지 업로드' 탭에서 업로드한 이미지의 임시 파일 경로입니다.
         features (list[str]): 사용자가 UI에서 체크박스로 선택한 분석 기능들의 목록입니다. 예: ["tags", "caption"].
         smart_crops_aspect_ratios (str): 'smartCrops' 기능에 사용할 종횡비 목록입니다. 쉼표로 구분합니다.
 
@@ -55,9 +60,11 @@ def vision_api_call(
             - (str): API로부터 받은 원본 JSON 응답을 그대로 보여주는 텍스트입니다.
     """
     # --- 1. 입력 유효성 검사 ---
+    # 업로드된 이미지가 있으면 그것을 우선 사용하고, 없으면 URL을 사용합니다.
+    image_path = vision_image_upload if vision_image_upload else vision_image_url
     # 사용자가 이미지를 업로드하지 않고 버튼을 눌렀을 경우를 처리합니다.
     if not image_path:
-        return None, None, None, "### 이미지 태그\n", "이미지를 먼저 업로드해주세요."
+        return None, None, None, "### 이미지 태그\n", "이미지를 먼저 업로드하거나 URL을 입력해주세요."
 
     # 이미지는 업로드했지만 분석 기능을 하나도 선택하지 않은 경우를 처리합니다.
     if not features:
@@ -110,7 +117,7 @@ def vision_api_call(
     cropped_images_output = []
     # 사용자가 'smartCrops' 기능을 요청했고, 실제 응답에도 해당 결과가 있는지 확인합니다.
     if "smartCrops" in features and result.get("smartCropsResult"):
-        source_image = Image.open(image_path)
+        source_image = Image.open(image_path) if vision_image_upload else Image.open(requests.get(image_path, stream=True).raw)
         for crop in result["smartCropsResult"]["values"]:
             box = crop["boundingBox"]
             x, y, w, h = box["x"], box["y"], box["w"], box["h"]
@@ -217,11 +224,20 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
             with gr.Row():
                 # `gr.Column`은 컴포넌트들을 세로로 쌓습니다. `scale`은 열의 너비 비율을 조정합니다.
                 with gr.Column(scale=1):
-                    # `gr.Image`는 사용자가 이미지를 업로드할 수 있는 입력 컴포넌트입니다.
-                    # `type="filepath"`는 업로드된 이미지를 파일로 저장하고 그 경로를 함수에 전달하도록 설정합니다.
-                    vision_image_input = gr.Image(
-                        type="filepath", label="이미지 업로드"
-                    )
+                    with gr.Tabs("이미지 선택"):
+                        with gr.TabItem("이미지 Url"):
+                            vision_image_url = gr.Textbox(
+                                label="이미지 Url",
+                                value="https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/images/windows-kitchen.jpg",
+                                interactive=True,
+                            )
+                        with gr.TabItem("이미지 업로드"):
+                            # `gr.Image`는 사용자가 이미지를 업로드할 수 있는 입력 컴포넌트입니다.
+                            # `type="filepath"`는 업로드된 이미지를 파일로 저장하고 그 경로를 함수에 전달하도록 설정합니다.
+                            vision_image_upload = gr.Image(
+                                type="filepath", label="이미지 업로드"
+                            )
+
                     # `gr.CheckboxGroup`은 여러 개의 체크박스를 그룹으로 묶어 제공합니다.
                     # 사용자는 여러 분석 기능을 동시에 선택할 수 있습니다.
                     vision_features = gr.CheckboxGroup(
@@ -319,10 +335,11 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Azure AI Vision & Face Demo") as d
     analyze_button.click(
         fn=vision_api_call,  # 클릭 시 `vision_api_call` 함수를 실행합니다.
         inputs=[
-            vision_image_input,
+            vision_image_url,
+            vision_image_upload,
             vision_features,
             vision_smart_crops_aspect_ratios,
-        ],  # 함수의 입력으로 `vision_image_input`과 `vision_features`의 현재 값을 전달합니다.
+        ],  # 함수의 입력으로 두 이미지 입력 컴포넌트와 `vision_features`의 현재 값을 전달합니다.
         outputs=[
             vision_dense_captions_output,
             vision_objects_output,
