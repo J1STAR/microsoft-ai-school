@@ -1,4 +1,4 @@
-### [microsoft-ai-school/2025.06.30](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.30)
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.06.30](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.30)
 
 # 📅 2025년 6월 30일: Gradio와 Azure OpenAI를 활용한 다중 모드 AI 챗봇 개발
 

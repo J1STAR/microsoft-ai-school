@@ -1,4 +1,4 @@
-### [microsoft-ai-school/2025.06.25](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.25)
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.06.25](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.25)
 
 # 📅 2025년 6월 25일: Azure AI Document Intelligence를 활용한 문서 분석 🧠
 

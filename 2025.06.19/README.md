@@ -1,4 +1,4 @@
-### [microsoft-ai-school/2025.06.19](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.19)
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.06.19](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.19)
 
 # 2025년 6월 19일 학습 기록: Azure OpenAI Service 기능 심화
 

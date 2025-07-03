@@ -1,4 +1,4 @@
-### [microsoft-ai-school/2025.07.02 ~ 2025.07.03](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.07.02)
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.07.02 ~ 2025.07.03](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.07.02)
 
 # 📅 2025년 7월 2일: Azure Vision & Face 서비스를 활용한 이미지 분석 웹 앱 개발
 

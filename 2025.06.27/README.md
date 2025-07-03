@@ -1,4 +1,4 @@
-### [microsoft-ai-school/2025.06.27](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.27)
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.06.27](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.27)
 
 # 📅 2025년 6월 27일: Azure AI 음성 및 사용자 지정 언어 서비스를 활용한 대화형 AI 개발
 

@@ -1,4 +1,4 @@
-### [microsoft-ai-school/2025.06.23](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.23)
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.06.23](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.06.23)
 
 # 2025년 6월 23일 학습 기록
 

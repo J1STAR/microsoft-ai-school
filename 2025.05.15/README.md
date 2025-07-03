@@ -1,4 +1,4 @@
-### [microsoft-ai-school/2025.05.15](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.15)
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.05.15](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.05.15)
 
 # 📅 2025년 5월 15일: Scikit-learn을 활용한 회귀 모델링 및 파이프라인 구축
 
