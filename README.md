@@ -12,7 +12,7 @@
 <a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
 
 ## Contact
-<a href="mailto:j.1star.0726@gmail.com" style="display:flex; align-items:center; gap:8px"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>j.1star.0726@gmail.com</a>
+<a href="mailto:j.1star.0726@gmail.com" style="display:flex; align-items:center; gap:8px"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>&nbsp;j.1star.0726@gmail.com</a>
 
 ---
 
@@ -179,3 +179,4 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.06.30](./2025.06.30/) | **[Project]** `Gradio`와 `Azure OpenAI`를 활용한 다중 모드 AI 챗봇 개발 | `Gradio`, `Azure OpenAI`, `STT/TTS` |
 | [2025.07.02](./2025.07.02/) | **[Project]** `Azure Vision & Face` API를 활용한 이미지 분석 앱 기반 구축 | `Gradio`, `Azure AI Services` |
 | [2025.07.03](./2025.07.02/) | **[Project]** 이미지 분석 앱 UX 고도화: 동적 UI 및 `Pillow` 결과 처리 | `Gradio`, `Pillow` |
+| [2025.07.04](./2025.07.04/) | **[Project]** `Azure Custom Vision` SDK를 활용한 객체 탐지 모델 구축 자동화 | `Azure Custom Vision`, `Pillow` |
