@@ -106,5 +106,27 @@ if __name__ == "__main__":
                 inputs=min_neighbors_slider,  # 함수의 입력
             )
 
+        # 'Real-Time Yolo Detection' 탭을 생성합니다.
+        with gr.Tab("🎥 Real-Time Yolo Detection"):
+            with gr.Row():
+                with gr.Column():
+                    gr.Markdown("## 입력 영상")
+                    # 웹캠 입력을 위한 Image 컴포넌트 (YOLO용)
+                    input_webcam = gr.Image(
+                        sources="webcam", streaming=True, mirror_webcam=False
+                    )
+
+                with gr.Column():
+                    gr.Markdown("## Yolo Detection")
+                    # YOLO 탐지 결과가 출력될 Image 컴포넌트
+                    output_webcam = gr.Image()
+
+            # 웹캠 스트림을 YOLO 탐지 함수와 연결합니다.
+            input_webcam.stream(
+                fn=opencv_service.yolo.detect,  # 스트림 프레임마다 YOLO 탐지 함수 실행
+                inputs=input_webcam,  # 함수의 입력
+                outputs=output_webcam,  # 함수의 출력
+            )
+
     # 생성된 Gradio 데모를 실행하여 웹 서버를 시작합니다.
     demo.launch()
