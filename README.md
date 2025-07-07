@@ -180,3 +180,4 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.07.02](./2025.07.02/) | **[Project]** `Azure Vision & Face` API를 활용한 이미지 분석 앱 기반 구축 | `Gradio`, `Azure AI Services` |
 | [2025.07.03](./2025.07.02/) | **[Project]** 이미지 분석 앱 UX 고도화: 동적 UI 및 `Pillow` 결과 처리 | `Gradio`, `Pillow` |
 | [2025.07.04](./2025.07.04/) | **[Project]** `Azure Custom Vision` SDK를 활용한 객체 탐지 모델 구축 자동화 | `Azure Custom Vision`, `Pillow` |
+| [2025.07.07](./2025.07.07/) | **[Project]** `OpenCV`와 `YOLOv3`를 활용한 실시간 객체 탐지 웹 앱 | `Gradio`, `OpenCV` |
