@@ -130,9 +130,9 @@ dependencies = [
     "threadpoolctl==3.6.0",
     "tifffile==2025.3.30",
     "tomlkit==0.13.2",
-    "torch==2.7.0",
-    "torchaudio==2.7.0",
-    "torchvision==0.22.0",
+    "torch>=2.7.1+cu128",
+    "torchaudio>=2.7.1+cu128",
+    "torchvision>=0.22.1+cu128",
     "tornado==6.4.2",
     "tqdm==4.67.1",
     "traitlets==5.14.3",
@@ -142,6 +142,7 @@ dependencies = [
     "typing-extensions==4.13.2",
     "typing-inspection==0.4.1",
     "tzdata==2025.2",
+    "ultralytics>=8.3.162",
     "urllib3==2.4.0",
     "uvicorn==0.34.2",
     "wcwidth==0.2.13",
@@ -152,3 +153,9 @@ dependencies = [
     "xyzservices==2025.4.0",
     "yarl==1.20.1",
 ]
+
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
