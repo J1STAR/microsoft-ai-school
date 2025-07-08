@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from PIL import Image, ImageFont, ImageDraw
+from ultralytics import YOLO
 from pprint import pprint
 
 # cv2.data.haarcascades에 포함된 사용 가능한 캐스케이드 파일 목록
@@ -120,7 +121,7 @@ class _Face:
         self.min_neighbors = min_neighbors
 
 
-class _Yolo:
+class _YoloV3:
     """YOLO(You Only Look Once) 모델을 사용하여 객체 탐지를 수행하는 클래스."""
 
     def __init__(self, weights_path: str, config_path: str, names_path: str) -> None:
@@ -166,7 +167,7 @@ class _Yolo:
 
         # 네트워크의 모든 레이어 이름을 가져옵니다.
         # layer_names = self.net.getLayerNames()
-        
+
         # 출력 레이어(연결되지 않은 레이어)의 인덱스를 가져와 해당 레이어의 이름을 찾습니다. 이 레이어들에서 최종 탐지 결과가 나옵니다.
         # output_layers = [layer_names[i - 1] for i in self.net.getUnconnectedOutLayers()]
         output_layers = self.net.getUnconnectedOutLayersNames()
@@ -236,7 +237,7 @@ class OpenCVService:
 
         # 내부적으로 사용할 _Face와 _Yolo 헬퍼 클래스를 초기화합니다.
         self._face = _Face(face_cascade="haarcascade_frontalface_default")
-        self._yolo = _Yolo(
+        self._yolo_v3 = _YoloV3(
             weights_path=os.path.join(
                 os.path.dirname(__file__), "..", "models", "yolov3", "yolov3.weights"
             ),
@@ -279,11 +280,15 @@ class OpenCVService:
         return self._face
 
     @property
-    def yolo(self) -> _Yolo:
+    def yolo_v3(self) -> _YoloV3:
         """
-        YOLO 객체 탐지(_Yolo) 서비스 인스턴스를 반환하는 프로퍼티.
+        YOLO 객체 탐지(_YoloV3) 서비스 인스턴스를 반환하는 프로퍼티.
 
         Returns:
-            _Yolo: _Yolo 클래스의 인스턴스.
+            _YoloV3: _YoloV3 클래스의 인스턴스.
         """
-        return self._yolo
+        return self._yolo_v3
+        """
+
+        Returns:
+        """
