@@ -228,6 +228,70 @@ class _YoloV3:
         return np.array(pil_image)
 
 
+class _YoloV8n:
+    """YOLOv8 모델을 사용하여 실시간 객체 탐지를 수행하는 클래스."""
+
+    def __init__(self) -> None:
+        """
+        _YoloV8n 클래스의 생성자.
+
+        YOLOv8 모델을 로드하고, 사용 가능한 경우 CUDA(GPU)로 모델을 이동시킵니다.
+        """
+        self.model = YOLO(
+            os.path.join(
+                os.path.dirname(__file__), "..", "models", "yolov8", "yolov8n.pt"
+            )
+        ).to("cuda")
+
+    def detect(self, image: np.ndarray) -> np.ndarray:
+        """
+        입력된 이미지에서 객체를 탐지하고, 결과 바운딩 박스와 레이블을 그립니다.
+
+        Args:
+            image (np.ndarray): 객체를 탐지할 입력 이미지 (RGB 형식의 NumPy 배열).
+
+        Returns:
+            np.ndarray: 탐지된 객체 정보가 그려진 이미지 (RGB 형식의 NumPy 배열).
+        """
+        # OpenCV의 NumPy 배열을 PIL 이미지 객체로 변환합니다. 텍스트 렌더링에 PIL을 사용하기 위함입니다.
+        pil_image = Image.fromarray(image)
+        # PIL 이미지에 그리기 위한 Draw 객체를 생성합니다.
+        draw = ImageDraw.Draw(pil_image)
+
+        # YOLOv8 모델을 사용하여 이미지에서 객체를 예측합니다.
+        results = self.model.predict(pil_image)
+        # 탐지된 객체들에 대한 정보 처리
+        for result in results:
+            # `result.boxes`에는 탐지된 모든 객체의 바운딩 박스 정보가 포함됩니다.
+            for box in result.boxes:
+                # 바운딩 박스 좌표를 정수형으로 변환합니다. (x1, y1, x2, y2)
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                # 클래스 ID와 이름을 가져옵니다.
+                cls = int(box.cls[0])
+                name = self.model.names[cls]
+                # 객체에 대한 신뢰도 점수를 가져옵니다.
+                conf = float(box.conf[0])
+
+                # 신뢰도가 0.5 이상인 경우에만 결과 이미지에 표시합니다.
+                if conf > 0.5:
+                    # 레이블 텍스트를 생성합니다 (예: "person 0.95").
+                    label = f"{name} {conf:.2f}"
+                    # 바운딩 박스를 빨간색으로 그립니다.
+                    draw.rectangle([x1, y1, x2, y2], outline="red", width=2)
+
+                    # 텍스트가 잘 보이도록 레이블 배경을 먼저 그립니다.
+                    # 텍스트 길이에 따라 배경 상자의 너비를 동적으로 계산합니다. (근사치)
+                    draw.rectangle(
+                        [x1, y1 - 20, x1 + len(label) * 10, y1],
+                        fill="red",
+                    )
+                    # 레이블 텍스트를 흰색으로 그립니다.
+                    draw.text((x1, y1 - 20), label, font=font, fill="white")
+
+        # 최종적으로 그려진 PIL 이미지를 NumPy 배열로 변환하여 반환합니다.
+        return np.array(pil_image)
+
+
 class OpenCVService:
     """얼굴 탐지 및 YOLO 객체 탐지 기능을 제공하는 메인 서비스 클래스."""
 
@@ -252,6 +316,7 @@ class OpenCVService:
                 "coco_korean.names",
             ),
         )
+        self._yolo_v8n = _YoloV8n()
 
     def get_cascades(self) -> List[str]:
         """
@@ -288,7 +353,13 @@ class OpenCVService:
             _YoloV3: _YoloV3 클래스의 인스턴스.
         """
         return self._yolo_v3
+
+    @property
+    def yolo_v8n(self) -> _YoloV8n:
         """
+        YOLO 객체 탐지(_YoloV8n) 서비스 인스턴스를 반환하는 프로퍼티.
 
         Returns:
+            _YoloV8n: _YoloV8n 클래스의 인스턴스.
         """
+        return self._yolo_v8n
