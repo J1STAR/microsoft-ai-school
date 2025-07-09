@@ -182,3 +182,4 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.07.04](./2025.07.04/) | **[Project]** `Azure Custom Vision` SDK를 활용한 객체 탐지 모델 구축 자동화 | `Azure Custom Vision`, `Pillow` |
 | [2025.07.07](./2025.07.07/) | **[Project]** `OpenCV`와 `YOLO`(v3)를 활용한 실시간 객체 탐지 웹 앱 | `Gradio`, `OpenCV`, `YOLO` |
 | [2025.07.08](./2025.07.08/) | **[Project]** `Gradio`, `YOLO`(v8), `Azure OpenAI`를 결합한 멀티모달 AI 앱 | `Gradio`, `Azure OpenAI`, `YOLO` |
+| [2025.07.09](./2025.07.09/) | **[Project]** HTML 기초 학습 및 시맨틱 마크업을 활용한 이력서 페이지 제작 | `HTML`, `CSS` |
