@@ -1,0 +1,370 @@
+<!--
+    HTML (HyperText Markup Language)은 웹 페이지의 구조를 정의하는 표준 마크업 언어입니다.
+    'HyperText'는 다른 텍스트로의 링크를 의미하며, 'Markup Language'는 태그를 사용하여 문서의 구조와 내용을 정의하는 언어를 의미합니다.
+    HTML은 웹 브라우저가 웹 페이지의 콘텐츠를 어떻게 렌더링할지 알려주는 역할을 합니다.
+-->
+<!DOCTYPE html> <!-- 이 선언은 문서 유형을 정의하며, 웹 브라우저에게 이 문서가 HTML5로 작성되었음을 알립니다. 모든 HTML 문서의 가장 처음에 위치해야 합니다. -->
+<html lang="ko"> <!-- HTML 문서의 최상위 요소(root element)입니다. 'lang' 속성은 페이지의 기본 언어를 지정합니다. 'ko'는 한국어를 의미합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/html) -->
+<head>
+    <!-- <head> 태그는 HTML 문서의 메타데이터(metadata)를 포함하는 부분입니다. 메타데이터는 문서 자체에 대한 정보로, 웹 페이지에 직접적으로 표시되지 않습니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/head) -->
+    <meta charset="UTF-8"> <!-- 문서의 문자 인코딩을 지정합니다. UTF-8은 전 세계 대부분의 문자를 포함하는 가장 일반적인 문자 집합으로, 한글 깨짐 현상을 방지합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/meta) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 웹 페이지가 다양한 장치(데스크톱, 태블릿, 모바일 등)에서 잘 보이도록 뷰포트를 설정합니다. width=device-width는 페이지의 너비를 장치의 화면 너비에 맞추고, initial-scale=1.0은 초기 확대/축소 수준을 1로 설정합니다. -->
+    <title>HTML 기초</title> <!-- 웹 브라우저의 탭이나 창 제목에 표시될 문서의 제목을 정의합니다. 검색 엔진 최적화(SEO)에도 중요한 역할을 합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/title) -->
+</head>
+<body>
+    <!-- <body> 태그는 웹 페이지에 표시되는 모든 콘텐츠를 포함하는 부분입니다. 텍스트, 이미지, 링크, 비디오 등 사용자가 직접 보는 모든 요소가 이 태그 안에 위치합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/body) -->
+    Hello World!
+
+    <!-- <h1> ~ <h6> 태그는 제목(Heading)을 나타냅니다. h1이 가장 중요한 제목이며, 숫자가 커질수록 중요도가 낮아집니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/Heading_Elements) -->
+    <h1>HTML 시작하기</h1>
+
+    <!-- 주석 -->
+    <!-- 이 안에 작성된 내용은 주석(Comment)으로 처리되어 웹 브라우저 화면에 표시되지 않습니다. 개발자가 코드에 대한 설명을 남길 때 사용합니다. -->
+
+    <!-- <p> 태그는 단락(Paragraph)을 나타냅니다. 텍스트 블록을 만들 때 사용되며, 문단과 문단 사이에 자동으로 여백이 생깁니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/p) -->
+    <p>
+        CSS (Cascading Style Sheets)는 HTML 문서의 스타일(디자인 및 레이아웃)을 지정하는 언어입니다.
+    </p>
+
+    <p>
+        JavaScript는 웹 페이지를 동적으로 만들고 사용자와 상호작용할 수 있도록 하는 프로그래밍 언어입니다.
+    </p>
+
+    <!-- <button> 태그는 사용자가 클릭할 수 있는 버튼을 만듭니다. 주로 JavaScript와 함께 사용하여 특정 동작을 실행시킵니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/button) -->
+    <button>시작</button>
+
+    <hr> <!-- <hr> 태그는 주제 변경을 나타내는 수평선을 만듭니다. 내용의 분리를 시각적으로 보여줄 때 사용합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/hr) -->
+
+    <h2>주요 태그 알아보기</h2>
+
+    <!-- <a> 태그는 하이퍼링크(Hyperlink)를 만듭니다. 'href' 속성에 연결할 URL을 지정합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/a) -->
+    <p>
+        더 많은 정보는 <a href="https://developer.mozilla.org/ko/docs/Web/HTML" target="_blank">MDN HTML 문서</a>에서 확인하세요.
+        <!-- target="_blank" 속성은 링크를 새 탭에서 열도록 합니다. -->
+    </p>
+
+    <h4>&lt;a&gt; 태그의 다른 활용</h4>
+    <ul>
+        <!-- href 속성값에 "#"과 id 속성값을 사용하면 같은 페이지 내의 특정 요소로 스크롤을 이동시킬 수 있습니다. -->
+        <li><a href="#footer-section">페이지 하단으로 이동하기</a></li>
+        <!-- "mailto:"를 사용하면 기본 이메일 클라이언트를 실행하여 메일을 보낼 수 있도록 합니다. -->
+        <li><a href="mailto:j.1star.0726@gmail.com">이메일 보내기</a></li>
+        <!-- "tel:"을 사용하면 모바일 장치에서 전화를 걸 수 있는 기능을 실행합니다. -->
+        <li><a href="tel:010-1234-5678">전화 걸기</a></li>
+    </ul>
+
+    <!-- <img> 태그는 이미지를 삽입합니다. 'src' 속성에 이미지 파일의 경로를, 'alt' 속성에는 이미지를 표시할 수 없을 때 나타낼 대체 텍스트를 지정합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/img) -->
+    <!-- 'alt' 속성은 웹 접근성을 위해 매우 중요합니다. -->
+    <img src="https://via.placeholder.com/150" alt="150x150 크기의 회색 사각형 이미지 예시">
+
+    <h4>&lt;img&gt; 태그의 다른 활용</h4>
+    <!-- width와 height 속성을 사용하여 이미지의 크기를 직접 지정할 수 있습니다. -->
+    <img src="https://via.placeholder.com/100" alt="100x100 이미지" width="100" height="100">
+    <!-- style 속성을 사용하여 이미지를 반응형으로 만들 수 있습니다. max-width: 100%는 이미지가 부모 요소의 너비를 넘지 않도록 하여 화면 크기가 작아져도 이미지가 잘리지 않게 합니다. -->
+    <p>아래 이미지는 너비가 500px이지만, max-width 스타일 덕분에 화면이 작아지면 함께 작아집니다.</p>
+    <img src="https://via.placeholder.com/500" alt="500x500 이미지" style="max-width: 100%; height: auto;">
+
+    <!-- <ul>, <ol>, <li> 태그는 목록을 만듭니다. -->
+    <h3>순서 없는 목록 (Unordered List)</h3>
+    <!-- <ul> 태그는 순서가 중요하지 않은 목록을 만듭니다. 각 항목 앞에는 보통 글머리 기호(bullet)가 붙습니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/ul) -->
+    <ul>
+        <li>HTML</li> <!-- <li> 태그는 목록의 각 항목(List Item)을 나타냅니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/li) -->
+        <li>CSS</li>
+        <li>JavaScript</li>
+    </ul>
+
+    <h3>순서 있는 목록 (Ordered List)</h3>
+    <!-- <ol> 태그는 순서가 중요한 목록을 만듭니다. 각 항목 앞에는 보통 숫자가 붙습니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/ol) -->
+    <ol>
+        <li>기획</li>
+        <li>디자인</li>
+        <li>개발</li>
+    </ol>
+
+    <!-- <div>와 <span> 태그는 콘텐츠를 그룹화하는 데 사용됩니다. -->
+    <!-- <div> 태그는 블록(block) 레벨 요소로, 여러 요소를 묶어 하나의 구역으로 나눌 때 사용합니다. 주로 레이아웃을 구성할 때 활용됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/div) -->
+    <div style="border: 1px solid black; padding: 10px; margin-top: 10px;">
+        <h4>이것은 div 영역입니다.</h4>
+        <p>이 단락은 div 내부에 있습니다.</p>
+    </div>
+
+    <!-- <span> 태그는 인라인(inline) 요소로, 텍스트의 일부를 묶어 스타일을 적용하거나 특정 부분에 의미를 부여할 때 사용합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/span) -->
+    <p>
+        이 문장에서 <span style="color: red; font-weight: bold;">이 부분만</span> 다르게 스타일을 적용할 수 있습니다.
+    </p>
+
+    <hr>
+
+    <h2>시맨틱 태그 (Semantic Tags)</h2>
+    <!--
+        시맨틱 태그는 브라우저와 개발자 모두에게 코드의 의미를 명확하게 전달하는 태그입니다.
+        예를 들어, <div> 태그는 단순히 콘텐츠를 묶는 역할을 하지만, <header>, <footer>, <nav>, <main> 등의 시맨틱 태그는
+        그 안에 어떤 종류의 콘텐츠가 들어있는지 의미를 명확하게 알려줍니다.
+        이는 코드 가독성을 높이고, 검색 엔진 최적화(SEO)와 웹 접근성을 향상시키는 데 도움이 됩니다.
+    -->
+
+    <!-- <header> 태그: 페이지나 특정 섹션의 머리말 부분을 나타냅니다. 주로 로고, 제목, 내비게이션 메뉴 등이 포함됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/header) -->
+    <header style="border: 1px solid blue; padding: 10px; margin-bottom: 10px;">
+        <h1>웹사이트 제목</h1>
+        <!-- <nav> 태그: 다른 페이지나 현재 페이지의 다른 부분으로 연결되는 내비게이션 링크들의 집합을 나타냅니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/nav) -->
+        <nav>
+            <ul>
+                <li><a href="#">홈</a></li>
+                <li><a href="#">소개</a></li>
+                <li><a href="#">연락처</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- <main> 태그: 문서의 핵심적인 콘텐츠를 나타냅니다. 문서에서 한 번만 사용해야 합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/main) -->
+    <main style="border: 1px solid green; padding: 10px; margin-bottom: 10px;">
+        <!-- <section> 태그: 문서의 독립적인 구획을 나타냅니다. 보통 제목(h1-h6)을 포함합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/section) -->
+        <section>
+            <h2>주요 뉴스</h2>
+            <!-- <article> 태그: 독립적으로 구분되거나 재사용 가능한 콘텐츠를 나타냅니다. 예를 들어, 블로그 포스트, 뉴스 기사, 포럼 글 등이 해당됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/article) -->
+            <article>
+                <h3>첫 번째 기사</h3>
+                <p>이것은 첫 번째 기사의 내용입니다...</p>
+            </article>
+            <article>
+                <h3>두 번째 기사</h3>
+                <p>이것은 두 번째 기사의 내용입니다...</p>
+            </article>
+        </section>
+    </main>
+
+    <!-- <footer> 태그: 페이지나 특정 섹션의 꼬리말 부분을 나타냅니다. 주로 저작권 정보, 연락처, 관련 링크 등이 포함됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/footer) -->
+    <footer id="footer-section" style="border: 1px solid purple; padding: 10px; margin-top: 10px;">
+        <p>&copy; 2024 나의 웹사이트. 모든 권리 보유.</p>
+        <!-- &copy;는 저작권 기호(©)를 나타내는 HTML 엔티티입니다. -->
+    </footer>
+
+    <hr>
+
+    <h2>기타 텍스트 관련 태그</h2>
+
+    <!-- <abbr> 태그: 약어(Abbreviation)나 머리글자어(Acronym)를 나타냅니다. title 속성을 사용하여 전체 단어나 설명을 제공할 수 있습니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/abbr) -->
+    <p><abbr title="World Health Organization">WHO</abbr>는 1948년에 설립되었습니다.</p>
+
+    <!-- <small> 태그: 덧붙이는 글이나 저작권 정보와 같이 작은 글씨로 표현될 필요가 있는 텍스트를 나타냅니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/small) -->
+    <p>이 웹사이트의 모든 콘텐츠는 저작권법의 보호를 받습니다. <small>무단 전재 및 재배포를 금지합니다.</small></p>
+
+    <!-- <sub> 태그: 아래 첨자(subscript) 텍스트를 나타냅니다. 주로 화학식이나 수학 공식에 사용됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/sub) -->
+    <p>물의 화학식은 H<sub>2</sub>O 입니다.</p>
+
+    <!-- <sup> 태그: 위 첨자(superscript) 텍스트를 나타냅니다. 주로 각주, 서수, 수학의 거듭제곱 등에 사용됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/sup) -->
+    <p>피타고라스의 정리는 a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> 입니다.</p>
+
+    <hr>
+
+    <h2>정의 목록 및 표 관련 태그</h2>
+
+    <!-- <dl>, <dt>, <dd> 태그: 용어와 그에 대한 설명을 목록으로 만들 때 사용합니다. -->
+    <h3>정의 목록 (Description List)</h3>
+    <!-- <dl> 태그는 정의 목록(Description List)을 감싸는 컨테이너입니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/dl) -->
+    <dl>
+        <!-- <dt> 태그는 정의할 용어(Description Term)를 나타냅니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/dt) -->
+        <dt>HTML</dt>
+        <!-- <dd> 태그는 용어에 대한 설명(Description Details)을 나타냅니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/dd) -->
+        <dd>HyperText Markup Language의 약자로, 웹 페이지의 구조를 만드는 데 사용되는 마크업 언어입니다.</dd>
+        
+        <dt>CSS</dt>
+        <dd>Cascading Style Sheets의 약자로, HTML 문서의 스타일과 디자인을 담당합니다.</dd>
+    </dl>
+
+    <!-- <table> 태그: 데이터를 표 형태로 구성할 때 사용합니다. -->
+    <h3>표 (Table)</h3>
+    <table border="1" style="width:100%; border-collapse: collapse;">
+        <!-- <caption> 태그는 표의 제목이나 설명을 추가합니다. 표의 상단에 중앙 정렬되어 표시됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/caption) -->
+        <caption>프로그래밍 언어 비교</caption>
+        <!-- <thead> 태그는 표의 머리글(header) 그룹을 정의합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/thead) -->
+        <thead>
+            <!-- <tr> 태그는 표의 한 행(Table Row)을 정의합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/tr)-->
+            <tr>
+                <!-- <th> 태그는 표의 제목 셀(Table Header)을 정의합니다. 텍스트가 굵게 표시되고 중앙 정렬됩니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/th) -->
+                <th>언어</th>
+                <th>주요 용도</th>
+                <th>장점</th>
+            </tr>
+        </thead>
+        <!-- <tbody> 태그는 표의 본문(body) 그룹을 정의합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/tbody) -->
+        <tbody>
+            <tr>
+                <!-- <td> 태그는 표의 데이터 셀(Table Data)을 정의합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/td) -->
+                <td>Python</td>
+                <td>웹 개발, 데이터 과학, AI</td>
+                <td>문법이 쉽고 라이브러리가 풍부함</td>
+            </tr>
+            <tr>
+                <td>JavaScript</td>
+                <td>프론트엔드, 백엔드 웹 개발</td>
+                <td>웹 브라우저에서 바로 실행 가능</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>표 (Table) - 고급 기능 (rowspan, colspan, tfoot)</h3>
+    <!-- 'border="1"'은 표의 테두리를 표시하는 오래된 속성입니다. 현대 웹 개발에서는 CSS의 border 속성을 사용하는 것이 권장됩니다. -->
+    <table border="1" style="width:100%; border-collapse: collapse; text-align: center;">
+        <caption>프로그래밍 언어 및 주요 프레임워크</caption>
+        <!-- <colgroup>과 <col> 태그: 표의 열(column)을 그룹화하고 스타일을 적용할 때 사용합니다. <caption> 태그 바로 다음에 위치해야 합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/colgroup) -->
+        <colgroup>
+            <!-- <col> 태그는 표의 열에 대한 속성을 정의합니다. style 속성을 사용해 배경색 등 공통 스타일을 지정할 수 있습니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/col) -->
+            <!-- 첫 번째 열의 배경색을 지정합니다. -->
+            <col style="background-color: #f2f2f2;">
+            <!-- 두 번째 열은 기본 스타일을 유지합니다. -->
+            <col>
+            <!-- 세 번째 열의 너비를 50%로 지정합니다. -->
+            <col style="width: 50%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>언어</th>
+                <th>프레임워크</th>
+                <th>주요 용도</th>
+            </tr>
+        </thead>
+        <!-- <tfoot> 태그는 표의 바닥글(footer) 그룹을 정의합니다. 주로 합계나 요약 정보를 담습니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/tfoot) -->
+        <tfoot>
+            <tr>
+                <!-- colspan="2" 속성은 해당 셀이 지정된 수만큼의 열(column)을 병합하도록 합니다. 여기서는 2개의 열을 병합합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/td#attr-colspan) -->
+                <td colspan="2">총 항목 수</td>
+                <td>3개 언어/프레임워크</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr>
+                <!-- rowspan="2" 속성은 해당 셀이 지정된 수만큼의 행(row)을 병합하도록 합니다. 여기서는 2개의 행을 병합합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/td#attr-rowspan) -->
+                <td rowspan="2" style="vertical-align: middle;">JavaScript</td>
+                <td>React</td>
+                <td>프론트엔드 UI 개발</td>
+            </tr>
+            <tr>
+                <td>Node.js</td>
+                <td>백엔드 서버 개발</td>
+            </tr>
+            <tr>
+                <td>Python</td>
+                <td>Django</td>
+                <td>웹 개발, 데이터 과학, AI</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>멀티미디어와 폼 태그</h2>
+
+    <!-- <audio> 태그: 사운드 콘텐츠를 재생할 때 사용합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/audio) -->
+    <h3>오디오 (Audio)</h3>
+    <p>아래는 'controls' 속성을 사용하여 재생 컨트롤을 표시한 오디오 예제입니다.</p>
+    <audio controls>
+      <!-- <source> 태그를 사용하면 브라우저가 지원하는 첫 번째 오디오 파일을 재생합니다. -->
+      <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg">
+      <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+      오디오 태그를 지원하지 않는 브라우저입니다.
+    </audio>
+    <!--
+        <audio>의 주요 속성:
+        - controls: 재생, 정지, 볼륨 조절 등 컨트롤 UI를 표시합니다.
+        - autoplay: 페이지 로드 시 자동으로 재생을 시작합니다. (사용자 경험을 위해 보통 muted와 함께 사용됩니다.)
+        - loop: 오디오 재생이 끝나면 다시 처음부터 재생합니다.
+        - muted: 음소거 상태로 재생을 시작합니다.
+    -->
+
+    <!-- <video> 태그: 비디오 콘텐츠를 재생할 때 사용합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/video) -->
+    <h3>비디오 (Video)</h3>
+    <p>아래는 'controls', 'width', 'poster' 속성을 사용한 비디오 예제입니다.</p>
+    <video width="400" controls poster="https://via.placeholder.com/400x225.png?text=Video+Poster">
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      <source src="https://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+      비디오 태그를 지원하지 않는 브라우저입니다.
+    </video>
+    <!--
+        <video>의 주요 속성:
+        - controls: 재생, 정지 등 컨트롤 UI를 표시합니다.
+        - width/height: 비디오 플레이어의 너비와 높이를 지정합니다.
+        - poster: 비디오가 재생되기 전에 표시될 이미지의 URL을 지정합니다.
+        - autoplay, loop, muted: <audio> 태그와 동일한 기능을 합니다.
+    -->
+
+    <hr>
+
+    <!-- <form> 태그: 사용자로부터 입력을 받기 위한 양식을 정의합니다. (https://developer.mozilla.org/ko/docs/Web/HTML/Element/form) -->
+    <h3>폼 (Form)과 입력 (Input)</h3>
+    <!--
+        <form> 태그는 사용자 입력을 받는 여러 요소들을 감싸는 컨테이너입니다.
+        - action: 폼 데이터가 전송될 URL을 지정합니다. (예: 서버의 특정 API 주소)
+        - method: 폼 데이터를 전송할 때 사용할 HTTP 메서드를 지정합니다. (주로 'GET' 또는 'POST')
+    -->
+    <form action="/submit-form-example" method="post" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
+      <!-- <fieldset> 태그는 폼 안에서 관련된 요소들을 그룹화합니다. <legend> 태그로 그룹의 제목을 붙일 수 있습니다. -->
+      <fieldset>
+        <legend>개인 정보</legend>
+
+        <!-- <label> 태그는 입력 필드의 제목을 나타냅니다. for 속성값과 input의 id 속성값을 일치시키면, 라벨을 클릭했을 때 해당 입력 필드에 포커스가 갑니다. -->
+        <p>
+          <label for="username">사용자 이름:</label>
+          <input type="text" id="username" name="username" required placeholder="이름을 입력하세요">
+        </p>
+        <p>
+          <label for="password">비밀번호:</label>
+          <input type="password" id="password" name="password" required minlength="8">
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <legend>추가 정보</legend>
+        
+        <p>
+          <label for="email">이메일:</label>
+          <input type="email" id="email" name="email" placeholder="user@example.com">
+        </p>
+        <p>
+            <label for="birthdate">생년월일:</label>
+            <input type="date" id="birthdate" name="birthdate">
+        </p>
+        <div>
+          <p>관심 분야 (중복 선택 가능):</p>
+          <input type="checkbox" id="tech" name="interests" value="technology">
+          <label for="tech">기술</label>
+          <input type="checkbox" id="art" name="interests" value="art">
+          <label for="art">예술</label>
+          <input type="checkbox" id="sports" name="interests" value="sports">
+          <label for="sports">스포츠</label>
+        </div>
+        <br>
+        <div>
+          <p>가장 선호하는 언어 (하나만 선택):</p>
+          <input type="radio" id="js" name="favorite_language" value="javascript" checked>
+          <label for="js">JavaScript</label>
+          <input type="radio" id="python" name="favorite_language" value="python">
+          <label for="python">Python</label>
+          <input type="radio" id="ruby" name="favorite_language" value="ruby">
+          <label for="ruby">Ruby</label>
+        </div>
+        <br>
+        <p>
+            <label for="bio">자기소개:</label><br>
+            <textarea id="bio" name="bio" rows="4" cols="50" placeholder="자신을 소개해주세요..."></textarea>
+        </p>
+        <p>
+            <label for="job">직업:</label>
+            <select id="job" name="job">
+              <option value="">--선택하세요--</option>
+              <option value="developer">개발자</option>
+              <option value="designer">디자이너</option>
+              <option value="manager">기획자</option>
+            </select>
+        </p>
+
+      </fieldset>
+      <br>
+      <!-- <button type="submit"> 또는 <input type="submit"> 을 사용하여 폼을 제출할 수 있습니다. -->
+      <button type="submit">제출하기</button>
+      <button type="reset">초기화</button>
+    </form>
+
+
+</body>
+</html>
