@@ -1,4 +1,6 @@
 [tools]
+bun = "latest"
+node = "latest"
 python = "3.12.9"
 uv = "latest"
 
