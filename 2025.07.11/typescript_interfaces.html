@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeScript - 인터페이스 (Interfaces)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #007acc;
+      /* TypeScript color */
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    pre::before {
+      content: "TypeScript";
+      position: absolute;
+      top: 0;
+      right: 15px;
+      padding: 2px 8px;
+      font-size: 12px;
+      color: #fff;
+      background-color: #007acc;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+    pre code.hljs {
+      padding: 30px 20px 20px 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #e7f3fe;
+      border-left: 5px solid #007acc;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>TypeScript 인터페이스 (Interfaces)</h1>
+    <div class="note">
+      <p>
+        인터페이스는 TypeScript의 핵심 원칙 중 하나인
+        <strong>'덕 타이핑(duck typing)'</strong>을 구현하는 주요 수단입니다.
+        객체의 구조(shape)를 정의하고, 코드 내에서 해당 구조를 따르도록
+        강제하여 코드의 일관성과 안정성을 크게 향상시킬 수 있습니다.
+      </p>
+    </div>
+
+    <h2>1. 기본 인터페이스와 선택적/읽기전용 프로퍼티</h2>
+    <p>
+      가장 기본적인 형태로, 인터페이스는 객체가 가져야 할 프로퍼티와 그 타입을
+      정의합니다. <code>?</code>를 사용하여 선택적 프로퍼티를,
+      <code>readonly</code>를 사용하여 읽기 전용 프로퍼티를 지정할 수
+      있습니다.
+    </p>
+    <pre><code class="language-typescript">interface SquareConfig {
+    readonly color: string; // 읽기 전용
+    width?: number;       // 선택적
+}
+
+function createSquare(config: SquareConfig): { color: string; area: number } {
+    let newSquare = { color: config.color, area: 100 };
+    if (config.width) {
+        newSquare.area = config.width * config.width;
+    }
+    // config.color = "red"; // 오류! 읽기 전용 프로퍼티에는 할당할 수 없음
+    return newSquare;
+}
+
+let mySquare = createSquare({ color: "black", width: 20 });</code></pre>
+
+    <h2>2. 함수 타입 (Function Types)</h2>
+    <p>
+      인터페이스는 함수의 매개변수 타입과 반환 타입을 정의하는 데 사용될 수
+      있습니다. 이를 통해 특정 시그니처를 가진 함수를 변수에 할당하거나 전달할
+      수 있습니다.
+    </p>
+    <pre><code class="language-typescript">interface SearchFunc {
+    (source: string, subString: string): boolean;
+}
+
+let mySearch: SearchFunc;
+mySearch = function(src, sub) {
+    let result = src.search(sub);
+    return result > -1;
+}
+
+console.log(mySearch("hello world", "world")); // true</code></pre>
+
+    <h2>3. 인덱서블 타입 (Indexable Types)</h2>
+    <p>
+      인터페이스로 배열이나 딕셔너리처럼 인덱스를 통해 접근할 수 있는 타입을
+      정의할 수 있습니다. 숫자 인덱스와 문자열 인덱스를 모두 지원합니다.
+    </p>
+    <pre><code class="language-typescript">interface StringArray {
+    [index: number]: string;
+}
+
+let myArray: StringArray = ["Bob", "Fred"];
+let myStr: string = myArray[0]; // "Bob"
+
+interface NumberDictionary {
+    [index: string]: number;
+    length: number; // ok, length는 숫자이므로 문자열 인덱서의 타입과 호환됨
+}</code></pre>
+
+    <h2>4. 클래스 타입 (Class Types)</h2>
+    <p>
+      <code>implements</code> 키워드를 사용하여 클래스가 특정 인터페이스를
+      만족하도록 강제할 수 있습니다. 이는 클래스가 특정 API 명세를 준수하도록
+      보장합니다.
+    </p>
+    <pre><code class="language-typescript">interface ClockInterface {
+    currentTime: Date;
+    setTime(d: Date): void;
+}
+
+class Clock implements ClockInterface {
+    currentTime: Date = new Date();
+    setTime(d: Date) {
+        this.currentTime = d;
+    }
+    constructor(h: number, m: number) { }
+}</code></pre>
+
+    <h2>5. 인터페이스 확장 (Extending Interfaces)</h2>
+    <p>
+      인터페이스는 다른 인터페이스를 <code>extends</code> 키워드로 상속받아
+      프로퍼티를 확장할 수 있습니다. 여러 인터페이스를 동시에 확장하는 것도
+      가능합니다.
+    </p>
+    <pre><code class="language-typescript">interface Shape {
+    color: string;
+}
+
+interface PenStroke {
+    penWidth: number;
+}
+
+interface Square extends Shape, PenStroke {
+    sideLength: number;
+}
+
+let square = {} as Square;
+square.color = "blue";
+square.sideLength = 10;
+square.penWidth = 5.0;</code></pre>
+
+    <h2>6. 하이브리드 타입 (Hybrid Types)</h2>
+    <p>
+      드물지만, 인터페이스는 함수이면서 동시에 객체로서 추가적인 프로퍼티를
+      가지는 '하이브리드 타입'을 정의할 수 있습니다. 예를 들어, jQuery의 `$`
+      함수가 대표적입니다.
+    </p>
+    <pre><code class="language-typescript">interface Counter {
+    (start: number): string; // 함수처럼 호출 가능
+    interval: number;        // 프로퍼티를 가짐
+    reset(): void;           // 메서드를 가짐
+}
+
+function getCounter(): Counter {
+    let counter = ((start: number) => `Started at ${start}`) as Counter;
+    counter.interval = 123;
+    counter.reset = function () { /* ... */ };
+    return counter;
+}
+
+let c = getCounter();
+console.log(c(10));       // "Started at 10"
+c.reset();
+c.interval = 5.0;</code></pre>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>

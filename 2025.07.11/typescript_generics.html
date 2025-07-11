@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeScript - 제네릭 (Generics)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #007acc;
+      /* TypeScript color */
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    pre::before {
+      content: "TypeScript";
+      position: absolute;
+      top: 0;
+      right: 15px;
+      padding: 2px 8px;
+      font-size: 12px;
+      color: #fff;
+      background-color: #007acc;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+    pre code.hljs {
+      padding: 30px 20px 20px 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #e7f3fe;
+      border-left: 5px solid #007acc;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>TypeScript 제네릭 (Generics)</h1>
+    <div class="note">
+      <p>
+        제네릭은 컴포넌트(함수, 클래스, 인터페이스 등)가 다양한 타입을 처리할
+        수 있도록 하면서도 <strong>타입 안정성</strong>을 잃지 않게 해주는
+        강력한 기능입니다. 하나의 코드로 여러 타입을 지원함으로써 코드의
+        <strong>재사용성</strong>을 극대화합니다.
+      </p>
+    </div>
+
+    <h2>1. 제네릭의 기본: Identity 함수</h2>
+    <p>
+      제네릭의 가장 기본적인 예는 'identity' 함수입니다. 이 함수는 어떤 타입의
+      인자를 받으면 동일한 타입의 값을 반환합니다. 제네릭을 사용하면
+      <code>any</code> 타입을 사용했을 때 잃게 되는 타입 정보를 그대로 보존할
+      수 있습니다.
+    </p>
+    <pre><code class="language-typescript">// T는 타입 변수(type variable)로, 함수를 사용하는 시점에 타입이 결정됩니다.
+function identity&lt;T&gt;(arg: T): T {
+    return arg;
+}
+
+// 사용 방법 1: 타입 인수를 명시적으로 전달
+let output1 = identity&lt;string&gt;("myString");
+
+// 사용 방법 2: 컴파일러가 타입을 추론 (type argument inference)
+let output2 = identity(123);
+
+console.log(typeof output1); // "string"
+console.log(typeof output2); // "number"</code></pre>
+
+    <h2>2. 제네릭 인터페이스 (Generic Interfaces)</h2>
+    <p>
+      인터페이스에 제네릭을 적용하여 다양한 타입에 대응하는 유연한 구조를
+      정의할 수 있습니다.
+    </p>
+    <pre><code class="language-typescript">interface GenericIdentityFn&lt;T&gt; {
+    (arg: T): T;
+}
+
+function identity&lt;T&gt;(arg: T): T {
+    return arg;
+}
+
+let myIdentity: GenericIdentityFn&lt;number&gt; = identity;
+console.log(myIdentity(100)); // 100</code></pre>
+
+    <h2>3. 제네릭 클래스 (Generic Classes)</h2>
+    <p>
+      클래스에 제네릭을 사용하면, 클래스의 인스턴스가 특정 타입에 종속되도록
+      만들 수 있습니다. 이를 통해 타입 안정성을 갖춘 재사용 가능한 클래스를
+      설계할 수 있습니다.
+    </p>
+    <pre><code class="language-typescript">class GenericNumber&lt;T&gt; {
+    zeroValue: T;
+    add: (x: T, y: T) => T;
+}
+
+// 숫자 타입으로 사용하는 경우
+let myGenericNumber = new GenericNumber&lt;number&gt;();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function(x, y) { return x + y; };
+console.log(myGenericNumber.add(5, 10)); // 15
+
+// 문자열 타입으로 사용하는 경우
+let stringNumeric = new GenericNumber&lt;string&gt;();
+stringNumeric.zeroValue = "";
+stringNumeric.add = function(x, y) { return x + y; };
+console.log(stringNumeric.add("Hello, ", "World!")); // "Hello, World!"</code></pre>
+
+    <h2>4. 제네릭 제약 조건 (Generic Constraints)</h2>
+    <p>
+      때로는 제네릭 타입이 특정 프로퍼티나 구조를 가지고 있다고 보장해야 할
+      때가 있습니다. 이 때 <code>extends</code> 키워드를 사용하여 '제약
+      조건'을 추가할 수 있습니다.
+    </p>
+    <pre><code class="language-typescript">interface Lengthwise {
+    length: number;
+}
+
+// T는 이제 Lengthwise 인터페이스를 만족하는 타입만 가능합니다.
+// 즉, .length 프로퍼티를 반드시 가져야 합니다.
+function loggingIdentity&lt;T extends Lengthwise&gt;(arg: T): T {
+    console.log(arg.length); // .length가 존재함을 보장받음
+    return arg;
+}
+
+loggingIdentity("hello"); // string은 .length가 있으므로 성공
+loggingIdentity([1, 2, 3]); // array는 .length가 있으므로 성공
+loggingIdentity({ length: 10, value: 3 }); // 객체도 .length가 있으므로 성공
+// loggingIdentity(123); // 오류: number에는 .length 프로퍼티가 없음</code></pre>
+
+    <h2>5. 제약 조건에서 타입 매개변수 사용</h2>
+    <p>
+      한 타입 매개변수가 다른 타입 매개변수의 키(key) 중 하나를 따르도록
+      제약할 수 있습니다. <code>keyof</code> 연산자를 사용하면 객체의 모든
+      키를 문자열 리터럴 유니언 타입으로 얻을 수 있습니다.
+    </p>
+    <pre><code class="language-typescript">// T는 객체, K는 T 객체의 키 중 하나여야 합니다.
+function getProperty&lt;T, K extends keyof T&gt;(obj: T, key: K) {
+    return obj[key];
+}
+
+let vehicle = {
+    brand: "Toyota",
+    model: "Camry",
+    year: 2022
+};
+
+console.log(getProperty(vehicle, "brand")); // "Toyota"
+console.log(getProperty(vehicle, "year"));  // 2022
+
+// console.log(getProperty(vehicle, "color")); 
+// 오류: Argument of type '"color"' is not assignable to parameter of type '"brand" | "model" | "year"'.</code></pre>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>
