@@ -166,20 +166,23 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | deep-learning | 
 | [2025.05.21](./2025.05.21/) | **[DL]** "밑바닥부터 시작하는 딥러닝" 실습: `NumPy`로 신경망, CNN 구현 | `Numpy`, `Matplotlib` |
 | [2025.05.27](./2025.05.27/) | **[DL]** 이미지 분류 프로젝트: `TensorFlow`와 **전이 학습(Transfer Learning)** 활용 | `TensorFlow`, `Keras` |
-| [2025.05.28](./2025.05.28/) | **[Deployment]** `Gradio`를 활용한 머신러닝 모델 데모 웹 앱 제작 | `Gradio` |
+| [2025.05.28](./2025.05.28/) | **[Azure Custom Vision & Gradio]** `Azure Custom Vision` 모델을 `Gradio`로 데모 UI 제작 | `Gradio`, `Azure AI Services` |
 | azure-ai-services | 
 | [2025.06.18](./2025.06.18/) | **[Azure OpenAI]** `Azure OpenAI Service` 기반 지능형 앱 개발 입문, RAG 개념 소개 | `Azure OpenAI` |
 | [2025.06.19](./2025.06.19/) | **[Azure OpenAI]** Azure OpenAI 심화: 프롬프트 엔지니어링, DALL-E, RAG 시스템 구축 | `Azure OpenAI`, `DALL-E` |
 | [2025.06.23](./2025.06.23/) | **[Azure OpenAI]** RAG 시스템 직접 구축, Function Calling, 음성 API(Whisper, TTS) 활용 | `Azure OpenAI`, `Whisper`, `TTS` |
 | azure-ai-services-advanced | 
-| [2025.06.24](./2025.06.24/) | **[Project]** `Gradio`와 `Azure OpenAI`를 결합한 다기능(채팅, 이미지, RAG) AI 앱 개발 | `Gradio`, `Azure OpenAI` |
-| [2025.06.25](./2025.06.25/) | **[Project]** `Azure Document Intelligence` REST API를 활용한 OCR 및 문서 분석 | `Azure AI Services` |
-| [2025.06.26](./2025.06.26/) | **[Project]** `Document Intelligence`와 `Gradio`를 결합한 OCR 앱 및 **AI 언어 서비스** 활용 | `Gradio`, `Azure AI Services` |
-| [2025.06.27](./2025.06.27/) | **[Project]** `Azure Speech`(STT/TTS) 및 `Custom NER`을 활용한 대화형 AI 개발 | `Gradio`, `Azure AI Services` |
-| [2025.06.30](./2025.06.30/) | **[Project]** `Gradio`와 `Azure OpenAI`를 활용한 다중 모드 AI 챗봇 개발 | `Gradio`, `Azure OpenAI`, `STT/TTS` |
-| [2025.07.02](./2025.07.02/) | **[Project]** `Azure Vision & Face` API를 활용한 이미지 분석 앱 기반 구축 | `Gradio`, `Azure AI Services` |
-| [2025.07.03](./2025.07.02/) | **[Project]** 이미지 분석 앱 UX 고도화: 동적 UI 및 `Pillow` 결과 처리 | `Gradio`, `Pillow` |
-| [2025.07.04](./2025.07.04/) | **[Project]** `Azure Custom Vision` SDK를 활용한 객체 탐지 모델 구축 자동화 | `Azure Custom Vision`, `Pillow` |
-| [2025.07.07](./2025.07.07/) | **[Project]** `OpenCV`와 `YOLO`(v3)를 활용한 실시간 객체 탐지 웹 앱 | `Gradio`, `OpenCV`, `YOLO` |
-| [2025.07.08](./2025.07.08/) | **[Project]** `Gradio`, `YOLO`(v8), `Azure OpenAI`를 결합한 멀티모달 AI 앱 | `Gradio`, `Azure OpenAI`, `YOLO` |
-| [2025.07.09](./2025.07.09/) | **[Project]** HTML 기초 학습 및 시맨틱 마크업을 활용한 이력서 페이지 제작 | `HTML`, `CSS` |
+| [2025.06.24](./2025.06.24/) | **[Gradio & RAG]** `Gradio`와 `Azure OpenAI`를 결합한 다기능(채팅, 이미지, RAG) AI 앱 개발 | `Gradio`, `Azure OpenAI` |
+| [2025.06.25](./2025.06.25/) | **[Azure Document Intelligence]** `Azure Document Intelligence` REST API를 활용한 OCR 및 문서 분석 | `Azure AI Services` |
+| [2025.06.26](./2025.06.26/) | **[Gradio & Document Intelligence]** `Document Intelligence`와 `Gradio`를 결합한 OCR 앱 및 **AI 언어 서비스** 활용 | `Gradio`, `Azure AI Services` |
+| [2025.06.27](./2025.06.27/) | **[Azure AI Language & Custom NER]** `Azure Speech`(STT/TTS) 및 `Custom NER`을 활용한 대화형 AI 개발 | `Gradio`, `Azure AI Services` |
+| [2025.06.30](./2025.06.30/) | **[Gradio & Azure AI Speech]** `Gradio`와 `Azure OpenAI`를 활용한 다중 모드 AI 챗봇 개발 | `Gradio`, `Azure OpenAI`, `STT/TTS` |
+| [2025.07.02](./2025.07.02/) | **[Azure AI Vision & Face]** `Azure Vision & Face` API를 활용한 이미지 분석 앱 기반 구축 | `Gradio`, `Azure AI Services` |
+| [2025.07.03](./2025.07.02/) | **[Azure AI Vision & Face]** 이미지 분석 앱 UX 고도화: 동적 UI 및 `Pillow` 결과 처리 | `Gradio`, `Pillow` |
+| [2025.07.04](./2025.07.04/) | **[Azure Custom Vision SDK]** `Azure Custom Vision` SDK를 활용한 객체 탐지 모델 구축 자동화 | `Azure Custom Vision`, `Pillow` |
+| [2025.07.07](./2025.07.07/) | **[OpenCV & YOLOv3]** `OpenCV`와 `YOLO`(v3)를 활용한 실시간 객체 탐지 웹 앱 | `Gradio`, `OpenCV`, `YOLO` |
+| [2025.07.08](./2025.07.08/) | **[YOLOv8 & GPT-4o Vision]** `Gradio`, `YOLO`(v8), `Azure OpenAI`를 결합한 멀티모달 AI 앱 | `Gradio`, `Azure OpenAI`, `YOLO` |
+| Web Frontend | 
+| [2025.07.09](./2025.07.09/) | **[HTML, CSS]** HTML 기초 학습 및 시맨틱 마크업을 활용한 이력서 페이지 제작 | `HTML`, `CSS` |
+| [2025.07.10](./2025.07.10/) | **[HTML, CSS]** HTML5 시맨틱 태그, 고급 표, 미디어 요소를 활용한 웹 페이지 레이아웃 설계 | `HTML`, `CSS` |
+| [2025.07.11](./2025.07.11/) | **[JS, TS]** 모던 JavaScript 및 TypeScript 핵심 개념(프로토타입, 모듈, 제네릭 등) 학습 | `JavaScript`, `TypeScript` |
