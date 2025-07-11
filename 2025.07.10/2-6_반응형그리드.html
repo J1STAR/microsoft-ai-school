@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>갤러리</title>
+    <style>
+      h1 {
+        text-align: center;
+      }
+      body {
+        text-align: center;
+      }
+      #container {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      img {
+        width: 400px;
+      }
+
+      @media screen and (min-width: 480px) {
+        #container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        img {
+          width: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>갤러리</h1>
+    <div id="container">
+      <div class="box">
+        <div class="image">
+          <img
+            src="https://cdn.pixabay.com/photo/2018/04/13/16/13/pixel-3316924_1280.png"
+            alt="고흐"
+          />
+        </div>
+        <div class="title">고흐</div>
+      </div>
+      <div class="box">
+        <div class="image">
+          <img
+            src="https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png"
+            alt="고흐"
+          />
+        </div>
+        <div class="title">고흐</div>
+      </div>
+      <div class="box">
+        <div class="image">
+          <img
+            src="https://cdn.pixabay.com/photo/2017/06/17/18/32/sculpture-2413071_1280.jpg"
+            alt="고흐"
+          />
+        </div>
+        <div class="title">고흐</div>
+      </div>
+      <div class="box">
+        <div class="image">
+          <img
+            src="https://cdn.pixabay.com/photo/2017/06/17/18/32/sculpture-2413071_1280.jpg"
+            alt="고흐"
+          />
+        </div>
+        <div class="title">고흐</div>
+      </div>
+      <div class="box">
+        <div class="image">
+          <img
+            src="https://cdn.pixabay.com/photo/2017/06/17/18/32/sculpture-2413071_1280.jpg"
+            alt="고흐"
+          />
+        </div>
+        <div class="title">고흐</div>
+      </div>
+      <div class="box">
+        <div class="image">
+          <img
+            src="https://cdn.pixabay.com/photo/2017/06/17/18/32/sculpture-2413071_1280.jpg"
+            alt="고흐"
+          />
+        </div>
+        <div class="title">고흐</div>
+      </div>
+    </div>
+  </body>
+</html>

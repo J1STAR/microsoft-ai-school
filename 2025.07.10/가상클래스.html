@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>가상클래스 예제</title>
+    <style>
+      /* 1. 마우스 오버 효과 (:hover)  */
+      .btn {
+        background: #2b6cb0;
+        color: #fff;
+        padding: 10px 24px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: #22577a;
+        color: #ffe066;
+      }
+      /* 2. 입력창 포커스 효과 (:focus) */
+      .input {
+        border: 1.5px solid #bbb;
+        padding: 8px 12px;
+        border-radius: 4px;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .input:focus {
+        border: 2px solid #2b6cb0;
+        background: #e3f0fc;
+      }
+      /* 3. 특정 위치에만 스타일 적용 (:first-child, :last-child) */
+      ul li:first-child {
+        color: #e63946;
+        font-weight: bold;
+      }
+      ul li:last-child {
+        color: #457b9d;
+        text-decoration: underline;
+      }
+      /* 4. 상태에 따른 스타일 (:checked, :active 등) */
+      .chk:checked + span {
+        color: #2b9348;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div><button class="btn">마우스를 올려보세요</button></div>
+    <div>
+      <input type="text" class="input" placeholder="여기에 입력하세요" />
+    </div>
+    <div>
+      <ul>
+        <li>첫 번째 항목</li>
+        <li>두 번째 항목</li>
+        <li>세 번째 항목</li>
+      </ul>
+    </div>
+    <div>
+      <label> <input type="checkbox" class="chk" /> 동의합니다 </label>
+    </div>
+  </body>
+</html>

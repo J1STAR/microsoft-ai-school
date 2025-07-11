@@ -1,0 +1,85 @@
+<!-- 시맨틱 HTML 구조 모듈
+시맨틱 레이아웃 컴포넌트 (semantic-layout.html) -->
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>시맨틱 HTML 구조</title>
+  </head>
+  <body>
+    <!-- 헤더 섹션 -->
+    <header role="banner">
+      <nav role="navigation" aria-label="주 메뉴">
+        <h1>웹사이트 로고</h1>
+        <ul>
+          <li><a href="#home" aria-current="page">홈</a></li>
+          <li><a href="#about">소개</a></li>
+          <li><a href="#services">서비스</a></li>
+          <li><a href="#contact">연락처</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main role="main" id="main-content">
+      <!-- 히어로 섹션 -->
+      <section class="hero" aria-labelledby="hero-title">
+        <h1 id="hero-title">메인 제목</h1>
+        <p>부제목이나 설명 텍스트</p>
+      </section>
+
+      <!-- 콘텐츠 섹션들 -->
+      <section class="about" aria-labelledby="about-title">
+        <h2 id="about-title">소개</h2>
+        <article>
+          <h3>회사 소개</h3>
+          <p>회사에 대한 설명...</p>
+        </article>
+      </section>
+
+      <section class="services" aria-labelledby="services-title">
+        <h2 id="services-title">서비스</h2>
+        <div class="service-grid">
+          <article class="service-item">
+            <h3>서비스 1</h3>
+            <p>서비스 설명...</p>
+          </article>
+          <article class="service-item">
+            <h3>서비스 2</h3>
+            <p>서비스 설명...</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- 사이드바 -->
+    <aside role="complementary" aria-labelledby="sidebar-title">
+      <h2 id="sidebar-title">관련 정보</h2>
+      <section class="recent-posts">
+        <h3>최근 게시물</h3>
+        <ul>
+          <li><a href="#">게시물 1</a></li>
+          <li><a href="#">게시물 2</a></li>
+        </ul>
+      </section>
+    </aside>
+
+    <!-- 푸터 -->
+    <footer role="contentinfo">
+      <section class="footer-content">
+        <div class="footer-section">
+          <h3>연락처</h3>
+          <address>
+            <p>
+              이메일: <a href="mailto:info@example.com">info@example.com</a>
+            </p>
+            <p>전화: <a href="tel:+82-10-1234-5678">010-1234-5678</a></p>
+          </address>
+        </div>
+      </section>
+      <p>&copy; 2025 회사명. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
