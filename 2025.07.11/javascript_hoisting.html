@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript - 호이스팅 (Hoisting)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #f7df1e;
+      /* JavaScript Yellow */
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+      background-color: #e9e9e9;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #fff9c4;
+      border-left: 5px solid #fbc02d;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>JavaScript 호이스팅 (Hoisting)</h1>
+    <div class="note">
+      <p>
+        <strong>호이스팅(Hoisting)</strong>은 JavaScript 인터프리터가 코드를
+        실행하기 전, 변수와 함수 선언을 해당 스코프의 맨 위로 '끌어올리는'
+        것처럼 동작하는 방식을 말합니다. 실제 코드가 이동하는 것이 아니라,
+        컴파일 단계에서 선언부가 먼저 메모리에 등록되기 때문에 나타나는
+        현상입니다.
+      </p>
+    </div>
+
+    <h2>1. <code>var</code> 변수 호이스팅</h2>
+    <p>
+      <code>var</code>로 선언된 변수는 선언부가 스코프 최상단으로
+      끌어올려지며, <code>undefined</code>로 자동 초기화됩니다. 따라서 선언문
+      이전에 변수에 접근해도 에러가 발생하지 않고 <code>undefined</code>를
+      반환합니다.
+    </p>
+    <pre><code class="language-javascript">console.log(myVar); // undefined
+
+var myVar = "Hello, Hoisting!";
+
+console.log(myVar); // "Hello, Hoisting!"</code></pre>
+
+    <h2>
+      2. <code>let</code>, <code>const</code>와 TDZ (Temporal Dead Zone)
+    </h2>
+    <p>
+      ES6에 도입된 <code>let</code>과 <code>const</code>도 호이스팅됩니다.
+      하지만 <code>var</code>와 달리, 선언과 초기화 단계가 분리되어 있어
+      '일시적 사각지대(TDZ)'가 발생합니다. TDZ는 스코프 시작 지점부터 변수
+      선언문까지의 구간으로, 이 구간에서 변수에 접근하면
+      <code>ReferenceError</code>가 발생합니다.
+    </p>
+    <pre><code class="language-javascript">// 스코프 시작
+// --- Temporal Dead Zone (TDZ) 시작 ---
+// console.log(myLet); // ReferenceError: Cannot access 'myLet' before initialization
+// --- TDZ 끝 ---
+let myLet = "TDZ Escaped!"; // 여기서 선언 및 초기화가 이루어짐
+
+console.log(myLet); // "TDZ Escaped!"</code></pre>
+
+    <h2>3. 함수 선언문 (Function Declaration) 호이스팅</h2>
+    <p>
+      함수 선언문은 선언부뿐만 아니라 함수 본문 전체가 호이스팅됩니다. 따라서
+      코드 상 어디에서든 함수를 선언하기 전에 호출할 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">sayHello(); // "Hello, World!"
+
+function sayHello() {
+  console.log("Hello, World!");
+}</code></pre>
+
+    <h2>4. 함수 표현식 (Function Expression) 호이스팅</h2>
+    <p>
+      함수 표현식은 변수에 함수를 할당하는 형태이므로, 변수 호이스팅 규칙을
+      그대로 따릅니다.
+    </p>
+    <ul>
+      <li>
+        <code>var</code>로 선언된 함수 표현식은 변수명만 호이스팅되어
+        <code>undefined</code>로 초기화됩니다. 할당 전에 호출하면
+        <code>TypeError</code>가 발생합니다.
+      </li>
+      <li>
+        <code>let</code> 또는 <code>const</code>로 선언된 경우, TDZ의 영향을
+        받아 <code>ReferenceError</code>가 발생합니다.
+      </li>
+    </ul>
+    <pre><code class="language-javascript">// var의 경우
+try {
+  sayGoodbye(); // TypeError: sayGoodbye is not a function
+} catch (e) {
+  console.log(e.message);
+}
+var sayGoodbye = function() { console.log("Goodbye!"); };
+
+// let의 경우
+try {
+  sayHi(); // ReferenceError: Cannot access 'sayHi' before initialization
+} catch (e) {
+  console.log(e.message);
+}
+const sayHi = function() { console.log("Hi!"); };</code></pre>
+
+    <h2>5. 호이스팅 우선순위</h2>
+    <p>
+      같은 이름의 변수와 함수가 있을 경우,
+      <strong>함수 선언문이 변수 선언보다 높은 우선순위</strong>를 가집니다.
+      함수가 먼저 호이스팅되고, 그 다음에 변수 할당이 이루어집니다.
+    </p>
+    <pre><code class="language-javascript">console.log(typeof myPriority); // "function"
+
+var myPriority = "Variable";
+
+function myPriority() {
+  console.log("Function");
+}
+
+console.log(typeof myPriority); // "string"
+
+/*
+엔진 해석 순서:
+1. function myPriority() { ... } 가 최상단으로 올라옴
+2. var myPriority; 는 중복 선언이므로 무시됨
+3. console.log(typeof myPriority); 실행 -> "function"
+4. myPriority = "Variable"; 할당문 실행
+5. console.log(typeof myPriority); 실행 -> "string"
+*/</code></pre>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>

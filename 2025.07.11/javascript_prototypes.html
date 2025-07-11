@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript - 프로토타입 (Prototype)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #e7f3fe;
+      border-left: 5px solid #2196f3;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>JavaScript 프로토타입 (Prototype)</h1>
+    <div class="note">
+      <p>
+        JavaScript는 <strong>프로토타입 기반 언어</strong>입니다. 모든 객체는
+        다른 객체를 가리키는 내부 링크인 [[Prototype]]을 가집니다. 이
+        프로토타입 객체 또한 자신만의 프로토타입을 가질 수 있으며, 이것이
+        연쇄적으로 이어지는 것을 '프로토타입 체인'이라고 부릅니다.
+      </p>
+    </div>
+
+    <h2>1. 생성자 함수와 프로토타입</h2>
+    <p>
+      생성자 함수는 <code>new</code> 키워드와 함께 사용되어 객체 인스턴스를
+      만듭니다. 모든 함수는 생성될 때 <code>prototype</code>이라는 특별한
+      속성을 가집니다. 이 프로토타입에 추가된 속성이나 메서드는 모든
+      인스턴스가 공유하게 되어 메모리를 절약할 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">function Animal(name) {
+  this.name = name; // 인스턴스 속성 (각 인스턴스가 고유하게 가짐)
+}
+
+// Animal.prototype에 메서드를 추가합니다.
+Animal.prototype.speak = function () {
+  console.log(`${this.name}이(가) 소리를 냅니다.`);
+};
+Animal.prototype.species = "동물"; // 프로토타입 속성 (모든 인스턴스가 공유)
+
+const dog = new Animal("멍멍이");
+dog.speak(); // "멍멍이이(가) 소리를 냅니다."
+console.log(dog.species); // "동물"
+
+// dog 인스턴스는 'speak' 메서드를 직접 가지고 있지 않습니다.
+// 대신 프로토타입 체인을 통해 Animal.prototype의 'speak' 메서드를 찾아 실행합니다.
+console.log(dog.hasOwnProperty('speak')); // false</code></pre>
+
+    <h2>2. 프로토타입 체인 (Prototype Chain)</h2>
+    <p>
+      객체의 속성이나 메서드에 접근할 때, 해당 객체에 그 멤버가 없다면
+      JavaScript는 프로토타입 체인을 따라 올라가며 멤버를 찾습니다. 체인의
+      가장 위에는 <code>Object.prototype</code>이 있으며, 여기에는
+      <code>toString</code>, <code>hasOwnProperty</code> 등의 기본 메서드들이
+      포함되어 있습니다.
+    </p>
+    <pre><code class="language-javascript">const dog = new Animal("멍멍이");
+
+// `dog` -> `Animal.prototype` -> `Object.prototype` -> `null`
+console.log(Object.getPrototypeOf(dog) === Animal.prototype); // true
+console.log(Object.getPrototypeOf(Animal.prototype) === Object.prototype); // true
+console.log(Object.getPrototypeOf(Object.prototype)); // null
+
+// `toString`은 `dog`나 `Animal.prototype`에 없지만,
+// 프로토타입 체인을 따라 올라가 `Object.prototype`에서 찾을 수 있습니다.
+console.log(dog.toString()); // "[object Object]"</code></pre>
+
+    <h2>3. 프로토타입 기반 상속</h2>
+    <p>
+      <code>Object.create()</code>를 사용하여 특정 객체를 프로토타입으로 하는
+      새 객체를 만들고, <code>call</code>을 이용해 생성자를 빌려쓰는 방식으로
+      상속을 구현할 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">function Lion(name) {
+  // Animal 생성자를 호출하여 'name' 속성을 설정합니다 (생성자 빌려쓰기).
+  Animal.call(this, name);
+}
+
+// Lion.prototype의 프로토타입을 Animal.prototype으로 설정합니다.
+Lion.prototype = Object.create(Animal.prototype);
+
+// `constructor` 속성을 올바르게 Lion으로 재설정해줍니다.
+Lion.prototype.constructor = Lion;
+
+Lion.prototype.roar = function () {
+  console.log(`${this.name}이(가) "어흥"하고 포효합니다.`);
+};
+
+const simba = new Lion("심바");
+simba.speak(); // "심바이(가) 소리를 냅니다." (상속받은 메서드)
+simba.roar();  // "심바이(가) "어흥"하고 포효합니다."
+
+console.log(simba instanceof Lion);   // true
+console.log(simba instanceof Animal); // true</code></pre>
+
+    <h2>4. 클래스와 프로토타입</h2>
+    <div class="note">
+      <p>
+        ES6의 <code>class</code> 문법은 사실 이러한 프로토타입 기반 상속을 더
+        쉽게 사용할 수 있도록 만든
+        <strong>'문법적 설탕(Syntactic Sugar)'</strong>입니다. 내부적으로는
+        여전히 프로토타입을 사용합니다.
+      </p>
+    </div>
+    <pre><code class="language-javascript">class Bird {
+  constructor(name) {
+    this.name = name;
+  }
+  fly() {
+    console.log(`${this.name}이(가) 납니다.`);
+  }
+}
+
+// 클래스의 메서드는 프로토타입에 추가됩니다.
+console.log(Bird.prototype.hasOwnProperty('fly')); // true
+
+const eagle = new Bird("독수리");
+console.log(Object.getPrototypeOf(eagle) === Bird.prototype); // true</code></pre>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript - 클래스(Class)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #e7f3fe;
+      border-left: 5px solid #2196f3;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>JavaScript 클래스 (Class)</h1>
+    <div class="note">
+      <p>
+        JavaScript의 클래스(Class)에 대해 상세히 설명하는 예제 파일입니다.<br />
+        이 파일은 클래스의 기본 문법, 상속, 캡슐화, 정적 멤버 등 ES6 클래스의
+        주요 기능을 다룹니다.<br />
+        JavaScript 클래스는 프로토타입 기반 상속에 대한
+        <strong>문법적 설탕(syntactic sugar)</strong>입니다.
+      </p>
+    </div>
+
+    <h2>1. 클래스 기본 (Class Basics)</h2>
+    <p>
+      <code>class</code> 키워드를 사용하여 클래스를 정의합니다.
+      <code>constructor</code>는 클래스의 인스턴스가 생성될 때 호출되는 특별한
+      메서드입니다.
+    </p>
+    <pre><code class="language-javascript">class Animal {
+  /**
+   * Animal 클래스의 생성자
+   * @param {string} name - 동물의 이름
+   */
+  constructor(name) {
+    // 'this'는 생성될 인스턴스를 가리킵니다.
+    this.name = name;
+  }
+
+  // 메서드 정의
+  speak() {
+    console.log(`${this.name}이(가) 소리를 냅니다.`);
+  }
+}
+
+// `new` 키워드를 사용하여 클래스의 인스턴스를 생성합니다.
+const dog = new Animal("멍멍이");
+dog.speak(); // "멍멍이이(가) 소리를 냅니다."</code></pre>
+
+    <h2>2. 클래스 상속 (Inheritance)</h2>
+    <p>
+      <code>extends</code> 키워드를 사용하여 다른 클래스를 상속받을 수
+      있습니다. 상속을 통해 부모 클래스의 속성과 메서드를 재사용할 수
+      있습니다.
+    </p>
+    <p>
+      자식 클래스의 생성자에서는 <code>this</code>를 사용하기 전에 반드시
+      <code>super()</code>를 호출하여 부모 클래스의 생성자를 호출해야 합니다.
+    </p>
+    <pre><code class="language-javascript">class Cat extends Animal {
+  constructor(name) {
+    // `super()`는 부모 클래스의 생성자를 호출합니다.
+    super(name);
+  }
+
+  // 메서드 오버라이딩 (Method Overriding)
+  speak() {
+    console.log(`${this.name}이(가) "야옹"하고 웁니다.`);
+  }
+
+  // 자식 클래스 고유의 메서드
+  purr() {
+    console.log(`${this.name}이(가) 가르랑거립니다.`);
+  }
+}
+
+const nabi = new Cat("나비");
+nabi.speak(); // "나비이(가) "야옹"하고 웁니다."
+nabi.purr(); // "나비이(가) 가르랑거립니다."</code></pre>
+
+    <h2>3. Getter와 Setter</h2>
+    <p>
+      <code>get</code>과 <code>set</code> 키워드를 사용하여 객체의 속성 값을
+      가져오고 설정하는 방법을 제어할 수 있습니다. 이를 통해 데이터에 대한
+      접근을 캡슐화하고 유효성 검사 등을 추가할 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">class Person {
+  constructor(firstName, lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
+  // Getter: 속성 값을 읽을 때 호출됩니다.
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+  // Setter: 속성에 값을 할당할 때 호출됩니다.
+  set fullName(name) {
+    const [firstName, lastName] = name.split(' ');
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+}
+
+const user = new Person("길동", "홍");
+console.log(user.fullName); // "길동 홍"
+
+user.fullName = "철수 김"; // Setter 호출
+console.log(user.fullName); // "철수 김"</code></pre>
+
+    <h2>4. 정적 멤버 (Static Members)</h2>
+    <p>
+      <code>static</code> 키워드를 사용하여 클래스 자체에 속한 메서드나 속성을
+      정의할 수 있습니다. 정적 멤버는 클래스의 인스턴스를 생성하지 않고도
+      <code>클래스이름.멤버</code> 형식으로 직접 접근할 수 있습니다. 주로
+      유틸리티 함수나 클래스 수준의 상수를 정의할 때 사용됩니다.
+    </p>
+    <pre><code class="language-javascript">class MathHelper {
+  static PI = 3.14159;
+
+  static add(a, b) {
+    return a + b;
+  }
+}
+
+console.log(MathHelper.PI); // 3.14159
+console.log(MathHelper.add(5, 10)); // 15</code></pre>
+
+    <h2>5. 캡슐화: Private 멤버 (Encapsulation)</h2>
+    <p>
+      <code>#</code> 접두사를 사용하여 클래스 외부에서 접근할 수 없는
+      비공개(private) 필드와 메서드를 만들 수 있습니다. 이는 객체의 내부
+      상태를 보호하고 클래스의 인터페이스를 명확하게 하는 데 도움이 됩니다.
+    </p>
+    <pre><code class="language-javascript">class BankAccount {
+  // Private 필드
+  #balance = 0;
+
+  constructor(initialBalance) {
+    if (initialBalance > 0) {
+      this.#balance = initialBalance;
+    }
+  }
+
+  // Public 메서드를 통해 Private 필드에 접근
+  deposit(amount) {
+    if (amount > 0) {
+      this.#balance += amount;
+      this.#logBalance();
+    }
+  }
+
+  withdraw(amount) {
+    if (amount > this.#balance) {
+      console.error("오류: 잔액이 부족합니다.");
+      return;
+    }
+    this.#balance -= amount;
+    this.#logBalance();
+  }
+
+  // Private 메서드
+  #logBalance() {
+    console.log(`현재 잔액: ${this.#balance.toLocaleString()}원`);
+  }
+}
+
+const myAccount = new BankAccount(10000);
+myAccount.deposit(5000);
+myAccount.withdraw(2000);
+
+// console.log(myAccount.#balance); // SyntaxError!</code></pre>
+
+    <h2>6. instanceof 연산자</h2>
+    <p>
+      <code>instanceof</code> 연산자는 특정 객체가 특정 클래스의 인스턴스인지
+      확인하는 데 사용됩니다. 상속 관계도 확인 가능합니다.
+    </p>
+    <pre><code class="language-javascript">const nabi = new Cat("나비");
+const dog = new Animal("멍멍이");
+
+console.log(nabi instanceof Cat);       // true
+console.log(nabi instanceof Animal);   // true (상속 관계)
+console.log(dog instanceof Cat);         // false</code></pre>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>

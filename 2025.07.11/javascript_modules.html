@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript - 모듈 (Modules)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 30px;
+      border-left: 4px solid #3498db;
+      padding-left: 10px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #e7f3fe;
+      border-left: 5px solid #2196f3;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>JavaScript 모듈 (ES6 Modules)</h1>
+    <div class="note">
+      <p>
+        ES6(ECMAScript 2015)에서 도입된 모듈 시스템은 코드를 재사용 가능한
+        조각으로 구성하고, 전역 스코프의 오염을 방지하며, 의존성을 명확하게
+        관리할 수 있도록 돕습니다.
+      </p>
+    </div>
+
+    <h2>모듈의 기본 개념</h2>
+    <p>
+      모듈은 파일 단위로 코드를 분리하는 방식입니다. 한 파일에서 기능을
+      내보내고(export), 다른 파일에서 그 기능을 가져와(import) 사용할 수
+      있습니다.
+    </p>
+
+    <h2>1. 기능 내보내기 (Export)</h2>
+    <h3>이름 있는 내보내기 (Named Exports)</h3>
+    <p>
+      <code>export</code> 키워드를 사용하여 변수, 함수, 클래스를 개별적으로
+      내보낼 수 있습니다. 한 파일에서 여러 개를 내보낼 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">// 파일: math.js
+
+export const PI = 3.14159;
+
+export function add(a, b) {
+  return a + b;
+}
+
+export class Calculator {
+  multiply(a, b) {
+    return a * b;
+  }
+}</code></pre>
+
+    <h3>기본 내보내기 (Default Export)</h3>
+    <p>
+      <code>export default</code>를 사용하여 모듈에서 단 하나의 값만 내보낼 수
+      있습니다. 파일 당 한 번만 사용 가능하며, 주로 해당 모듈을 대표하는
+      하나의 기능을 내보낼 때 사용합니다.
+    </p>
+    <pre><code class="language-javascript">// 파일: logger.js
+
+export default function log(message) {
+  console.log(`[LOG] ${message}`);
+}</code></pre>
+
+    <h2>2. 기능 가져오기 (Import)</h2>
+    <h3>이름 있는 가져오기 (Named Imports)</h3>
+    <p>
+      중괄호 <code>{}</code> 안에 가져올 기능의 이름을 명시하여 가져옵니다.
+      <code>as</code> 키워드를 사용하여 이름을 바꿔서 사용할 수도 있습니다.
+    </p>
+    <pre><code class="language-javascript">// 파일: main.js
+import { PI, add as sum, Calculator } from './math.js';
+
+console.log(PI); // 3.14159
+console.log(sum(5, 3)); // 8
+const calc = new Calculator();
+console.log(calc.multiply(4, 5)); // 20</code></pre>
+
+    <h3>기본 가져오기 (Default Import)</h3>
+    <p>중괄호 없이 원하는 변수 이름으로 가져올 수 있습니다.</p>
+    <pre><code class="language-javascript">// 파일: main.js
+import printLog from './logger.js';
+
+printLog("애플리케이션 시작!"); // [LOG] 애플리케이션 시작!</code></pre>
+
+    <h3>모듈 전체 가져오기</h3>
+    <p>
+      <code>* as</code> 구문을 사용하여 모듈의 모든 named export를 하나의
+      객체로 가져올 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">// 파일: main.js
+import * as mathUtils from './math.js';
+
+console.log(mathUtils.PI); // 3.14159
+console.log(mathUtils.add(10, 20)); // 30</code></pre>
+
+    <div class="note">
+      <h4>모듈 사용 방법</h4>
+      <p>
+        브라우저 환경에서 ES6 모듈을 사용하려면
+        <code>&lt;script&gt;</code> 태그에 <code>type="module"</code> 속성을
+        추가해야 합니다.
+      </p>
+      <pre><code class="language-html">&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</code></pre>
+      <p>
+        Node.js 환경에서는 기본적으로 CommonJS 모듈 시스템을 사용하지만,
+        <code>package.json</code>에 <code>"type": "module"</code>을 추가하거나
+        파일 확장자를 <code>.mjs</code>로 사용하여 ES6 모듈을 사용할 수
+        있습니다.
+      </p>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>
