@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript 학습: 이벤트 루프(Event Loop)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      color: #333;
+      /* 어두운 글씨 */
+      padding: 2px 0;
+      border-radius: 4px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      /* background-color와 color는 highlight.js 테마가 제어하도록 제거합니다. */
+      border: 1px solid #dee2e6;
+      /* 부드러운 테두리 */
+      padding: 0;
+      /* 내부 code 태그가 패딩을 갖도록 pre는 패딩을 제거합니다. */
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 10px;
+      overflow: hidden;
+      /* code 태그의 radius를 적용하기 위함 */
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffeeba;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>JavaScript 심화: 이벤트 루프(Event Loop)</h1>
+    <div class="note">
+        <p><strong>이벤트 루프(Event Loop)</strong>는 JavaScript의 비동기 실행 모델의 핵심입니다. 이 문서는 이벤트 루프를 구성하는 <strong>Call Stack</strong>, <strong>Microtask Queue</strong>, <strong>Macrotask Queue</strong>의 역할을 개별 예제와 함께 상세히 설명하고, 이들이 상호작용하는 처리 순서를 종합 예제로 보여줍니다.</p>
+    </div>
+
+    <h2>1. Call Stack (호출 스택)</h2>
+    <ul>
+        <li>현재 실행 중인 코드(함수)를 추적하는 자료 구조입니다. (LIFO: Last-In, First-Out)</li>
+        <li>함수가 호출되면 스택에 쌓이고(push), 함수 실행이 끝나면 스택에서 제거됩니다(pop).</li>
+        <li>JavaScript는 단 하나의 호출 스택을 가지므로, 한 번에 하나의 작업만 처리할 수 있습니다.</li>
+        <li>스택이 가득 차면 'Stack Overflow' 에러가 발생합니다.</li>
+    </ul>
+    <pre><code class="language-javascript">function first() {
+  console.log("  - first() 시작");
+  second();
+  console.log("  - first() 종료");
+}
+function second() {
+  console.log("    - second() 시작");
+  third();
+  console.log("    - second() 종료");
+}
+function third() {
+  console.log("      - third() 실행");
+}
+
+first(); // first -> second -> third 순으로 스택에 쌓이고, 역순으로 제거됩니다.</code></pre>
+
+    <h2>2. Microtask Queue</h2>
+    <ul>
+        <li><code>Promise.then/catch/finally</code>, <code>async/await</code> 등 Macrotask보다 우선순위가 높은 비동기 작업의 콜백이 대기하는 큐입니다.</li>
+        <li>현재 실행 중인 동기 코드가 끝나면, 이벤트 루프는 Macrotask를 처리하기 전에 이 큐에 있는 <strong>모든</strong> 작업을 먼저 처리합니다.</li>
+    </ul>
+    <pre><code class="language-javascript">console.log("Microtask 예제");
+Promise.resolve().then(function () {
+  console.log("  - Microtask (Promise.then)가 Call Stack으로 이동하여 실행됨");
+});</code></pre>
+
+    <h2>3. Macrotask Queue (또는 Task Queue)</h2>
+    <ul>
+        <li><code>setTimeout</code>, <code>setInterval</code>, I/O 작업, UI 렌더링 이벤트 등 비동기 작업의 콜백 함수가 대기하는 큐입니다.</li>
+        <li>이벤트 루프는 한 번의 '틱(tick)'에서 이 큐의 작업 <strong>하나</strong>만 처리합니다.</li>
+    </ul>
+    <pre><code class="language-javascript">console.log("Macrotask 예제");
+setTimeout(function () {
+  console.log("  - Macrotask (setTimeout)가 Call Stack으로 이동하여 실행됨");
+}, 0);</code></pre>
+
+    <h2>4. 이벤트 루프 처리 순서 및 종합 예제</h2>
+    <p>이벤트 루프의 한 사이클(tick)은 다음과 같은 순서로 진행됩니다.</p>
+    <ol>
+        <li>Call Stack에 있는 동기 코드를 모두 실행한다.</li>
+        <li>Call Stack이 비워지면, Microtask Queue에 있는 <strong>모든</strong> 작업을 순서대로 꺼내 실행한다. (이 과정에서 새로운 Microtask가 추가되면, 그 작업도 이번 사이클에 함께 실행된다.)</li>
+        <li>Microtask Queue가 완전히 비워지면, Macrotask Queue에서 가장 오래된 작업 <strong>하나</strong>를 꺼내 실행한다.</li>
+        <li>해당 Macrotask 실행이 완료되면, 브라우저는 필요한 경우 렌더링을 수행할 수 있다.</li>
+        <li>2번 과정부터 다시 반복한다.</li>
+    </ol>
+    <pre><code class="language-javascript">console.log(
+  "종합 예제: (동기 코드) -> (Microtasks) -> (Macrotask) -> 반복"
+);
+
+console.log("  (1) 동기: 코드 시작");
+
+// Macrotask 1
+setTimeout(function () {
+  console.log("  (5) Macrotask: 첫 번째 setTimeout 콜백");
+  // 이 Macrotask가 실행되는 동안 Microtask가 추가됨
+  Promise.resolve().then(function () {
+    console.log("  (6) Microtask: (setTimeout 내부의) Promise.then");
+  });
+}, 0);
+
+// Microtask 1
+Promise.resolve().then(function () {
+  console.log("  (3) Microtask: 첫 번째 Promise.then");
+});
+
+// Macrotask 2
+setTimeout(function () {
+  console.log("  (7) Macrotask: 두 번째 setTimeout 콜백");
+}, 0);
+
+// Microtask 2
+Promise.resolve().then(function () {
+  console.log("  (4) Microtask: 두 번째 Promise.then");
+});
+
+console.log("  (2) 동기: 코드 종료");</code></pre>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html> 
