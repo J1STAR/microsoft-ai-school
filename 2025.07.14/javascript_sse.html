@@ -86,10 +86,34 @@
     <h1>JavaScript Server-Sent Events (SSE)</h1>
     <div class="info-box">
       <p>
-        JavaScript의 Server-Sent Events(SSE)를 사용하여 서버로부터 단방향으로 데이터를 수신하는 예제입니다. SSE는 서버가 클라이언트에게 지속적으로 데이터를 푸시(push)할 수 있는 기술입니다. WebSocket과 달리 단방향 통신(서버 -> 클라이언트)만 지원하지만, 일반 HTTP를 통해 구현되므로 더 간단하고 기존 인프라와 호환성이 좋습니다.
-        <br>
-        <a href="https://developer.mozilla.org/ko/docs/Web/API/Server-sent_events/Using_server-sent_events" target="_blank" rel="noopener noreferrer">MDN에서 자세히 보기</a>
+        JavaScript의 Server-Sent Events(SSE)를 사용하여 서버로부터 단방향으로
+        데이터를 수신하는 예제입니다. SSE는 서버가 클라이언트에게 지속적으로
+        데이터를 푸시(push)할 수 있는 기술입니다. WebSocket과 달리 단방향
+        통신(서버 -> 클라이언트)만 지원하지만, 일반 HTTP를 통해 구현되므로 더
+        간단하고 기존 인프라와 호환성이 좋습니다.
       </p>
+       <p><strong>참고 자료:</strong></p>
+      <ul>
+        <li>
+          <a
+            href="https://developer.mozilla.org/ko/docs/Web/API/Server-sent_events/Using_server-sent_events"
+            target="_blank"
+            rel="noopener"
+            >MDN - Server-Sent Events 사용하기</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://javascript.info/server-sent-events"
+            target="_blank"
+            rel="noopener"
+            >javascript.info - Server-Sent Events</a
+          >
+        </li>
+        <li>
+            <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events" target="_blank" rel="noopener">WHATWG - HTML Living Standard (SSE)</a>
+        </li>
+      </ul>
     </div>
 
     <h2>1. EventSource를 이용한 연결</h2>

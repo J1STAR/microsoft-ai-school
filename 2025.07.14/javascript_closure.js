@@ -3,6 +3,9 @@
  * 클로저는 함수와 그 함수가 선언된 렉시컬 환경(Lexical Environment)의 조합입니다.
  * 외부 함수의 실행이 끝나도 내부 함수는 자신이 선언된 환경을 '기억'하여
  * 외부 함수의 변수에 접근할 수 있는 강력하고 중요한 개념입니다.
+ *
+ * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures
+ * @see https://javascript.info/closure
  */
 
 console.log("--- JavaScript 클로저(Closure) ---");

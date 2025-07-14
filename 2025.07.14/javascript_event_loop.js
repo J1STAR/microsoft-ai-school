@@ -3,6 +3,7 @@
  * JavaScript는 싱글 스레드 언어이지만, 이벤트 루프 덕분에 논블로킹(non-blocking) 방식으로
  * 동시성(concurrency)을 처리할 수 있습니다.
  *
+ * @see https://html.spec.whatwg.org/multipage/webappapis.html#event-loops
  * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/EventLoop
  */
 
