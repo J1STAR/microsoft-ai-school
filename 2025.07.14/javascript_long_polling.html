@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Long Polling</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      color: #333;
+      padding: 2px 0;
+      border-radius: 4px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-box {
+      background-color: #eaf2f8;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .info-box p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>JavaScript Long Polling</h1>
+    <div class="info-box">
+      <p>
+        JavaScript를 사용한 롱 폴링(Long Polling) 기법을 설명하는 예제입니다. 롱 폴링은 클라이언트가 서버에 요청을 보내고, 서버는 새로운 데이터가 있을 때까지 응답을 지연시키는 방식입니다. WebSocket이 지원되지 않는 환경에서 실시간 통신을 구현하기 위한 대안으로 사용될 수 있습니다.
+      </p>
+    </div>
+
+    <h2>1. Long Polling의 동작 원리</h2>
+    <ol>
+        <li>클라이언트가 서버에 데이터를 요청합니다.</li>
+        <li>서버는 즉시 응답하지 않고, 연결을 열어둔 상태로 대기합니다.</li>
+        <li>서버에서 새로운 이벤트(예: 새 메시지, 데이터 업데이트)가 발생하면, 해당 데이터를 담아 클라이언트에 응답합니다.</li>
+        <li>클라이언트는 응답을 받으면 데이터를 처리하고, 즉시 서버에 새로운 요청을 보내 1번 과정부터 다시 시작합니다.</li>
+        <li>만약 정해진 타임아웃 시간 동안 아무런 이벤트가 없으면, 서버는 타임아웃 상태를 알리는 응답을 보냅니다. 클라이언트는 이 응답을 받고 즉시 다시 요청을 보냅니다.</li>
+    </ol>
+
+    <h2>2. 클라이언트 측 구현 예시 (Client-Side Implementation)</h2>
+    <p>
+        여기서는 Fetch API와 재귀적 async 함수를 사용하여 Long Polling을 구현합니다. 실제 프로덕션에서는 예기치 않은 에러나 네트워크 중단에 대비한 더 정교한 에러 처리 로직이 필요합니다. 아래 코드는 실제 동작하는 서버 엔드포인트가 없으므로 개념 이해용으로 참고해 주세요.
+    </p>
+    <pre><code class="language-javascript">
+async function subscribe() {
+  console.log("  - 서버에 구독 요청을 보냅니다...");
+  try {
+    const response = await fetch("/subscribe"); // '/subscribe' 엔드포인트는 응답을 지연시킴
+    if (response.status === 502) {
+      // 서버 타임아웃
+      console.log("  - 서버 타임아웃, 즉시 재구독합니다.");
+      await subscribe();
+    } else if (response.status !== 200) {
+      // 기타 에러
+      console.error(`  - 에러 발생: ${response.statusText}. 1초 후 재시도합니다.`);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await subscribe();
+    } else {
+      // 성공적으로 데이터를 받은 경우
+      const message = await response.text();
+      console.log("  - 새로운 메시지 수신:", message);
+      await subscribe(); // 즉시 재구독
+    }
+  } catch (e) {
+    // 네트워크 에러
+    console.log("  - 네트워크 에러. 5초 후 재연결을 시도합니다.");
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    await subscribe();
+  }
+}
+// 실제 환경에서는 아래 주석을 해제하여 실행합니다.
+// subscribe();
+    </code></pre>
+
+    <h2>3. 서버 측 구현 개념 (Node.js/Express)</h2>
+    <p>
+        아래는 Node.js와 Express를 사용한 Long Polling 서버의 개념적인 코드입니다. 실제로는 EventEmitter나 메시지 큐(예: Redis Pub/Sub)를 사용하여 이벤트 발생을 효율적으로 처리하는 것이 일반적입니다.
+    </p>
+    <pre><code class="language-javascript">
+/*
+  const express = require('express');
+  const app = express();
+  const events = require('events');
+
+  const emitter = new events.EventEmitter();
+
+  app.get('/subscribe', (req, res) => {
+    emitter.once('newMessage', (message) => {
+      res.json(message);
+    });
+  });
+
+  app.post('/publish', express.json(), (req, res) => {
+    emitter.emit('newMessage', req.body);
+    res.status(204).end();
+  });
+
+  app.listen(3000, () => {
+    console.log('Long Polling 서버가 3000번 포트에서 실행 중입니다.');
+  });
+*/
+    </code></pre>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+</html> 

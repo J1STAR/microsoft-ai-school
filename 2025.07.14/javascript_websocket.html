@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript WebSocket API</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      color: #333;
+      padding: 2px 0;
+      border-radius: 4px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-box {
+      background-color: #eaf2f8;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .info-box p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>JavaScript WebSocket API</h1>
+    <div class="info-box">
+      <p>
+        JavaScript의 WebSocket API를 사용하여 실시간 양방향 통신을 구현하는 예제입니다. WebSocket은 클라이언트와 서버 간에 지속적인 연결을 제공하여, 양쪽에서 언제든지 데이터를 보낼 수 있게 합니다. 이는 HTTP 기반의 요청-응답 모델과 달리, 채팅, 실시간 게임, 주식 시세 등과 같은 서비스에 매우 유용합니다.
+        <br>
+        <a href="https://developer.mozilla.org/ko/docs/Web/API/WebSockets_API" target="_blank" rel="noopener noreferrer">MDN에서 자세히 보기</a>
+      </p>
+    </div>
+
+    <h2>1. WebSocket 연결 생성</h2>
+    <p>
+      <code>WebSocket</code> 객체를 생성하여 서버에 연결을 시도합니다. URL 스킴은 'ws://' 또는 보안 연결(TLS)을 위한 'wss://'를 사용합니다. 이 예제에서는 공개 에코(echo) 서버를 사용하여, 보내는 메시지가 그대로 돌아오는 것을 확인합니다.
+    </p>
+    <pre><code class="language-javascript">
+// 'wss://echo.websocket.events/'는 테스트용 public WebSocket 서버입니다.
+const socket = new WebSocket("wss://echo.websocket.events/");
+    </code></pre>
+
+    <h2>2. WebSocket 이벤트 핸들러</h2>
+    <p>
+      WebSocket의 상태 변화와 데이터 수신은 이벤트를 통해 처리됩니다.
+    </p>
+    <ul>
+      <li><b>onopen:</b> 연결이 성공적으로 수립되었을 때 호출됩니다.</li>
+      <li><b>onmessage:</b> 서버로부터 메시지를 수신했을 때 호출됩니다.</li>
+      <li><b>onclose:</b> 연결이 종료되었을 때 호출됩니다.</li>
+      <li><b>onerror:</b> 에러가 발생했을 때 호출됩니다.</li>
+    </ul>
+    <pre><code class="language-javascript">
+socket.onopen = function (event) {
+  console.log("  - (onopen) WebSocket 연결 성공:", event);
+  socket.send("안녕하세요, WebSocket!");
+};
+
+socket.onmessage = function (event) {
+  console.log(`  - (onmessage) 서버로부터 메시지 수신: "${event.data}"`);
+  // 5초 후 연결을 종료합니다.
+  setTimeout(() => socket.close(1000, "작업 완료"), 5000);
+};
+
+socket.onclose = function (event) {
+  if (event.wasClean) {
+    console.log(`  - (onclose) WebSocket 연결이 정상적으로 종료되었습니다. 코드: ${event.code}, 이유: ${event.reason}`);
+  } else {
+    console.error(`  - (onclose) WebSocket 연결이 비정상적으로 끊어졌습니다. 코드: ${event.code}`);
+  }
+};
+
+socket.onerror = function (error) {
+  console.error("  - (onerror) WebSocket 에러 발생:", error);
+};
+    </code></pre>
+
+    <h2>3. WebSocket의 상태 (readyState)</h2>
+    <p>
+      <code>WebSocket</code> 객체는 현재 연결 상태를 나타내는 <code>readyState</code> 속성을 가집니다.
+    </p>
+    <ul>
+        <li><b>WebSocket.CONNECTING (0):</b> 연결 중입니다.</li>
+        <li><b>WebSocket.OPEN (1):</b> 연결이 수립되어 데이터를 주고받을 수 있습니다.</li>
+        <li><b>WebSocket.CLOSING (2):</b> 연결 종료 중입니다.</li>
+        <li><b>WebSocket.CLOSED (3):</b> 연결이 종료되었거나 실패했습니다.</li>
+    </ul>
+    <pre><code class="language-javascript">
+function logReadyState() {
+  let state = "";
+  switch (socket.readyState) {
+    case WebSocket.CONNECTING: state = "CONNECTING"; break;
+    case WebSocket.OPEN: state = "OPEN"; break;
+    case WebSocket.CLOSING: state = "CLOSING"; break;
+    case WebSocket.CLOSED: state = "CLOSED"; break;
+    default: state = "UNKNOWN"; break;
+  }
+  console.log(`  - 현재 readyState: ${state} (${socket.readyState})`);
+}
+
+console.log("\n3. WebSocket의 현재 상태(readyState) 확인");
+logReadyState(); // 스크립트 실행 시점 (주로 CONNECTING)
+setTimeout(logReadyState, 1000); // 1초 후 (주로 OPEN)
+setTimeout(logReadyState, 6000); // 6초 후 (주로 CLOSED)
+    </code></pre>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+</html> 
