@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript 학습: 콜백(Callback)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      color: #333;
+      padding: 2px 0;
+      border-radius: 4px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffeeba;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>JavaScript 심화: 콜백(Callback)</h1>
+    <div class="note">
+      <p><strong>콜백(Callback)</strong>은 다른 함수에 인자로 전달되어, 특정 작업(동기 또는 비동기)이 완료된 후 실행되는 함수입니다. 이는 JavaScript의 비동기 처리 모델을 이해하는 데 가장 기본이 되는 개념입니다.</p>
+    </div>
+
+    <h2>1. 콜백의 기본 개념 (동기적 콜백)</h2>
+    <p>
+        다른 함수의 인자로 전달되는 함수를 '콜백 함수'라고 합니다. 배열의 <code>forEach</code> 메서드는 각 요소에 대해 콜백 함수를 실행하는 대표적인 동기적 콜백의 예입니다. 코드가 순서대로 즉시 실행됩니다.
+    </p>
+    <pre><code class="language-javascript">const numbers = [1, 2, 3];
+
+function printItem(item) {
+  console.log(`  - 아이템: ${item}`);
+}
+
+numbers.forEach(printItem); // printItem 함수가 forEach의 콜백으로 전달됩니다.</code></pre>
+
+    <h2>2. 비동기 처리와 콜백</h2>
+    <p>
+        시간이 걸리는 작업(예: 네트워크 요청, 타이머)이 끝난 후 특정 코드를 실행하고 싶을 때 비동기 콜백을 사용합니다. <code>setTimeout</code>은 지정된 시간 후에 콜백 함수를 실행하는 대표적인 비동기 함수입니다.
+    </p>
+    <pre><code class="language-javascript">function onTimeout() {
+  console.log("  - 2초 후에 이 메시지가 표시됩니다.");
+}
+
+console.log("  - 타이머 시작...");
+setTimeout(onTimeout, 2000); // 2초(2000ms) 후에 onTimeout 콜백이 실행됩니다.
+console.log("  - setTimeout은 코드를 멈추지 않고 바로 다음 줄을 실행합니다.");</code></pre>
+
+    <h2>3. 콜백 지옥 (Callback Hell)</h2>
+    <p>
+        여러 비동기 작업이 순차적으로 의존해야 할 때, 콜백 안에 또 다른 콜백을 계속 중첩하게 되면 코드가 깊어지고 가독성이 급격히 떨어지는 <strong>'콜백 지옥'</strong> 또는 <strong>'파멸의 피라미드(Pyramid of Doom)'</strong> 현상이 발생합니다. 이는 코드의 흐름을 파악하고 에러를 처리하기 매우 어렵게 만듭니다.
+    </p>
+    <pre><code class="language-javascript">setTimeout(() => {
+  console.log("  - 1단계: 사용자 정보 가져오기 (1초 소요)");
+  setTimeout(() => {
+    console.log("    - 2단계: 사용자 게시물 가져오기 (1초 소요)");
+    setTimeout(() => {
+      console.log("      - 3단계: 게시물 댓글 가져오기 (1초 소요)");
+      console.log("        - 모든 작업 완료!");
+    }, 1000);
+  }, 1000);
+}, 1000);</code></pre>
+
+    <h2>4. 콜백 지옥을 해결하는 방법: Promise</h2>
+    <p>
+        이러한 콜백 지옥의 문제를 해결하기 위해 ES6(ECMAScript 2015)에서 <strong>Promise</strong>가 표준으로 도입되었습니다. Promise를 사용하면 비동기 작업을 보다 깔끔하게 체이닝(chaining)하여 코드의 가독성을 높일 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">function step(delay, message) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(message);
+      resolve();
+    }, delay);
+  });
+}
+
+step(1000, "  - Promise 1단계")
+  .then(() => step(1000, "    - Promise 2단계"))
+  .then(() => step(1000, "      - Promise 3단계"))
+  .then(() => console.log("        - Promise로 모든 작업 완료!"));</code></pre>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html> 
