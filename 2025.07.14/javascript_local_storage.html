@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript 학습: localStorage</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      color: #333;
+      padding: 2px 0;
+      border-radius: 4px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffeeba;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>브라우저 저장소: localStorage</h1>
+    <div class="note">
+      <p><strong>localStorage</strong>는 웹 브라우저에 데이터를 영구적으로 저장하는 방법입니다. 데이터는 key-value 쌍으로 저장되며, 브라우저를 닫거나 컴퓨터를 재부팅해도 데이터가 사라지지 않습니다. 동일한 브라우저의 동일한 출처(origin)에서는 항상 같은 데이터에 접근할 수 있습니다.</p>
+    </div>
+
+    <h2>1. localStorage 기본 사용법</h2>
+    <p>
+        <code>localStorage</code> 객체는 <code>setItem()</code>, <code>getItem()</code>, <code>removeItem()</code>, <code>clear()</code>와 같은 간단한 메서드를 제공하여 데이터를 관리합니다.
+    </p>
+    <pre><code class="language-javascript">// 1. 데이터 저장: localStorage.setItem(key, value)
+localStorage.setItem("theme", "dark");
+
+// 2. 데이터 조회: localStorage.getItem(key)
+const savedTheme = localStorage.getItem("theme");
+console.log(`저장된 테마: ${savedTheme}`); // "dark"
+
+// 3. 데이터 삭제: localStorage.removeItem(key)
+localStorage.removeItem("theme");
+
+// 4. 모든 데이터 삭제: localStorage.clear()
+localStorage.setItem("user", "JohnDoe");
+localStorage.setItem("isLoggedIn", "true");
+localStorage.clear(); // 모든 항목 삭제
+</code></pre>
+
+    <h2>2. 객체(Object) 저장하기 (JSON 활용)</h2>
+    <p>
+        <code>localStorage</code>는 문자열(String) 형태의 데이터만 저장할 수 있습니다. 객체나 배열을 저장하려면 <code>JSON.stringify()</code>를 사용하여 문자열로 변환해야 하고, 다시 가져올 때는 <code>JSON.parse()</code>를 사용하여 원래 형태로 복원해야 합니다.
+    </p>
+    <pre><code class="language-javascript">// 사용자 설정 객체
+const userSettings = {
+  username: "Alice",
+  notifications: {
+    email: true,
+    sms: false,
+  },
+  language: "ko",
+};
+
+// 1. 객체를 JSON 문자열로 변환하여 저장
+localStorage.setItem("settings", JSON.stringify(userSettings));
+
+// 2. 저장된 문자열을 가져와서 객체로 파싱
+const savedSettingsString = localStorage.getItem("settings");
+const parsedSettings = JSON.parse(savedSettingsString);
+
+console.log(parsedSettings.username); // "Alice"
+</code></pre>
+
+    <div class="note">
+      <p><strong>주의:</strong> <code>localStorage</code>는 사용자가 직접 브라우저 개발자 도구를 통해 데이터를 보거나 수정할 수 있으므로, 비밀번호와 같은 민감한 정보는 저장해서는 안 됩니다.</p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html> 

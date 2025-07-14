@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript 학습: IndexedDB</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      color: #333;
+      padding: 2px 0;
+      border-radius: 4px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      border: 1px solid #dee2e6;
+      padding: 0;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffeeba;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>브라우저 저장소: IndexedDB</h1>
+    <div class="note">
+      <p><strong>IndexedDB</strong>는 대용량의 구조화된 데이터를 브라우저에 저장할 수 있게 해주는 로우레벨(low-level) API입니다. 단순한 key-value 저장소를 넘어, 트랜잭션을 지원하는 비동기 데이터베이스 시스템입니다. 복잡한 데이터, 파일, Blob 등을 저장하고 인덱스를 통해 효율적으로 검색할 수 있습니다.</p>
+    </div>
+
+    <h2>1. IndexedDB 핵심 개념</h2>
+    <ul>
+        <li><strong>Database:</strong> 데이터가 저장되는 가장 상위의 컨테이너입니다. 이름과 버전으로 관리됩니다.</li>
+        <li><strong>Object Store:</strong> 데이터를 저장하는 공간으로, 관계형 데이터베이스의 '테이블'과 유사한 개념입니다.</li>
+        <li><strong>Index:</strong> 객체 저장소 내의 데이터를 특정 속성을 기준으로 빠르게 검색할 수 있도록 만드는 색인입니다.</li>
+        <li><strong>Transaction:</strong> 데이터베이스 작업을 위한 래퍼(wrapper)입니다. 모든 데이터 읽기/쓰기 작업은 트랜잭션 내에서 이루어져야 하며, 데이터의 일관성과 원자성을 보장합니다.</li>
+        <li><strong>Cursor:</strong> 객체 저장소나 인덱스의 레코드를 순회하며 탐색하는 메커니즘입니다.</li>
+    </ul>
+
+    <h2>2. 데이터베이스 열기 및 스키마 정의</h2>
+    <p>
+        <code>indexedDB.open(dbName, version)</code>을 통해 데이터베이스 연결을 요청합니다. 이 과정에서 <code>onupgradeneeded</code> 이벤트는 데이터베이스를 처음 만들거나 버전을 업그레이드할 때 발생하며, 이 이벤트 핸들러 안에서만 객체 저장소나 인덱스와 같은 스키마를 정의하거나 수정할 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">// 'notesDB'라는 이름의 데이터베이스를 버전 1로 엽니다.
+const request = indexedDB.open("notesDB", 1);
+
+// 데이터베이스를 열거나 생성하는 데 에러가 발생했을 때
+request.onerror = (event) => {
+  console.error("DB 열기 실패:", event.target.error);
+};
+
+// 데이터베이스가 처음 생성되거나 버전이 변경될 때
+request.onupgradeneeded = (event) => {
+  const db = event.target.result;
+
+  // 'notes'라는 객체 저장소(테이블) 생성. 'id'를 키로 사용하고 자동 증가.
+  const objectStore = db.createObjectStore("notes", {
+    keyPath: "id",
+    autoIncrement: true,
+  });
+
+  // 'timestamp' 속성을 기준으로 검색할 수 있도록 인덱스 생성
+  objectStore.createIndex("timestamp", "timestamp", { unique: false });
+};
+
+// 데이터베이스가 성공적으로 열렸을 때
+request.onsuccess = (event) => {
+  console.log("DB 열기 성공!");
+  const db = event.target.result;
+  // DB 연결 객체(db)를 사용하여 다른 작업을 수행할 수 있습니다.
+};</code></pre>
+
+    <h2>3. 데이터 추가 (Create)</h2>
+    <p>
+        데이터를 추가하려면 'readwrite' 모드로 트랜잭션을 시작하고, 대상 객체 저장소를 가져온 뒤 <code>add()</code> 메서드를 사용합니다. 모든 작업은 비동기적이며, 성공 또는 실패 이벤트 핸들러를 통해 결과를 처리합니다.
+    </p>
+    <pre><code class="language-javascript">function addNote(db, newNote) {
+    // 'readwrite' 모드로 트랜잭션을 시작합니다.
+    const transaction = db.transaction(["notes"], "readwrite");
+    const objectStore = transaction.objectStore("notes");
+    
+    // 데이터를 추가하는 요청을 생성합니다.
+    const request = objectStore.add(newNote);
+
+    request.onsuccess = () => {
+        console.log("노트 추가 성공, ID:", request.result);
+    };
+
+    request.onerror = (event) => {
+        console.error("노트 추가 실패:", event.target.error);
+    };
+}
+
+// 예시: addNote(db, { text: "새 메모", timestamp: new Date().getTime() });</code></pre>
+
+    <h2>4. 데이터 조회 (Read)</h2>
+    <p>
+        하나의 데이터를 조회할 때는 <code>get()</code> 메서드를 사용합니다.
+    </p>
+    <pre><code class="language-javascript">function getNote(db, id) {
+    const transaction = db.transaction(["notes"], "readonly");
+    const objectStore = transaction.objectStore("notes");
+    
+    const request = objectStore.get(id);
+
+    request.onsuccess = () => {
+        if(request.result) {
+            console.log("조회 성공:", request.result);
+        } else {
+            console.log("해당 ID의 노트가 없습니다.");
+        }
+    };
+}
+
+// 예시: getNote(db, 1);</code></pre>
+
+    <div class="note">
+      <p><strong>참고:</strong> <code>IndexedDB</code>는 비동기 이벤트 기반 API로, 코드가 복잡해지기 쉽습니다. 실제 프로젝트에서는 <code>Dexie.js</code>나 <code>idb</code>와 같은 Promise 기반의 래퍼(wrapper) 라이브러리를 사용하여 생산성을 높이는 경우가 많습니다.</p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html> 
