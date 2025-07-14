@@ -185,4 +185,5 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | Web Frontend | 
 | [2025.07.09](./2025.07.09/) | **[HTML, CSS]** HTML 기초 학습 및 시맨틱 마크업을 활용한 이력서 페이지 제작 | `HTML`, `CSS` |
 | [2025.07.10](./2025.07.10/) | **[HTML, CSS]** HTML5 시맨틱 태그, 고급 표, 미디어 요소를 활용한 웹 페이지 레이아웃 설계 | `HTML`, `CSS` |
-| [2025.07.11](./2025.07.11/) | **[JS, TS]** 모던 JavaScript 및 TypeScript 핵심 개념(프로토타입, 모듈, 제네릭 등) 학습 | `JavaScript`, `TypeScript` |
+| [2025.07.11](./2025.07.11/) | **[JavaScript, TypeScript]** JavaScript(호이스팅, 프로토타입, 모듈) 및 TypeScript(기본 타입, 제네릭, 인터페이스) 핵심 개념 | `JavaScript`, `TypeScript` |
+| [2025.07.14](./2025.07.14/) | **[JavaScript]** DOM 조작 및 이벤트, 비동기(콜백, Promise, async/await), 웹 API(Storage, WebSocket, SSE) | `JavaScript`, `DOM`, `Async`, `Storage`, `Network` |
