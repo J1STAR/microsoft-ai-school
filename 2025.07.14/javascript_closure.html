@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript 학습: 클로저(Closure)</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    p,
+    li {
+      font-size: 16px;
+    }
+
+    code {
+      color: #333;
+      /* 어두운 글씨 */
+      padding: 2px 0;
+      border-radius: 4px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    pre {
+      /* background-color와 color는 highlight.js 테마가 제어하도록 제거합니다. */
+      border: 1px solid #dee2e6;
+      /* 부드러운 테두리 */
+      padding: 0;
+      /* 내부 code 태그가 패딩을 갖도록 pre는 패딩을 제거합니다. */
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 10px;
+      overflow: hidden;
+      /* code 태그의 radius를 적용하기 위함 */
+    }
+
+    pre code.hljs {
+      padding: 20px;
+      font-family: "D2Coding", "Courier New", Courier, monospace;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .note {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffeeba;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>JavaScript 심화: 클로저(Closure)</h1>
+    <div class="note">
+        <p><strong>클로저(Closure)</strong>는 함수와 그 함수가 선언된 렉시컬 환경의 조합입니다. 클로저를 통해 함수는 자신의 외부 스코프에 있는 변수에 계속 접근할 수 있으며, 이는 데이터 은닉과 상태 유지 등 강력한 프로그래밍 패턴을 가능하게 합니다.</p>
+    </div>
+
+    <h2>1. 클로저의 기본 원리</h2>
+    <p>
+        함수가 자신이 선언된 렉시컬 스코프를 기억하여, 그 스코프 밖에서 호출될 때에도 해당 스코프의 변수에 접근할 수 있는 현상을 의미합니다.
+    </p>
+    <pre><code class="language-javascript">function outerFunction() {
+  const outerVariable = "외부 함수의 변수";
+
+  // innerFunction은 outerFunction의 스코프에 접근할 수 있습니다.
+  function innerFunction() {
+    console.log("  - 내부 함수에서 접근:", outerVariable);
+  }
+
+  return innerFunction;
+}
+
+const myClosure = outerFunction(); // outerFunction의 실행은 끝났지만,
+                                   // innerFunction은 outerVariable을 '기억'하고 있습니다.
+
+myClosure(); // 기억하고 있던 변수에 접근하여 출력합니다.</code></pre>
+
+    <h2>2. 클로저의 활용 (1): 데이터 은닉 (Data Encapsulation)</h2>
+    <p>
+        클로저를 사용하면 외부에서 직접 접근할 수 없는 비공개(private) 변수를 만들 수 있습니다. 이는 객체지향 프로그래밍의 캡슐화를 흉내 내는 강력한 패턴입니다.
+    </p>
+    <pre><code class="language-javascript">function createCounter() {
+  let count = 0; // 이 변수는 외부에서 직접 수정이 불가능한 '비공개' 상태가 됩니다.
+
+  /*
+   * 반환되는 객체의 메서드들은 자신이 선언된 환경(createCounter)을 기억하는 클로저입니다.
+   * 따라서 이 메서드들을 통해서만 'count' 변수를 제어할 수 있습니다.
+   */
+  return {
+    increment: function () {
+      count++;
+    },
+    decrement: function () {
+      count--;
+    },
+    getCount: function () {
+      return count;
+    },
+  };
+}
+
+const counter1 = createCounter();
+counter1.increment();
+counter1.increment();
+console.log("  - Counter 1의 값:", counter1.getCount()); // 2
+
+try {
+  console.log(counter1.count); // undefined. 외부에서 직접 접근할 수 없습니다.
+} catch (e) {
+  console.log("  - count 변수에 직접 접근 시도... 실패!");
+}</code></pre>
+
+    <h2>3. 클로저의 활용 (2): 상태 유지 (Stateful Functions)</h2>
+    <p>
+        클로저는 함수 호출 간에 특정 상태를 기억하고 유지하는 데 사용될 수 있습니다.
+    </p>
+    <pre><code class="language-javascript">function createUniqueIdGenerator() {
+  let lastId = 0;
+
+  return function () {
+    lastId++;
+    return `ID-${lastId}`;
+  };
+}
+
+const generateId = createUniqueIdGenerator();
+console.log("  - 첫 번째 ID 생성:", generateId()); // ID-1
+console.log("  - 두 번째 ID 생성:", generateId()); // ID-2
+// 'lastId'는 generateId 함수가 호출될 때마다 유지되고 증가합니다.</code></pre>
+
+    <h2>4. 반복문에서의 클로저 문제와 해결</h2>
+    <p>
+        반복문에서 클로저를 사용할 때, 변수의 스코프 문제로 예상과 다르게 동작할 수 있습니다. <code>var</code>는 함수 스코프를 가지므로, <code>setTimeout</code>의 콜백이 실행될 시점에는 루프가 모두 끝난 후의 최종 <code>i</code> 값을 참조합니다.
+    </p>
+    <pre><code class="language-javascript">// 문제 상황 (var 사용)
+for (var i = 1; i <= 3; i++) {
+  setTimeout(function () {
+    /*
+     * setTimeout의 콜백이 실행될 시점(1초 후)에는 루프가 모두 끝난 상태입니다.
+     * var로 선언된 i는 함수 스코프를 가지므로, 모든 콜백이 마지막 i 값(4)을 참조합니다.
+     */
+    console.log(`    var i: ${i}`); // 4, 4, 4가 출력됨
+  }, 100);
+}</code></pre>
+    <p>
+        이 문제는 <code>let</code>을 사용하여 해결할 수 있습니다. <code>let</code>은 블록 스코프를 가지므로, 루프의 각 반복마다 새로운 <code>i</code> 변수가 생성되어 클로저가 해당 시점의 <code>i</code> 값을 올바르게 기억합니다.
+    </p>
+    <pre><code class="language-javascript">// 해결책 (let 사용)
+// `let`은 블록 스코프를 가집니다. 루프의 각 반복마다 새로운 `i` 변수가 생성됩니다.
+// 따라서 각 콜백은 자신이 생성된 시점의 `i` 값을 올바르게 기억합니다.
+for (let i = 1; i <= 3; i++) {
+  setTimeout(function () {
+    console.log(`    let i: ${i}`); // 1, 2, 3이 출력됨
+  }, 500);
+}</code></pre>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html> 
