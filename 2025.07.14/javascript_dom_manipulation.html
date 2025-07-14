@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 학습: DOM 조작 (Manipulation)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            color: #2c3e50;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        h3 {
+            margin-top: 30px;
+        }
+        p, li {
+            font-size: 16px;
+        }
+        code {
+            color: #333;
+            padding: 2px 0;
+            border-radius: 4px;
+            font-family: "D2Coding", "Courier New", Courier, monospace;
+        }
+        pre {
+            border: 1px solid #dee2e6;
+            padding: 0;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        pre code.hljs {
+            padding: 20px;
+            font-family: "D2Coding", "Courier New", Courier, monospace;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .note {
+            background-color: #eaf5ff;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .example-box {
+            border: 2px dashed #bdc3c7;
+            padding: 20px;
+            margin-top: 15px;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+        }
+        .box {
+            width: 50px;
+            height: 50px;
+            background-color: #e74c3c;
+            margin: 5px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .title-highlight {
+            border: 2px solid red;
+        }
+        .title-active {
+            background-color: yellow !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>JavaScript 심화: DOM 조작 (Manipulation)</h1>
+    <div class="note">
+        <p><strong>DOM(Document Object Model)</strong>은 웹 페이지의 콘텐츠와 구조, 스타일을 표현하는 트리 구조의 객체 모델입니다. JavaScript는 DOM API를 통해 웹 페이지의 모든 요소를 동적으로 선택, 변경, 추가, 삭제하는 방법을 제공합니다.</p>
+        <p><strong>학습 방법:</strong> 이 페이지의 예제들을 가장 효과적으로 학습하려면 <strong>개발자 도구(F12)</strong>를 열고, 각 코드 조각을 <strong>콘솔(Console)</strong>에 직접 복사-붙여넣기하여 실행해보세요.</p>
+        <p><strong>참고 자료:</strong></p>
+        <ul>
+            <li><a href="https://developer.mozilla.org/ko/docs/Web/API/Document_Object_Model" target="_blank" rel="noopener">MDN - Document Object Model</a></li>
+            <li><a href="https://javascript.info/document" target="_blank" rel="noopener">JavaScript.info - Document</a></li>
+        </ul>
+    </div>
+
+    <h2>DOM과 DOM 트리란?</h2>
+    <p><strong>DOM(Document Object Model, 문서 객체 모델)</strong>은 웹 페이지(HTML, XML 문서)에 대한 프로그래밍 인터페이스입니다. 브라우저가 HTML 문서를 읽으면, 그 내용을 해석하여 메모리 상에 <strong>객체(object)</strong>들의 트리 구조로 변환하는데, 이것이 바로 DOM입니다. 즉, DOM은 웹 페이지를 JavaScript가 이해하고 조작할 수 있는 객체의 집합으로 모델링한 것입니다.</p>
+    
+    <h3>DOM 트리 (DOM Tree)</h3>
+    <p>DOM은 문서를 논리적인 트리 구조로 표현합니다. 이 트리의 각 부분을 <strong>노드(Node)</strong>라고 부릅니다. HTML 태그는 '요소 노드', 태그 안의 텍스트는 '텍스트 노드', 주석은 '주석 노드'가 됩니다. 이 노드들은 서로 부모-자식-형제 관계를 형성하며 전체 문서를 구성합니다.</p>
+    <pre style="background-color:#fff; border: 1px solid #ccc; padding: 15px; border-radius: 5px; font-family: monospace; line-height: 1.5;">
+[Document]
+  └── [Element: &lt;html&gt;]
+      ├── [Element: &lt;head&gt;]
+      │   └── [Element: &lt;title&gt;]
+      │       └── [Text: "페이지 제목"]
+      └── [Element: &lt;body&gt;]
+          ├── [Element: &lt;h1&gt;]
+          │   └── [Text: "주요 제목"]
+          └── [Element: &lt;p&gt;]
+              ├── [Text: "문단 내용입니다."]
+              └── [Element: &lt;strong&gt;]
+                  └── [Text: "중요!"]
+    </pre>
+    <p>JavaScript로 DOM을 조작한다는 것은, 결국 이 트리 구조의 노드 객체들을 선택하고, 그들의 속성, 스타일, 내용을 변경하거나 새로운 노드를 추가/삭제하는 것을 의미합니다.</p>
+
+
+    <h2>1. 요소 선택 (Selecting Elements)</h2>
+    <p><code>getElementsByClassName</code>은 '살아있는(live)' <code>HTMLCollection</code>을 반환하여 DOM 변경을 실시간으로 반영하지만 <code>forEach</code>를 쓸 수 없습니다. 반면 <code>querySelectorAll</code>은 선택 시점의 상태를 담은 '정적(static)' <code>NodeList</code>를 반환하며 <code>forEach</code>를 지원해 다루기 편리합니다.</p>
+    <div class="example-box">
+        <h3 id="title-1">제목</h3>
+        <p class="content-text-1">첫 번째 문단입니다.</p>
+        <p class="content-text-1">두 번째 문단입니다.</p>
+    </div>
+    <pre><code class="language-javascript">document.getElementById('title-1');
+document.getElementsByClassName('content-text-1');
+document.querySelectorAll('.content-text-1');</code></pre>
+
+    <h2>2. 내용 변경 (Changing Content)</h2>
+    <p><code>textContent</code>는 순수 텍스트만 다뤄 속도가 빠르고 XSS 공격으로부터 안전합니다. <code>innerHTML</code>은 HTML 문자열을 파싱하고 DOM을 재구성하므로 상대적으로 느리고, 신뢰할 수 없는 데이터를 사용할 경우 보안 취약점이 생길 수 있습니다.</p>
+    <div class="example-box">
+        <h4 id="title-2">원래 제목</h4>
+        <div id="container-2"></div>
+    </div>
+    <pre><code class="language-javascript">const title2 = document.getElementById('title-2');
+title2.textContent = '새로운 제목!';
+const container2 = document.getElementById('container-2');
+container2.innerHTML = '&lt;p&gt;innerHTML로 추가된 문단&lt;/p&gt;';</code></pre>
+
+    <h2>3. 속성 변경 (Manipulating Attributes)</h2>
+    <p>HTML 속성(attribute)은 HTML 문서의 초기 값이며, DOM 프로퍼티(property)는 DOM 객체가 가진 현재 값입니다. <code>setAttribute</code>는 attribute를, <code>element.id</code> 같은 접근은 property를 조작합니다. 대부분 서로 동기화되지만, 비표준 속성 등을 다룰 때는 차이가 있을 수 있습니다.</p>
+    <div class="example-box">
+        <button id="btn-3">버튼</button>
+    </div>
+    <pre><code class="language-javascript">const btn3 = document.getElementById('btn-3');
+btn3.setAttribute('data-action', 'changed');
+btn3.id = 'new-btn-3';</code></pre>
+
+    <h2>4. 스타일 변경 (Manipulating Styles)</h2>
+    <p><code>element.style</code>은 CSS 규칙 중 우선순위가 가장 높은 '인라인 스타일'을 직접 수정합니다. 이 때문에 유지보수가 어려워질 수 있어, 일반적으로 <code>classList</code>를 통해 CSS 클래스를 제어하는 방식이 권장됩니다.</p>
+    <div class="example-box">
+        <div id="div-4" style="padding: 10px;">스타일을 변경해 보세요.</div>
+    </div>
+    <pre><code class="language-javascript">const div4 = document.getElementById('div-4');
+div4.style.color = 'white';
+div4.style.backgroundColor = 'indigo';
+div4.classList.add('title-highlight');</code></pre>
+
+    <h2>5. 새로운 요소 생성 및 추가 (Creating and Adding Elements)</h2>
+    <p>여러 요소를 추가할 때는 <code>DocumentFragment</code>라는 가상 컨테이너를 사용하면 성능을 향상시킬 수 있습니다. 메모리상에서 여러 작업을 마친 뒤, 실제 DOM에는 단 한 번만 추가하여 불필요한 화면 갱신(리플로우/리페인트)을 최소화합니다.</p>
+    <div class="example-box" id="container-5">
+        <!-- 이곳에 새로운 요소가 추가됩니다 -->
+    </div>
+    <pre><code class="language-javascript">// DocumentFragment 생성
+const fragment = document.createDocumentFragment();
+
+// 프래그먼트 내부에 여러 li 요소를 추가
+for (let i = 0; i < 3; i++) {
+    const li = document.createElement('li');
+    li.textContent = `Fragment 아이템 ${i + 1}`;
+    fragment.appendChild(li);
+}
+
+// 최종적으로 프래그먼트를 실제 DOM에 한 번만 추가
+const container5 = document.getElementById('container-5');
+container5.appendChild(fragment);</code></pre>
+
+    <h2>6. 요소 제거 (Removing Elements)</h2>
+    <p>요소를 DOM에서 제거하면, 해당 요소에 연결된 모든 자식 요소와 이벤트 리스너도 함께 안전하게 제거됩니다. 이는 메모리 누수를 방지하는 데 도움이 됩니다.</p>
+    <div class="example-box">
+        <p id="p-to-remove-6">제거될 요소</p>
+    </div>
+    <pre><code class="language-javascript">const pToRemove6 = document.getElementById('p-to-remove-6');
+pToRemove6?.remove();</code></pre>
+
+    <h2>7. 이벤트 처리 (Event Handling)</h2>
+    <p><code>addEventListener</code>의 두 번째 인자인 함수를 '이벤트 핸들러'라고 합니다. 이 함수는 이벤트 발생 시 호출되며, 이벤트 상세 정보가 담긴 <code>Event</code> 객체를 인자로 받을 수 있습니다. <code>event.target</code>으로 이벤트가 발생한 요소를 특정할 수 있습니다.</p>
+    <div class="example-box">
+        <button id="btn-7">클릭하세요!</button>
+        <p id="p-for-event-7">대기 중...</p>
+    </div>
+    <pre><code class="language-javascript">const btn7 = document.getElementById('btn-7');
+const p7 = document.getElementById('p-for-event-7');
+btn7.addEventListener('click', (event) => {
+    p7.textContent = `버튼 클릭! (타겟: ${event.target.tagName})`;
+});</code></pre>
+
+    <h2>8. 요소 목록 순회 (Iterating Over Element Lists)</h2>
+    <p>여러 요소를 한 번에 선택하여 반복문으로 동일한 작업을 적용할 수 있습니다. 아래 세 가지 주요 방법을 실습해봅시다.</p>
+    <div class="example-box">
+        <p class="p-iterate-8">항목 1</p>
+        <p class="p-iterate-8">항목 2</p>
+        <p class="p-iterate-8">항목 3</p>
+    </div>
+
+    <h3>방법 1: for...of (가장 범용적)</h3>
+    <p><code>for...of</code> 반복문은 <code>NodeList</code>와 <code>HTMLCollection</code>을 모두 순회할 수 있어 가장 추천되는 방법 중 하나입니다.</p>
+    <pre><code class="language-javascript">const items = document.querySelectorAll('.p-iterate-8');
+for (const item of items) {
+    item.style.fontWeight = 'bold';
+}</code></pre>
+
+    <h3>방법 2: forEach (NodeList 전용)</h3>
+    <p><code>querySelectorAll</code>이 반환하는 <code>NodeList</code>는 <code>forEach</code> 메서드를 내장하고 있어 편리하게 사용할 수 있습니다.</p>
+    <pre><code class="language-javascript">const items = document.querySelectorAll('.p-iterate-8');
+items.forEach((item, index) => {
+    item.style.color = 'green';
+    item.textContent = `${index + 1}번째 항목 (forEach)`;
+});</code></pre>
+
+    <h3>방법 3: Array.from() (HTMLCollection 등 유사 배열 객체 변환)</h3>
+    <p><code>getElementsByClassName</code>이 반환하는 <code>HTMLCollection</code>은 <code>forEach</code>가 없지만, <code>Array.from()</code>으로 실제 배열로 변환하면 <code>forEach</code>를 포함한 모든 배열 메서드를 사용할 수 있습니다.</p>
+    <pre><code class="language-javascript">const itemCollection = document.getElementsByClassName('p-iterate-8');
+const itemArray = Array.from(itemCollection);
+
+itemArray.forEach(item => {
+    item.style.border = '1px solid blue';
+});</code></pre>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html> 
