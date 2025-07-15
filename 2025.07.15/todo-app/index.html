@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <link rel="stylesheet" href="./src/styles/main.css">
+</head>
+<body>
+    <div id="app-container">
+        <h1>Todo-List</h1>
+
+        <div id="clock-container">
+            <p id="clock"></p>
+        </div>
+
+        <div id="repository-selector">
+            <span>데이터 저장소 선택:</span>
+            <label>
+                <input type="radio" name="repo" value="indexeddb" checked> IndexedDB
+            </label>
+            <label>
+                <input type="radio" name="repo" value="localstorage"> LocalStorage
+            </label>
+        </div>
+
+        <div class="todo-form">
+            <input type="text" id="todo-title" placeholder="제목">
+            <textarea id="todo-content" placeholder="내용"></textarea>
+            <button id="add-todo">추가하기</button>
+        </div>
+
+        <div id="todo-list">
+        </div>
+
+    </div>
+    <script type="module" src="./src/controllers/todo.controller.js"></script>
+</body>
+</html> 
