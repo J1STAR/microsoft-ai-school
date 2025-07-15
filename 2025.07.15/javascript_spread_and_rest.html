@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 학습: Spread & Rest</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            margin-top: 30px;
+        }
+
+        p,
+        li {
+            font-size: 16px;
+            text-align: justify;
+        }
+
+        code {
+            color: #333;
+            padding: 2px 0;
+            border-radius: 4px;
+            font-family: "D2Coding", "Courier New", Courier, monospace;
+        }
+
+        pre {
+            border: 1px solid #dee2e6;
+            padding: 0;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        pre code.hljs {
+            padding: 20px;
+            font-family: "D2Coding", "Courier New", Courier, monospace;
+        }
+
+        pre.output {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 15px;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .note {
+            background-color: #eaf5ff;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        ul {
+            padding-left: 20px;
+            /* For alignment in note box */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>JavaScript 심화: Spread Syntax & Rest Parameters</h1>
+
+        <div class="note">
+            <p>
+                <strong>펼치기 문법(Spread Syntax)</strong>과
+                <strong>나머지 매개변수(Rest Parameters)</strong>는 동일하게 세 개의
+                점(<code>...</code>)을 사용하지만, 문맥에 따라 정반대의 역할을 하는
+                강력한 문법입니다. Spread는 데이터를 펼치는 역할을, Rest는 데이터를
+                모으는 역할을 합니다.
+            </p>
+            <p>
+                <strong>학습 방법:</strong> 각 예제의 <strong>'예제 실행'</strong> 버튼을 눌러
+                결과를 확인하고, <strong></strong>F12</strong>를 눌러 <strong>개발자 도구 콘솔</strong>에서도 로그를
+                살펴보세요.
+            </p>
+            <p><strong>참고 자료:</strong></p>
+            <ul>
+                <li>
+                    <a href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Spread_syntax"
+                        target="_blank" rel="noopener">MDN: 펼치기 문법 (Spread syntax)</a>
+                </li>
+                <li>
+                    <a href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/rest_parameters"
+                        target="_blank" rel="noopener">MDN: 나머지 매개변수 (Rest parameters)</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- =========== 1. Spread Syntax ============ -->
+        <h2>1. 펼치기 문법 (Spread Syntax: <code>...</code>)</h2>
+        <p>
+            <strong>개념:</strong> 배열이나 객체와 같이 묶여있는 데이터를 개별
+            요소로 <strong>펼쳐주는</strong> 역할입니다. 주로 배열/객체를
+            복사하거나 합칠 때, 또는 함수 인자를 전달할 때 사용됩니다. 불변성을
+            유지하며 작업할 수 있게 도와주는 핵심 문법입니다.<br />
+            <strong>구분법:</strong> <code>...</code>가 할당(<code>=</code>)의
+            <strong>오른쪽</strong>이나 함수 호출 시 인자로 사용되면
+            '펼치기(Spread)' 입니다.
+        </p>
+
+        <h3>1.1. 배열 펼치기 (Spreading Arrays)</h3>
+        <p>
+            <code>...배열</code> 형태로 사용하여, 배열의 모든 요소를 목록으로
+            펼쳐줍니다. 이를 통해 원본 배열을 변경하지 않고(불변성 유지) 새로운
+            배열을 만들거나, 여러 배열을 쉽게 합칠 수 있습니다.
+        </p>
+        <pre><code class="language-javascript">const groupA = ['철수', '영희'];
+const groupB = ['민준'];
+const newGroup = [...groupA, '새 멤버', ...groupB];</code></pre>
+        <button id="runArraySpread">예제 실행</button>
+        <pre class="output" id="outputArraySpread"></pre>
+
+        <h3>1.2. 객체 펼치기 (Spreading Objects)</h3>
+        <p>
+            객체의 모든 속성을 다른 객체 안에 펼쳐 넣습니다. 여러 객체를 병합할 때
+            동일한 속성(key)이 있으면, 가장 마지막에 위치한 값으로
+            덮어씌워집니다.
+        </p>
+        <pre><code class="language-javascript">const userProfile = {
+  name: '성춘향',
+  age: 25
+};
+const userDetails = {
+  job: '디자이너',
+  city: '서울'
+};
+
+const mergedUser = { ...userProfile, ...userDetails, age: 26 };</code></pre>
+        <button id="runObjectSpread">예제 실행</button>
+        <pre class="output" id="outputObjectSpread"></pre>
+
+        <!-- =========== 2. Rest Parameters ============ -->
+        <h2>
+            2. 나머지 매개변수 & 속성 (Rest Parameters & Properties:
+            <code>...</code>)
+        </h2>
+        <p>
+            <strong>개념:</strong> 펼치기와 정반대로, 흩어져 있는 여러 항목들을
+            하나의 배열이나 객체로 <strong>모아주는</strong> 역할입니다. 주로
+            함수의 매개변수나 구조 분해 할당에서 사용됩니다.<br />
+            <strong>구분법:</strong> <code>...</code>가 함수 정의의 매개변수
+            목록이나 할당(<code>=</code>)의 <strong>왼쪽</strong>에 있으면
+            '모으기(Rest)' 입니다.
+        </p>
+
+        <h3>2.1. 함수에서의 나머지 매개변수</h3>
+        <p>
+            함수에 전달된 인수들 중, 명시된 매개변수 외의
+            <strong>나머지 모든 인수</strong>를 배열로 모아줍니다. 이를 통해 인자의
+            개수가 가변적인 함수를 쉽게 만들 수 있습니다.
+        </p>
+        <pre><code class="language-javascript">function formTeam(captain, ...members) {
+  console.log(`주장: ${captain}`);
+  console.log('팀원들:', members);
+  return `팀은 총 ${1 + members.length}명입니다.`;
+}</code></pre>
+        <button id="runFuncRest">예제 실행</button>
+        <pre class="output" id="outputFuncRest"></pre>
+
+        <h3>2.2. 구조 분해에서의 나머지 속성</h3>
+        <p>
+            객체 구조 분해 시, 특정 속성을 제외한
+            <strong>나머지 모든 속성들</strong>을 새로운 객체로 모을 수 있습니다.
+            객체에서 특정 속성만 제거하거나, 주요 속성과 나머지 속성을 분리할 때
+            매우 유용합니다.
+        </p>
+        <pre><code class="language-javascript">const book = {
+  id: 'bk-101',
+  title: '프론트엔드 개발 필독서',
+  author: '김코딩',
+  publicationYear: 2025
+};
+
+const { id, ...otherDetails } = book;</code></pre>
+        <button id="runDestructuringRest">예제 실행</button>
+        <pre class="output" id="outputDestructuringRest"></pre>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+    <script src="javascript_spread_and_rest.js"></script>
+</body>
+
+</html>

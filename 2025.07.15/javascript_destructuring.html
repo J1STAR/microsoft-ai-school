@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 학습: 구조 분해 할당 (Destructuring)</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            margin-top: 30px;
+        }
+
+        p,
+        li {
+            font-size: 16px;
+            text-align: justify;
+        }
+
+        code {
+            color: #333;
+            padding: 2px 0;
+            border-radius: 4px;
+            font-family: "D2Coding", "Courier New", Courier, monospace;
+        }
+
+        pre {
+            border: 1px solid #dee2e6;
+            padding: 0;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        pre code.hljs {
+            padding: 20px;
+            font-family: "D2Coding", "Courier New", Courier, monospace;
+        }
+
+        pre.output {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 15px;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .note {
+            background-color: #eaf5ff;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        ul {
+            padding-left: 20px;
+            /* For alignment in note box */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>JavaScript 심화: 구조 분해 할당 (Destructuring)</h1>
+
+        <div class="note">
+            <p>
+                <strong>구조 분해 할당(Destructuring assignment)</strong>은 배열이나 객체 같은 데이터 묶음에서 원하는 값만 쉽고 깔끔하게 추출하여 변수에 할당할 수
+                있게 해주는 강력한 문법입니다. 코드의 가독성을 크게 향상시키고, 데이터에 접근하는 방식을 간소화합니다.
+            </p>
+            <p><strong>학습 방법:</strong> 각 예제의 <strong>'예제 실행'</strong> 버튼을 눌러 결과를 확인하고, <strong>F12</strong>를 눌러 <strong>개발자 도구 콘솔</strong>에서도 로그를 살펴보세요.</p>
+            <p><strong>참고 자료:</strong></p>
+            <ul>
+                <li><a href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+                        target="_blank" rel="noopener">MDN: 구조 분해 할당 (Destructuring assignment)</a></li>
+            </ul>
+        </div>
+
+        <h2>1. 구조 분해 할당 (Destructuring)</h2>
+        <p>
+            <strong>개념:</strong> 배열이나 객체 같은 데이터 묶음에서 원하는 값만 쉽고 깔끔하게 추출하여 변수에 할당할 수 있게 해주는 문법입니다. 코드의 가독성을 높이고, 필요한 데이터에
+            더 쉽게 접근할 수 있도록 도와줍니다.
+        </p>
+
+        <h3>1.1. 배열 구조 분해 (Array Destructuring)</h3>
+        <p>
+            배열의 요소를 <strong>순서대로</strong> 변수에 할당하는 문법입니다. 마치 줄 서 있는 순서대로 값을 나누어주는 것과 같습니다. 배열의 인덱스에 의존하므로, 변수의 순서가 매우
+            중요합니다.
+        </p>
+        <pre><code class="language-javascript">const fruits = ['🍎 사과', '🍌 바나나', '🍇 포도'];
+const [apple, banana, grape] = fruits;</code></pre>
+        <button id="runArrayDestructuring">예제 실행</button>
+        <pre class="output" id="outputArrayDestructuring"></pre>
+
+        <h3>1.2. 객체 구조 분해 (Object Destructuring)</h3>
+        <p>
+            객체의 <strong>속성(key) 이름</strong>을 기준으로 값을 변수에 할당합니다. 순서가 아닌 속성 이름(key)이 일치하는 것이 중요합니다. <code>{ key: 변수
+                }</code> 형태로 값을 꺼내며, 변수 이름이 key와 같다면 단축해서 <code>{ key }</code>로 쓸 수 있습니다.
+        </p>
+        <pre><code class="language-javascript">const person = {
+  name: '홍길동',
+  age: 30,
+  job: '개발자'
+};
+const { name, age } = person;</code></pre>
+        <button id="runObjectDestructuring">예제 실행</button>
+        <pre class="output" id="outputObjectDestructuring"></pre>
+
+        <h3>
+            1.3. 변수 이름 변경 및 기본값 할당 (Renaming & Default Values)
+        </h3>
+        <p>
+            구조 분해를 할 때, 원래 속성 이름이 아닌 새로운 변수 이름을 사용하거나, 값이 없는 경우(<code>undefined</code>)를 대비해 기본값을 지정할 수 있습니다. 코드의 안정성을
+            크게 높여주는 유용한 기능입니다.<br>
+            - 이름 변경: <code>{ 원래Key: 새로운변수명 }</code><br>
+            - 기본값 할당: <code>{ key = 기본값 }</code>
+        </p>
+        <pre><code class="language-javascript">const user = {
+  id: 'user123',
+  nickname: 'Gildong'
+};
+const { id: loginId, nickname, email = '이메일 없음' } = user;</code></pre>
+        <button id="runRenameDestructuring">예제 실행</button>
+        <pre class="output" id="outputRenameDestructuring"></pre>
+
+        <h3>1.4. 함수 매개변수에서의 구조 분해</h3>
+        <p>
+            함수에 객체를 전달할 때, 함수 정의 부분에서 바로 구조 분해를 사용하면 객체 내부의 필요한 속성만 즉시 변수로 사용할 수 있어 매우 편리합니다. 코드의 가독성을 높이고,
+            <code>props.title</code> 같은 접근 없이 필요한 부분만 명시적으로 사용할 수 있습니다.
+        </p>
+        <pre><code class="language-javascript">const book = {
+  title: '모던 JavaScript',
+  author: '이몽룡',
+  price: 30000
+};
+
+function printBookInfo({ title, author }) {
+  return `책 제목: ${title}, 저자: ${author}`;
+}</code></pre>
+        <button id="runFuncParamDestructuring">예제 실행</button>
+        <pre class="output" id="outputFuncParamDestructuring"></pre>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+    <script src="javascript_destructuring.js"></script>
+</body>
+
+</html>
