@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
+}
+
+#app-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+}
+
+h1 {
+    color: #4a4a4a;
+    margin-bottom: 20px;
+}
+
+#game-area {
+    display: flex;
+    justify-content: space-between; /* space-around에서 변경 */
+    align-items: center;
+    margin: 20px 0;
+    gap: 20px;
+}
+
+.player-box, .computer-box {
+    flex: 1; /* 동일한 비율로 공간을 차지하도록 설정 */
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* 자식 p 태그의 상하 마진을 제거하여 정렬을 개선 */
+.player-box p, .computer-box p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.computer-box {
+    color: #dc3545;
+}
+
+#vs {
+    font-size: 2em;
+    color: #6c757d;
+}
+
+#webcam-container {
+    margin-top: 15px;
+    border: 5px solid #007bff;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 300px;
+    width: 300px;
+    position: relative;
+}
+
+#webcam-container canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#game-controls {
+    margin: 20px 0;
+}
+
+#play-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    font-family: 'Jua', sans-serif;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#play-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+#play-button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+#results-area {
+    margin-top: 20px;
+    font-size: 1.5em;
+}
+
+#game-status {
+    height: 40px;
+    font-weight: bold;
+}
+
+.win { color: #28a745; }
+.loss { color: #dc3545; }
+.draw { color: #6c757d; }
+
+#stats-and-log {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    text-align: left;
+    gap: 20px;
+}
+
+#stats-container, #log-container {
+    width: 48%;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+h2 {
+    font-size: 1.2em;
+    color: #495057;
+    margin-top: 0;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+#stats-list p {
+    margin: 8px 0;
+    font-size: 1em;
+}
+
+#log-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    height: 150px;
+    overflow-y: auto;
+    font-size: 0.9em;
+}
+
+#log-list li {
+    padding: 8px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+#log-list li:first-child {
+    font-weight: bold;
+    background-color: #e9ecef;
+}
+
+/* 디버깅용 label-container 숨김 */
+#label-container {
+    display: none;
+} 

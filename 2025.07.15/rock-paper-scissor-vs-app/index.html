@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가위바위보 AI 대전</title>
+    <link rel="stylesheet" href="./src/styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+</head>
+
+<body>
+    <div id="app-container">
+        <h1>가위바위보 AI 대전</h1>
+
+        <div id="game-area">
+            <div class="player-box">
+                <p>You</p>
+                <p id="player-choice-text">🤔</p>
+            </div>
+            <div id="vs">VS</div>
+            <div class="computer-box">
+                <p>Computer</p>
+                <p id="computer-choice-text">🤖</p>
+            </div>
+        </div>
+
+        <div id="webcam-container"></div>
+        
+        <div id="results-area">
+            <p id="game-status">게임을 준비 중입니다...</p>
+        </div>
+
+        <div id="game-controls">
+            <button id="play-button" disabled>승부!</button>
+        </div>
+
+        <div id="stats-and-log">
+            <div id="stats-container">
+                <h2>📊 게임 통계</h2>
+                <div id="stats-list">
+                    <!-- 통계 정보가 여기에 표시됩니다. -->
+                </div>
+            </div>
+            <div id="log-container">
+                <h2>📜 게임 로그</h2>
+                <ul id="log-list">
+                    <!-- 로그 정보가 여기에 표시됩니다. -->
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 디버깅 또는 결과 확인용 컨테이너 -->
+        <div id="label-container"></div>
+    </div>
+    
+    <script type="module" src="./src/controllers/game.controller.js"></script>
+</body>
+
+</html>
