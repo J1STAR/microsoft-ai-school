@@ -188,3 +188,5 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.07.11](./2025.07.11/) | **[JavaScript, TypeScript]** JavaScript(호이스팅, 프로토타입, 모듈) 및 TypeScript(기본 타입, 제네릭, 인터페이스) 핵심 개념 | `JavaScript`, `TypeScript` |
 | [2025.07.14](./2025.07.14/) | **[JavaScript]** DOM 조작 및 이벤트, 비동기(콜백, Promise, async/await), 웹 API(Storage, WebSocket, SSE) | `JavaScript`, `DOM`, `Async`, `Storage`, `Network` |
 | [2025.07.15](./2025.07.15/) | **[JavaScript]** ES6+ 고급 문법(구조 분해, Spread/Rest), 계층형 모듈 설계, 미니 프로젝트(Todo, 가위바위보) | `JavaScript`, `Design Pattern` |
+| Web Application Development | 
+| [2025.07.31](./2025.07.31/) | **[React Native, Django]** `React Native`와 `Django`를 활용한 풀스택 뉴스 앱 개발 | `React Native`, `Django` |
