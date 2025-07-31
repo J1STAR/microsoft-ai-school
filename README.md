@@ -167,6 +167,8 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.05.21](./2025.05.21/) | **[DL]** "밑바닥부터 시작하는 딥러닝" 실습: `NumPy`로 신경망, CNN 구현 | `Numpy`, `Matplotlib` |
 | [2025.05.27](./2025.05.27/) | **[DL]** 이미지 분류 프로젝트: `TensorFlow`와 **전이 학습(Transfer Learning)** 활용 | `TensorFlow`, `Keras` |
 | [2025.05.28](./2025.05.28/) | **[Azure Custom Vision & Gradio]** `Azure Custom Vision` 모델을 `Gradio`로 데모 UI 제작 | `Gradio`, `Azure AI Services` |
+| Team Projects |
+| 2025.05.30 ~ 2025.06.13 | **[Project] 세션 기반 상품 추천 시스템 (Mercari)**<br/>- **추천 모델**: `PyTorch`와 `GRU`를 사용한 딥러닝 모델 개발 ([GRU4Rec-Mercari](https://github.com/7-MSAI-7/GRU4Rec-Mercari))<br/>- **API 서버**: 학습된 모델을 `FastAPI`로 서빙하는 API 구축 ([mercari-recommender-backend](https://github.com/7-MSAI-7/mercari-recommender-backend)) | `PyTorch`, `GRU`, `Sentence-Transformers`, `FastAPI` |
 | azure-ai-services | 
 | [2025.06.18](./2025.06.18/) | **[Azure OpenAI]** `Azure OpenAI Service` 기반 지능형 앱 개발 입문, RAG 개념 소개 | `Azure OpenAI` |
 | [2025.06.19](./2025.06.19/) | **[Azure OpenAI]** Azure OpenAI 심화: 프롬프트 엔지니어링, DALL-E, RAG 시스템 구축 | `Azure OpenAI`, `DALL-E` |
@@ -188,5 +190,7 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.07.11](./2025.07.11/) | **[JavaScript, TypeScript]** JavaScript(호이스팅, 프로토타입, 모듈) 및 TypeScript(기본 타입, 제네릭, 인터페이스) 핵심 개념 | `JavaScript`, `TypeScript` |
 | [2025.07.14](./2025.07.14/) | **[JavaScript]** DOM 조작 및 이벤트, 비동기(콜백, Promise, async/await), 웹 API(Storage, WebSocket, SSE) | `JavaScript`, `DOM`, `Async`, `Storage`, `Network` |
 | [2025.07.15](./2025.07.15/) | **[JavaScript]** ES6+ 고급 문법(구조 분해, Spread/Rest), 계층형 모듈 설계, 미니 프로젝트(Todo, 가위바위보) | `JavaScript`, `Design Pattern` |
+| Team Project |
+| 2025.07.16 ~ 2025.07.29 | **[Project] AI 뉴스 트렌드 분석 및 챗봇 서비스 (News GPT)**<br/>- **프론트엔드**: `Remix`와 `TypeScript`를 활용한 뉴스 분석 대시보드 개발 ([news-gpt-frontend](https://github.com/J1STAR/news-gpt-frontend))<br/>- **백엔드**: 뉴스 수집, 키워드 추출, `GPT-4o` 기반 분석 및 챗봇 API 서버 구축 ([news_gpt_v2](https://github.com/nnfct/news_gpt_v2)) | `Remix`, `TypeScript`, `FastAPI`, `Azure OpenAI` |
 | Web Application Development | 
 | [2025.07.31](./2025.07.31/) | **[React Native, Django]** `React Native`와 `Django`를 활용한 풀스택 뉴스 앱 개발 | `React Native`, `Django` |
