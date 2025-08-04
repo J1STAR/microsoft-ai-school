@@ -70,7 +70,7 @@
 1.  **사용자 상호작용 (User Interaction)**: 사용자가 앱의 특정 탭(예: 뉴스 탭)으로 이동합니다.
 2.  **화면 렌더링 및 데이터 요청 (Screen Render & Data Fetching)**:
     -   해당 화면 컴포넌트(예: `NewsScreen`)가 렌더링됩니다.
-    -   `useEffect` 훅이 트리거되어 백엔드 API 서버(`http://127.0.0.1:8000/v1/news`)로 `fetch` 요청을 보냅니다.
+    -   `useEffect` 훅이 트리거되어 백엔드 API 서버(`http://127.0.0.1:8000/api/v1/news`)로 `fetch` 요청을 보냅니다.
 3.  **상태 업데이트 (State Update)**:
     -   API로부터 JSON 형식의 뉴스 데이터 배열을 수신합니다.
     -   수신한 데이터로 컴포넌트의 상태(`newsList`)를 `useState`를 통해 업데이트합니다.
@@ -89,7 +89,7 @@
 | [2. Render Screen & useEffect]            |      |                              |
 |           |                               |      |   [ API Server ]             |
 |           v                               |      |                              |
-| [3. fetch('/v1/news')] --------------------------->  [4. GET /v1/news]          |
+| [3. fetch('/api/v1/news')] ----------------------->  [4. GET /api/v1/news]      |
 |                                           |      |           |                  |
 |                                           |      |           v                  |
 |           +----------------------------------------- [5. Respond with JSON]     |
@@ -189,6 +189,35 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+```
+
+---
+
+## 📅 2025년 8월 4일: 백엔드 API 엔드포인트 변경 대응
+
+### API 호출 URL 수정
+
+백엔드 서버의 API 엔드포인트가 `/api` 접두사를 포함하도록 변경됨에 따라, 클라이언트 앱의 API 호출 URL도 수정되었습니다.
+
+-   **기존**: `http://127.0.0.1:8000/v1/news`
+-   **변경**: `http://127.0.0.1:8000/api/v1/news`
+
+`app/(tabs)/news.tsx` 파일의 `fetch` 요청 URL이 아래와 같이 업데이트되었습니다.
+
+```tsx
+// app/(tabs)/news.tsx (변경 후)
+useEffect(() => {
+    // 백엔드 API에 GET 요청을 보내 뉴스 데이터를 가져옵니다.
+    fetch("http://127.0.0.1:8000/api/v1/news")
+        .then((res) => res.json())
+        .then((responseJson) => {
+            // 가져온 데이터로 newsList 상태를 업데이트합니다.
+            setNewsList(responseJson.data);
+        })
+        .catch((error) => {
+            console.error("Failed to fetch news:", error);
+        });
+}, []);
 ```
 
 ---

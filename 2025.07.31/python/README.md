@@ -210,6 +210,48 @@ urlpatterns = [
 
 ---
 
+## 📅 2025년 8월 4일: API 엔드포인트 구조 변경
+
+### 1. API 엔드포인트 접두사 추가
+
+모든 API의 진입점을 명확히 하기 위해, 엔드포인트 경로에 `/api` 접두사를 추가했습니다.
+
+-   **기존**: `/v1/users`, `/v1/news`
+-   **변경**: `/api/v1/users`, `/api/v1/news`
+
+### 2. 계층적 URL 구조로 리팩토링
+
+API의 확장성과 유지보수성을 높이기 위해 URL 구조를 다음과 같이 개선했습니다.
+
+-   **`project/urls.py`**: 최상위 라우터로서, `api/` 경로로 들어오는 모든 요청을 `news.urls` 모듈로 위임합니다.
+-   **`news/urls/__init__.py`**: API 버전별 라우팅을 담당합니다. `v1/` 요청을 하위 URL 설정으로 분기합니다.
+-   **`news/urls/v1/__init__.py`**: `v1` API 내에서 기능별(`users/`, `news/`) 라우팅을 담당합니다.
+
+이러한 구조는 각 앱이 독립적으로 자신의 URL을 관리할 수 있게 하여, 기능 추가나 변경 시 다른 부분에 미치는 영향을 최소화합니다.
+
+```python
+# project/urls.py (변경 후)
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # 'api/' 관련 모든 요청을 news.urls로 위임
+    path('api/', include('news.urls')),
+]
+
+# news/urls/__init__.py (신규)
+urlpatterns = [
+    # 'v1/' 요청은 v1 API URL 설정으로 위임
+    path("v1/", include("news.urls.v1")),
+]
+
+# news/urls/v1/__init__.py (신규)
+urlpatterns = [
+    path("users/", include("news.urls.v1.user")),
+    path("news/", include("news.urls.v1.news")),
+]
+```
+
+---
+
 ## 💡 학습 정리
 
 이번 프로젝트를 통해 Django와 DRF를 사용하여 체계적인 백엔드 API 서버를 구축하는 전반적인 과정을 학습했습니다. 특히, 단순히 기능을 구현하는 것을 넘어, 커스텀 사용자 모델 적용, 모듈화된 프로젝트 구조 설계, API 버전 관리 등 실제 프로덕션 환경에서 요구되는 중요한 설계 원칙들을 적용하는 경험을 할 수 있었습니다. 이는 향후 더 복잡하고 규모가 큰 백엔드 시스템을 개발하는 데 있어 튼튼한 기반이 될 것입니다.
