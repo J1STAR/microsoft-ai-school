@@ -22,11 +22,7 @@ urlpatterns = [
     # 'admin/' 경로로 들어오는 모든 요청을 Django 관리자 사이트로 라우팅합니다.
     path('admin/', admin.site.urls),
 
-    # 'v1/users' 경로로 시작하는 모든 요청을 `news.urls.v1.user` 모듈로 전달합니다.
-    # 이 모듈은 사용자 인증(로그인, 로그아웃 등)과 관련된 URL을 처리합니다.
-    path('v1/users', include('news.urls.v1.user')),
-
-    # 'v1/news' 경로로 시작하는 모든 요청을 `news.urls.v1.news` 모듈로 전달합니다.
-    # 이 모듈은 뉴스 데이터(목록 조회 등)와 관련된 URL을 처리합니다.
-    path('v1/news', include('news.urls.v1.news')),
+    # 'api/' 경로로 시작하는 모든 요청을 `news.urls` 모듈로 전달하여
+    # API 관련 URL을 중앙에서 관리합니다.
+    path('api/', include('news.urls')),
 ]

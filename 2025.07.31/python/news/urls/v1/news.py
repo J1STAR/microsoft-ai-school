@@ -1,8 +1,8 @@
 """
 뉴스 데이터 관련 API 엔드포인트의 URL을 정의합니다.
 
-이 URL 설정은 `project.urls`의 `v1/news/` 경로에 포함(include)되어 사용됩니다.
-따라서 여기에 정의된 모든 경로는 `/v1/news/` 접두사 뒤에 위치하게 됩니다.
+이 URL 설정은 `news.urls.v1` 모듈의 `news/` 경로에 포함(include)되어 사용됩니다.
+전체 URL 경로는 `api/v1/news/`가 됩니다.
 """
 from django.urls import path
 from news.apis.v1.news import NewsItemListAPIView
