@@ -136,3 +136,15 @@
 -   **유연하고 확장 가능한 설계**: 리포지토리 패턴과 팩토리 패턴을 적용하여 데이터 저장 기술을 언제든지 쉽게 교체할 수 있는 유연한 구조를 만드는 방법을 학습했습니다. 이는 애플리케이션의 기술적 요구사항이 변경되더라도 최소한의 수정으로 대응할 수 있게 해주는 강력한 설계 기법입니다.
 
 결론적으로, 단순히 기능을 구현하는 것을 넘어, **'어떻게 하면 더 좋은 코드를 작성하고, 더 나은 시스템을 설계할 것인가'**에 대한 해답을 아키텍처 패턴에서 찾을 수 있었습니다. 이는 향후 더 복잡하고 큰 규모의 프로젝트를 수행하는 데 튼튼한 기반이 될 것입니다. 
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+
+## Contact
+<a href="mailto:j.1star.0726@gmail.com" style="display:flex; align-items:center; gap:8px"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>j.1star.0726@gmail.com</a> 

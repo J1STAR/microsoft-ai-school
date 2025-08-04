@@ -213,3 +213,15 @@ urlpatterns = [
 ## 💡 학습 정리
 
 이번 프로젝트를 통해 Django와 DRF를 사용하여 체계적인 백엔드 API 서버를 구축하는 전반적인 과정을 학습했습니다. 특히, 단순히 기능을 구현하는 것을 넘어, 커스텀 사용자 모델 적용, 모듈화된 프로젝트 구조 설계, API 버전 관리 등 실제 프로덕션 환경에서 요구되는 중요한 설계 원칙들을 적용하는 경험을 할 수 있었습니다. 이는 향후 더 복잡하고 규모가 큰 백엔드 시스템을 개발하는 데 있어 튼튼한 기반이 될 것입니다.
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+
+## Contact
+<a href="mailto:j.1star.0726@gmail.com" style="display:flex; align-items:center; gap:8px"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>j.1star.0726@gmail.com</a> 

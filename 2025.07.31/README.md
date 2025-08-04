@@ -1,3 +1,6 @@
+### 📂 GitHub에서 보기: [microsoft-ai-school/2025.07.31](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.07.31)
+
+
 # 📅 2025년 7월 31일: Django, React Native를 사용한 뉴스 애플리케이션 개발
 
 ## 📝 개요
@@ -19,3 +22,15 @@
 ## 🚀 실행 방법
 
 각 프로젝트의 실행 방법은 해당 프로젝트의 `README.md` 문서를 참고하세요.
+
+---
+
+## 👨‍💻 About Me
+
+**HanByeol Jang (장한별)**
+
+<a href="https://github.com/J1STAR"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+
+## Contact
+<a href="mailto:j.1star.0726@gmail.com" style="display:flex; align-items:center; gap:8px"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>j.1star.0726@gmail.com</a> 
