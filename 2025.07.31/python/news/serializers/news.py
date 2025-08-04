@@ -12,7 +12,7 @@ class NewsItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NewsItem
-        fields = ["title", "pub_date", "source", "link"]
+        fields = ["id", "title", "pub_date", "source", "link"]
 
     def get_pub_date(self, obj):
         return obj.pub_date.strftime("%Y년 %m월 %d일")
