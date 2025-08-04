@@ -2,18 +2,22 @@
  * 이 파일은 애플리케이션의 최상위 레이아웃을 정의합니다.
  * 모든 화면에 공통적으로 적용되는 폰트, 테마, 네비게이션 구조 등을 설정합니다.
  */
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import "react-native-reanimated";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from "@/hooks/useColorScheme";
 
-import { TamaguiProvider } from 'tamagui';
+import { TamaguiProvider } from "tamagui";
 
-import { tamaguiConfig } from '../tamagui.config';
+import { tamaguiConfig } from "../tamagui.config";
 
 /**
  * RootLayout 컴포넌트
@@ -23,10 +27,10 @@ import { tamaguiConfig } from '../tamagui.config';
 export default function RootLayout() {
   // 현재 디바이스의 컬러 스킴(dark/light)을 가져옵니다.
   const colorScheme = useColorScheme();
-  
+
   // 앱에서 사용할 커스텀 폰트를 로드합니다.
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   // 폰트가 로딩 중일 때는 아무것도 렌더링하지 않습니다.
@@ -37,7 +41,6 @@ export default function RootLayout() {
   }
 
   return (
-    
     <SafeAreaProvider>
       {/* TamaguiProvider: Tamagui UI 라이브러리를 앱 전체에 적용하기 위한 컨텍스트 프로바이더입니다. */}
       {/* config: Tamagui의 설정을 전달합니다. */}
@@ -45,8 +48,10 @@ export default function RootLayout() {
       <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
         {/* ThemeProvider: React Navigation의 테마를 설정하는 컨텍스트 프로바이더입니다. */}
         {/* value: 컬러 스킴에 따라 다크 모드 또는 라이트 모드 테마를 적용합니다. */}
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
             {/* Stack: Expo Router의 스택 네비게이터입니다. 화면들을 스택처럼 쌓아 관리합니다. */}
             <Stack>
               {/* (tabs) 경로에 해당하는 화면 그룹을 스택에 추가합니다. */}
