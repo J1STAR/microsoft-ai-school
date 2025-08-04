@@ -43,6 +43,7 @@ export default function NewsScreen(): React.ReactNode {
         return (
             // Anchor 컴포넌트는 웹의 <a> 태그와 유사하게 동작하며, 클릭 시 지정된 URL로 이동합니다.
             <Anchor 
+                key={item.id}
                 href={item.link}
                 style={{
                     padding: 16,
