@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -36,27 +37,32 @@ export default function RootLayout() {
   }
 
   return (
-    // TamaguiProvider: Tamagui UI 라이브러리를 앱 전체에 적용하기 위한 컨텍스트 프로바이더입니다.
-    // config: Tamagui의 설정을 전달합니다.
-    // defaultTheme: 앱의 기본 테마를 디바이스의 컬러 스킴에 맞춰 설정합니다.
-    <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
-      {/* ThemeProvider: React Navigation의 테마를 설정하는 컨텍스트 프로바이더입니다. */}
-      {/* value: 컬러 스킴에 따라 다크 모드 또는 라이트 모드 테마를 적용합니다. */}
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {/* Stack: Expo Router의 스택 네비게이터입니다. 화면들을 스택처럼 쌓아 관리합니다. */}
-        <Stack>
-          {/* (tabs) 경로에 해당하는 화면 그룹을 스택에 추가합니다. */}
-          {/* headerShown: false 옵션으로 탭 화면 자체의 헤더는 숨깁니다. */}
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          
-          {/* 일치하는 경로가 없을 때 보여줄 404 에러 화면을 스택에 추가합니다. */}
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        
-        {/* StatusBar: 디바이스 상단 상태 표시줄의 스타일을 설정합니다. */}
-        {/* style="auto"는 현재 테마(dark/light)에 맞춰 아이콘 색상을 자동으로 조정합니다. */}
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </TamaguiProvider>
+    
+    <SafeAreaProvider>
+      {/* TamaguiProvider: Tamagui UI 라이브러리를 앱 전체에 적용하기 위한 컨텍스트 프로바이더입니다. */}
+      {/* config: Tamagui의 설정을 전달합니다. */}
+      {/* defaultTheme: 앱의 기본 테마를 디바이스의 컬러 스킴에 맞춰 설정합니다. */}
+      <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+        {/* ThemeProvider: React Navigation의 테마를 설정하는 컨텍스트 프로바이더입니다. */}
+        {/* value: 컬러 스킴에 따라 다크 모드 또는 라이트 모드 테마를 적용합니다. */}
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+            {/* Stack: Expo Router의 스택 네비게이터입니다. 화면들을 스택처럼 쌓아 관리합니다. */}
+            <Stack>
+              {/* (tabs) 경로에 해당하는 화면 그룹을 스택에 추가합니다. */}
+              {/* headerShown: false 옵션으로 탭 화면 자체의 헤더는 숨깁니다. */}
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+              {/* 일치하는 경로가 없을 때 보여줄 404 에러 화면을 스택에 추가합니다. */}
+              <Stack.Screen name="+not-found" />
+            </Stack>
+
+            {/* StatusBar: 디바이스 상단 상태 표시줄의 스타일을 설정합니다. */}
+            {/* style="auto"는 현재 테마(dark/light)에 맞춰 아이콘 색상을 자동으로 조정합니다. */}
+            <StatusBar style="auto" />
+          </SafeAreaView>
+        </ThemeProvider>
+      </TamaguiProvider>
+    </SafeAreaProvider>
   );
 }
