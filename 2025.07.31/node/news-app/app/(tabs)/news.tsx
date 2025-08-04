@@ -3,7 +3,7 @@
  * 백엔드 API로부터 뉴스 데이터를 가져와 사용자에게 리스트 형태로 보여줍니다.
  */
 import { useState, useEffect } from "react";
-import { Text, Anchor, YStack, YGroup, XGroup } from "tamagui";
+import { Text, Anchor, YStack, YGroup, XGroup, ScrollView } from "tamagui";
 
 /**
  * @interface NewsItem
@@ -94,9 +94,11 @@ export default function NewsScreen(): React.ReactNode {
 
     return (
         // YStack은 자식 요소들을 수직으로 쌓는 레이아웃 컴포넌트입니다.
-        <YStack style={{ flex: 1 }}>
-            {/* newsList 배열을 순회하며 각 아이템을 renderItem 함수를 통해 렌더링합니다. */}
-            {newsList.map((item) => renderItem({ item }))}
-        </YStack>
+        <ScrollView>
+            <YStack style={{ flex: 1 }}>
+                    {/* newsList 배열을 순회하며 각 아이템을 renderItem 함수를 통해 렌더링합니다. */}
+                    {newsList.map((item) => renderItem({ item }))}
+            </YStack>
+        </ScrollView>
     );
 }
