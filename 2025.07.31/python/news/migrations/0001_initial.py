@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='생성일시')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='수정일시')),
-                ('username', models.EmailField(max_length=50, unique=True, verbose_name='이메일')),
+                ('email', models.EmailField(max_length=50, unique=True, verbose_name='이메일')),
                 ('name', models.CharField(blank=True, max_length=30, null=True, verbose_name='이름')),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
