@@ -115,12 +115,15 @@
 | :--- | :--- | :--- |
 | `project/` | | Django 프로젝트의 전반적인 설정을 담고 있는 패키지입니다. |
 | | `settings.py` | 데이터베이스, 설치된 앱, 미들웨어 등 프로젝트의 모든 설정을 정의합니다. |
-| | `urls.py` | 프로젝트의 최상위 URL 라우팅을 담당합니다. 각 앱의 `urls.py`를 `include`하여 전체 URL 구조를 형성합니다. |
+| | `urls.py` | 프로젝트의 최상위 URL 라우팅을 담당합니다. `api/` 접두사로 들어오는 모든 요청을 `news` 앱의 `urls.py`로 위임(`include`)합니다. |
 | `news/` | | 뉴스와 사용자 관련 기능을 모두 포함하는 핵심 Django 앱입니다. 기능별로 패키지를 분리하여 구조화했습니다. |
-| | `models/` | 데이터베이스 모델을 기능별(`news.py`, `user.py`)로 분리하여 정의한 패키지입니다. `__init__.py`를 통해 모델들을 상위 `models` 네임스페이스로 노출시켜 `from news.models import User`와 같이 쉽게 임포트할 수 있도록 구성했습니다. |
-| | `apis/` | API 뷰 로직을 버전별(`v1/`), 기능별(`news.py`, `user.py`)로 분리하여 정의한 패키지입니다. 이를 통해 API의 버전이 올라가더라도 기존 코드를 해치지 않고 새로운 로직을 추가할 수 있습니다. |
-| | `serializers/` | Django 모델 인스턴스를 JSON으로 변환(직렬화)하거나 그 반대의 역할(역직렬화)을 하는 DRF 시리얼라이저를 기능별(`news.py`, `user.py`)로 정의하는 패키지입니다. |
-| | `urls/` | API URL 설정을 버전별(`v1/`), 기능별(`news.py`, `user.py`)로 분리하여 정의한 패키지입니다. 최상위 `urls.py`에서 이 설정들을 `include`하여 API 엔드포인트를 구성합니다. |
+| | `models/` | 데이터베이스 모델을 기능별(`common.py`, `news.py`, `user.py`)로 분리하여 정의한 패키지입니다. `__init__.py`를 통해 모델들을 상위 `models` 네임스페이스로 노출시켜 `from news.models import User`와 같이 쉽게 임포트할 수 있도록 구성했습니다. |
+| | `apis/` | API 뷰 로직을 버전별(`v1/`), 기능별(`news.py`, `user.py`)로 분리하여 정의한 패키지입니다. |
+| | | `v1/__init__.py`: 해당 버전의 API 뷰들을 모듈로 노출시키는 역할을 합니다. |
+| | `serializers/` | DRF 시리얼라이저를 기능별(`news.py`, `user.py`)로 정의하는 패키지입니다. |
+| | `urls/` | API URL 설정을 계층적으로 관리하는 패키지입니다. |
+| | | `__init__.py`: `api/` 경로 하위의 버전별 라우팅을 담당합니다. (`v1/` -> `news.urls.v1`) |
+| | | `v1/__init__.py`: `v1` API 내에서 기능별 라우팅을 담당합니다. (`users/` -> `...user`, `news/` -> `...news`) |
 | `manage.py` | | `runserver`, `makemigrations` 등 Django 관리 명령을 실행하기 위한 유틸리티 스크립트입니다. |
 | `pyproject.toml` | | `uv`를 위한 의존성 및 프로젝트 메타데이터 설정 파일입니다. |
 | `uv.lock` | | 설치된 패키지의 정확한 버전을 기록하여 환경의 일관성을 보장하는 lock 파일입니다. |
