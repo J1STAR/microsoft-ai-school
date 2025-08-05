@@ -1,13 +1,18 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from django.db.models import Q
 
 from news.models import Post
 
 
 class PostListView(APIView):
     def get(self, request):
-        posts = Post.objects.filter(removed_at__isnull=True)
-        data = list(posts.values())
+        query = request.query_params.get("q", "")
+
+        posts = Post.objects.filter(
+            Q(removed_at__isnull=True)
+            & (Q(title__icontains=query) | Q(content__icontains=query))
+        )
 
         return JsonResponse(
             {"status": "ok", "message": "게시글 목록을 조회하였습니다.", "data": data}
