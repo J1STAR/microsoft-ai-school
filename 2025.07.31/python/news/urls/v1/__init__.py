@@ -12,4 +12,5 @@ from typing import List
 urlpatterns: List[path] = [
     path("users/", include("news.urls.v1.user")),
     path("news/", include("news.urls.v1.news")),
+    path("posts/", include("news.urls.v1.post")),
 ]
