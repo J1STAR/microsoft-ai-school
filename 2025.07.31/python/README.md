@@ -85,26 +85,26 @@
 |   📱 클라이언트   |                         |     🌐 Django 웹 서버     |
 |                  | <---------------------- |                          |
 +------------------+      HTTP Response      +--------------------------+
-                                                    |
-                                                    | 1. URL 분석
-                                                    v
-                             +---------------------------------------------+
-                             |              Django Application             |
-                             | +------------------+   +------------------+ |
-                             | | URL Dispatcher   |-->|    API Views     | |
-                             | +------------------+   +------------------+ |
-                             |         ^                      | ^          |
-                             |         |                      v |          |
-                             | +------------------+   +------------------+ |
-                             | |   Serializers    |<->|      Models      | |
-                             | +------------------+   +------------------+ |
-                             |                                |            |
-                             +--------------------------------|------------+
-                                                              |
-                                                              v 5. DB 쿼리
-                                                      +------------------+
-                                                      |  🗄️ 데이터베이스   |
-                                                      +------------------+
+                                                   |
+                                                   | 1. URL 분석
+                                                   v
+                            +---------------------------------------------+
+                            |              Django Application             |
+                            | +------------------+   +------------------+ |
+                            | | URL Dispatcher   |-->|    API Views     | |
+                            | +------------------+   +------------------+ |
+                            |         ^                      | ^          |
+                            |         |                      v |          |
+                            | +------------------+   +------------------+ |
+                            | |   Serializers    |<->|      Models      | |
+                            | +------------------+   +------------------+ |
+                            |                                |            |
+                            +--------------------------------|------------+
+                                                             |
+                                                             v 5. DB 쿼리
+                                                     +------------------+
+                                                     |  🗄️ 데이터베이스   |
+                                                     +------------------+
 ```
 
 ---
@@ -249,6 +249,58 @@ urlpatterns = [
     path("news/", include("news.urls.v1.news")),
 ]
 ```
+
+---
+
+## 📅 2025년 8월 4일 ~ 8월 5일: 사용자 인증 및 회원가입 기능 구현
+
+### 1. 회원가입 API 구현
+
+클라이언트 앱에서 사용자가 신규 계정을 생성할 수 있도록 `POST /api/v1/users/sign-up` 엔드포인트를 추가했습니다.
+
+-   **`news/apis/v1/user.py`**: `UserSignUpView`가 회원가입 로직을 직접 처리합니다.
+    -   `POST` 요청 본문에서 `email`, `password`, `name` 데이터를 직접 추출합니다.
+    -   `email-validator` 라이브러리를 사용하여 이메일 형식을 검증하고, 비밀번호 길이를 확인하는 등 유효성 검사를 수행합니다.
+    -   유효성 검사를 통과하면, `User.objects.create_user()` 메소드를 호출하여 비밀번호를 안전하게 해싱하고 새로운 `User` 객체를 생성하여 데이터베이스에 저장합니다.
+    -   계정 생성 후, `django.contrib.auth.login` 함수를 호출하여 사용자를 즉시 로그인 상태로 만들고, 세션 쿠키와 함께 성공 응답을 반환합니다.
+
+```python
+# news/apis/v1/user.py
+class UserSignUpView(APIView):
+    """
+    사용자 회원가입을 처리하는 API 뷰입니다.
+    """
+    def post(self, request: HttpRequest) -> JsonResponse:
+        email: str = request.data.get("email", '')
+        password: str = request.data.get("password", '')
+        name: str = request.data.get("name", '')
+        
+        if not email or not password or not name:
+            return JsonResponse({"status": "BAD_REQUEST", "message": "이메일, 비밀번호, 이름은 필수 항목입니다."}, status=400)
+        
+        try:
+            validate_email(email)
+        except EmailNotValidError:
+            return JsonResponse({"status": "BAD_REQUEST", "message": "이메일 형식이 올바르지 않습니다."}, status=400)
+
+        if len(password) < 8:
+            return JsonResponse({"status": "BAD_REQUEST", "message": "비밀번호는 8자 이상이어야 합니다."}, status=400)
+
+        user = User.objects.create_user(email=email, password=password, name=name)
+        user.save()
+        login(request, user)
+        
+        return JsonResponse({"status": "OK", "message": "회원가입 성공"})
+```
+
+### 2. 세션을 이용한 사용자 인증 (`/me`)
+
+클라이언트가 현재 로그인 상태인지 확인할 수 있도록 `GET /api/v1/users/me` 엔드포인트를 구현했습니다.
+
+-   이 API는 별도의 요청 데이터 없이, 요청에 포함된 세션 쿠키를 통해 사용자를 식별합니다.
+-   `request.user.is_authenticated`를 확인하여 사용자가 인증된 상태이면, 해당 사용자의 정보를 `UserSerializer`를 통해 직렬화하여 반환합니다.
+-   인증되지 않은 사용자일 경우, 401 Unauthorized 에러를 반환합니다.
+-   이 엔드포인트는 클라이언트 앱이 시작될 때 호출되어, 사용자의 로그인 상태를 복원하고 UI를 적절하게 설정하는 데 사용됩니다.
 
 ---
 
