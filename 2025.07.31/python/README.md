@@ -114,18 +114,19 @@
 | 경로 | 파일명/디렉토리 | 설명 |
 | :--- | :--- | :--- |
 | `project/` | | Django 프로젝트의 전반적인 설정을 담고 있는 패키지입니다. |
-| | `settings.py` | 데이터베이스, 설치된 앱, 미들웨어 등 프로젝트의 모든 설정을 정의합니다. |
-| | `urls.py` | 프로젝트의 최상위 URL 라우팅을 담당합니다. `api/` 접두사로 들어오는 모든 요청을 `news` 앱의 `urls.py`로 위임(`include`)합니다. |
+| | [`settings.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/settings.py) | 데이터베이스, 설치된 앱, 미들웨어 등 프로젝트의 모든 설정을 정의합니다. |
+| | [`urls.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/urls.py) | 프로젝트의 최상위 URL 라우팅을 담당합니다. `api/` 접두사로 들어오는 모든 요청을 `news` 앱의 `urls.py`로 위임(`include`)합니다. |
 | `news/` | | 뉴스와 사용자 관련 기능을 모두 포함하는 핵심 Django 앱입니다. 기능별로 패키지를 분리하여 구조화했습니다. |
-| | `models/` | 데이터베이스 모델을 기능별(`common.py`, `news.py`, `user.py`)로 분리하여 정의한 패키지입니다. `__init__.py`를 통해 모델들을 상위 `models` 네임스페이스로 노출시켜 `from news.models import User`와 같이 쉽게 임포트할 수 있도록 구성했습니다. |
-| | `apis/` | API 뷰 로직을 버전별(`v1/`), 기능별(`news.py`, `user.py`)로 분리하여 정의한 패키지입니다. |
-| | | `v1/__init__.py`: 해당 버전의 API 뷰들을 모듈로 노출시키는 역할을 합니다. |
-| | `serializers/` | DRF 시리얼라이저를 기능별(`news.py`, `user.py`)로 정의하는 패키지입니다. |
+| | `models/` | 데이터베이스 모델을 기능별(`common.py`, `news.py`, `user.py`, `post.py`, `memo.py`)로 분리하여 정의한 패키지입니다. `__init__.py`를 통해 모델들을 상위 `models` 네임스페이스로 노출시켜 쉽게 임포트할 수 있도록 구성했습니다. |
+| | `apis/` | API 뷰 로직을 버전별(`v1/`), 기능별(`news.py`, `user.py`, `post.py`)로 분리하여 정의한 패키지입니다. |
+| | `serializers/` | DRF 시리얼라이저를 기능별(`news.py`, `user.py`, `post.py`)로 정의하는 패키지입니다. |
+| | `crawlers/` | 외부 데이터를 수집하는 크롤러 스크립트가 위치하는 패키지입니다. (`news.py`: RSS 피드 크롤러) |
+| | `requests/` | API 테스트를 위한 `.http` 파일들을 모아두는 디렉토리입니다. (예: `api_v1_users.http`) |
 | | `urls/` | API URL 설정을 계층적으로 관리하는 패키지입니다. |
 | | | `__init__.py`: `api/` 경로 하위의 버전별 라우팅을 담당합니다. (`v1/` -> `news.urls.v1`) |
-| | | `v1/__init__.py`: `v1` API 내에서 기능별 라우팅을 담당합니다. (`users/` -> `...user`, `news/` -> `...news`) |
-| `manage.py` | | `runserver`, `makemigrations` 등 Django 관리 명령을 실행하기 위한 유틸리티 스크립트입니다. |
-| `pyproject.toml` | | `uv`를 위한 의존성 및 프로젝트 메타데이터 설정 파일입니다. |
+| | | `v1/__init__.py`: `v1` API 내에서 기능별 라우팅을 담당합니다. (`users/`, `news/`, `posts/`) |
+| [`manage.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/manage.py) | | `runserver`, `makemigrations` 등 Django 관리 명령을 실행하기 위한 유틸리티 스크립트입니다. |
+| [`pyproject.toml`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/pyproject.toml)| | `uv`를 위한 의존성 및 프로젝트 메타데이터 설정 파일입니다. |
 | `uv.lock` | | 설치된 패키지의 정확한 버전을 기록하여 환경의 일관성을 보장하는 lock 파일입니다. |
 | `README.md` | | 본 프로젝트에 대한 설명 문서입니다. |
 
@@ -141,7 +142,9 @@
 
 ## 🚀 주요 기능 및 코드
 
-### 1. 커스텀 사용자 모델 (`news/models/user.py`)
+### 📅 2025년 7월 31일: 초기 API 및 커스텀 사용자 모델 구현
+
+#### 1. 커스텀 사용자 모델 ([`news/models/user.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/user.py))
 
 Django의 기본 `User` 모델 대신 이메일을 `USERNAME_FIELD`로 사용하는 커스텀 `User` 모델을 정의하여, 현대 웹 서비스의 일반적인 인증 방식을 따릅니다. `BaseUserManager`를 상속받은 `UserManager`를 구현하여 `create_user`, `create_superuser` 명령을 처리합니다.
 
@@ -166,7 +169,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 ```
 
-### 2. 뉴스 목록 API 뷰 (`news/apis/v1/news.py`)
+#### 2. 뉴스 목록 API 뷰 ([`news/apis/v1/news.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/news.py))
 
 `APIView`를 상속받아 뉴스 기사 목록을 조회하는 `GET` 요청을 처리합니다. `NewsItem` 모델에서 모든 객체를 가져와 `NewsItemSerializer`로 직렬화한 후, 표준화된 JSON 형식으로 응답합니다.
 
@@ -190,120 +193,163 @@ class NewsItemListAPIView(APIView):
         return JsonResponse(response_data)
 ```
 
-### 3. URL 버전 관리 (`project/urls.py` 및 `news/urls/`)
+---
 
-프로젝트의 최상위 `urls.py`에서 `v1` 접두사를 가진 경로를 각 앱의 하위 URL 설정 파일로 위임합니다. 이를 통해 API 버전별로 엔드포인트를 그룹화하여 관리의 용이성과 확장성을 확보합니다.
+### 📅 2025년 7월 31일: 외부 뉴스 데이터 수집 기능 추가
+
+#### 1. RSS 피드 크롤러 ([`news/crawlers/news.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/crawlers/news.py))
+
+외부 뉴스 데이터를 수집하기 위해 `feedparser` 라이브러리를 사용한 RSS 피드 크롤러를 구현했습니다. 이 스크립트는 독립적으로 실행되어 주기적으로 외부 뉴스 데이터를 가져와 데이터베이스에 저장하는 역할을 합니다.
+
+-   **데이터 파싱 및 저장**: 지정된 RSS URL(예: 구글 뉴스)로부터 피드를 가져와 파싱합니다. 파싱된 데이터는 `NewsChannel`(뉴스 제공 채널)과 `NewsItem`(개별 뉴스 기사) 모델에 맞게 정제된 후, `update_or_create` 메소드를 통해 데이터베이스에 저장됩니다. 이를 통해 중복 데이터 없이 항상 최신 상태를 유지할 수 있습니다.
+-   **독립 실행 환경**: Django의 모델을 사용하지만, 웹 서버와는 별개로 실행될 수 있도록 `django.setup()`을 통해 환경을 구성합니다. `crontab`과 같은 스케줄러와 연동하여 특정 시간마다 자동으로 뉴스를 수집하는 배치(batch) 작업에 활용할 수 있습니다.
 
 ```python
-# project/urls.py
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    # 'v1/users/' 경로 요청은 news.urls.v1.user 모듈로 위임
-    path('v1/users/', include('news.urls.v1.user')),
-    # 'v1/news/' 경로 요청은 news.urls.v1.news 모듈로 위임
-    path('v1/news/', include('news.urls.v1.news')),
-]
+# [news/crawlers/news.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/crawlers/news.py)
 
-# news/urls/v1/news.py
-urlpatterns = [
-    # '/v1/news/' 에 해당하는 뷰
-    path("", NewsItemListAPIView.as_view(), name="news-list"),
-]
+def prase_and_save_rss_feed(rss_url: str):
+    feed = feedparser.parse(rss_url)
+    
+    # ... 피드 및 채널 정보 파싱 ...
+    channel, created = NewsChannel.objects.update_or_create(
+        link=channel_data['link'],
+        defaults=channel_data
+    )
+
+    for entry in feed.entries:
+        # ... 뉴스 아이템 정보 파싱 ...
+        news_item, created_item = NewsItem.objects.update_or_create(
+            guid=item_data['guid'],
+            defaults=item_data
+        )
+
+if __name__ == "__main__":
+    google_news_rss_url = "https://news.google.com/rss/?hl=ko&gl=KR&ceid=KR:ko"
+    prase_and_save_rss_feed(google_news_rss_url)
 ```
 
 ---
 
-## 📅 2025년 8월 4일: API 엔드포인트 구조 변경
+### 📅 2025년 8월 4일: API 엔드포인트 구조 변경
 
-### 1. API 엔드포인트 접두사 추가
+#### 1. API 엔드포인트 접두사 추가 및 계층적 URL 구조로 리팩토링
 
-모든 API의 진입점을 명확히 하기 위해, 엔드포인트 경로에 `/api` 접두사를 추가했습니다.
+API의 확장성과 유지보수성을 높이기 위해 URL 구조를 개선했습니다. 모든 API 경로에 `/api` 접두사를 추가하고, URL 설정을 계층적으로 분리했습니다.
 
--   **기존**: `/v1/users`, `/v1/news`
--   **변경**: `/api/v1/users`, `/api/v1/news`
-
-### 2. 계층적 URL 구조로 리팩토링
-
-API의 확장성과 유지보수성을 높이기 위해 URL 구조를 다음과 같이 개선했습니다.
-
--   **`project/urls.py`**: 최상위 라우터로서, `api/` 경로로 들어오는 모든 요청을 `news.urls` 모듈로 위임합니다.
--   **`news/urls/__init__.py`**: API 버전별 라우팅을 담당합니다. `v1/` 요청을 하위 URL 설정으로 분기합니다.
--   **`news/urls/v1/__init__.py`**: `v1` API 내에서 기능별(`users/`, `news/`) 라우팅을 담당합니다.
-
-이러한 구조는 각 앱이 독립적으로 자신의 URL을 관리할 수 있게 하여, 기능 추가나 변경 시 다른 부분에 미치는 영향을 최소화합니다.
+-   **[`project/urls.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/urls.py)**: 최상위 라우터로서, `api/` 경로로 들어오는 모든 요청을 `news.urls` 모듈로 위임합니다.
+-   **[`news/urls/__init__.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/__init__.py)**: API 버전별 라우팅을 담당합니다. `v1/` 요청을 하위 URL 설정으로 분기합니다.
+-   **[`news/urls/v1/__init__.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/v1/__init__.py)**: `v1` API 내에서 기능별(`users/`, `news/`, `posts/`) 라우팅을 담당합니다.
 
 ```python
-# project/urls.py (변경 후)
+# [project/urls.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/urls.py) (변경 후)
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # 'api/' 관련 모든 요청을 news.urls로 위임
-    path('api/', include('news.urls')),
+    path('api/', include('news.urls')), # 'api/' 관련 모든 요청을 news.urls로 위임
 ]
 
-# news/urls/__init__.py (신규)
+# [news/urls/__init__.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/__init__.py) (신규)
 urlpatterns = [
-    # 'v1/' 요청은 v1 API URL 설정으로 위임
-    path("v1/", include("news.urls.v1")),
+    path("v1/", include("news.urls.v1")), # 'v1/' 요청은 v1 API URL 설정으로 위임
 ]
 
-# news/urls/v1/__init__.py (신규)
+# [news/urls/v1/__init__.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/v1/__init__.py) (신규)
 urlpatterns = [
     path("users/", include("news.urls.v1.user")),
     path("news/", include("news.urls.v1.news")),
+    path("posts/", include("news.urls.v1.post")),
 ]
 ```
 
 ---
 
-## 📅 2025년 8월 4일 ~ 8월 5일: 사용자 인증 및 회원가입 기능 구현
+### 📅 2025년 8월 4일 ~ 8월 5일: 사용자 인증 및 회원가입 기능 구현
 
-### 1. 회원가입 API 구현
+#### 1. 회원가입 API 구현 (`POST /api/v1/users/sign-up`)
 
-클라이언트 앱에서 사용자가 신규 계정을 생성할 수 있도록 `POST /api/v1/users/sign-up` 엔드포인트를 추가했습니다.
+클라이언트 앱에서 사용자가 신규 계정을 생성할 수 있도록 `POST /api/v1/users/sign-up` 엔드포인트를 추가했습니다. 이 API는 `news/apis/v1/user.py`의 `UserSignUpView`를 통해 처리됩니다.
 
--   **`news/apis/v1/user.py`**: `UserSignUpView`가 회원가입 로직을 직접 처리합니다.
-    -   `POST` 요청 본문에서 `email`, `password`, `name` 데이터를 직접 추출합니다.
-    -   `email-validator` 라이브러리를 사용하여 이메일 형식을 검증하고, 비밀번호 길이를 확인하는 등 유효성 검사를 수행합니다.
-    -   유효성 검사를 통과하면, `User.objects.create_user()` 메소드를 호출하여 비밀번호를 안전하게 해싱하고 새로운 `User` 객체를 생성하여 데이터베이스에 저장합니다.
-    -   계정 생성 후, `django.contrib.auth.login` 함수를 호출하여 사용자를 즉시 로그인 상태로 만들고, 세션 쿠키와 함께 성공 응답을 반환합니다.
+-   **데이터 유효성 검사**:
+    -   요청 본문에서 `email`, `password`, `name` 필드가 누락되지 않았는지 1차적으로 확인합니다.
+    -   `email-validator` 라이브러리를 사용하여 제출된 이메일 주소의 형식이 유효한지 검증합니다.
+    -   보안 강화를 위해 비밀번호가 최소 8자 이상인지 길이를 확인하는 로직을 포함했습니다.
+
+-   **안전한 사용자 생성**:
+    -   유효성 검사를 모두 통과하면, Django의 내장 `UserManager`가 제공하는 `create_user()` 메소드를 호출하여 `User` 객체를 생성합니다. 이 메소드는 전달받은 `password`를 평문으로 저장하지 않고, PBKDF2 알고리즘을 사용하여 안전하게 해싱(hashing)한 후 데이터베이스에 저장합니다.
+
+-   **자동 로그인 처리**:
+    -   사용자 객체가 성공적으로 데이터베이스에 저장된 후, `django.contrib.auth.login` 함수를 호출합니다. 이 함수는 현재 요청(request)에 세션 데이터를 생성하고, 클라이언트에게 세션 ID가 포함된 쿠키를 발급하여 즉시 로그인 상태로 만듭니다. 이를 통해 사용자는 회원가입 후 별도의 로그인 절차 없이 서비스를 바로 이용할 수 있습니다.
 
 ```python
-# news/apis/v1/user.py
+# [news/apis/v1/user.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/user.py)
 class UserSignUpView(APIView):
-    """
-    사용자 회원가입을 처리하는 API 뷰입니다.
-    """
     def post(self, request: HttpRequest) -> JsonResponse:
-        email: str = request.data.get("email", '')
-        password: str = request.data.get("password", '')
-        name: str = request.data.get("name", '')
-        
-        if not email or not password or not name:
-            return JsonResponse({"status": "BAD_REQUEST", "message": "이메일, 비밀번호, 이름은 필수 항목입니다."}, status=400)
-        
-        try:
-            validate_email(email)
-        except EmailNotValidError:
-            return JsonResponse({"status": "BAD_REQUEST", "message": "이메일 형식이 올바르지 않습니다."}, status=400)
-
-        if len(password) < 8:
-            return JsonResponse({"status": "BAD_REQUEST", "message": "비밀번호는 8자 이상이어야 합니다."}, status=400)
-
+        # ... 데이터 유효성 검사 ...
         user = User.objects.create_user(email=email, password=password, name=name)
-        user.save()
         login(request, user)
-        
         return JsonResponse({"status": "OK", "message": "회원가입 성공"})
 ```
 
-### 2. 세션을 이용한 사용자 인증 (`/me`)
+#### 2. 세션을 이용한 사용자 인증 (`GET /api/v1/users/me`)
 
-클라이언트가 현재 로그인 상태인지 확인할 수 있도록 `GET /api/v1/users/me` 엔드포인트를 구현했습니다.
+클라이언트가 앱 실행 시 로그인 상태를 확인하고 사용자 정보를 가져갈 수 있도록 `GET /api/v1/users/me` 엔드포인트를 구현했습니다. `request.user.is_authenticated` 속성을 통해 인증 여부를 확인하고, 인증된 사용자의 정보를 반환합니다.
 
 -   이 API는 별도의 요청 데이터 없이, 요청에 포함된 세션 쿠키를 통해 사용자를 식별합니다.
 -   `request.user.is_authenticated`를 확인하여 사용자가 인증된 상태이면, 해당 사용자의 정보를 `UserSerializer`를 통해 직렬화하여 반환합니다.
 -   인증되지 않은 사용자일 경우, 401 Unauthorized 에러를 반환합니다.
 -   이 엔드포인트는 클라이언트 앱이 시작될 때 호출되어, 사용자의 로그인 상태를 복원하고 UI를 적절하게 설정하는 데 사용됩니다.
+
+---
+
+### 📅 2025년 8월 5일: 게시글(Post) 기능 구현
+
+사용자 참여를 위한 기본적인 게시판 기능을 구현했습니다.
+
+#### 1. 데이터 모델링 ([`news/models/post.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/post.py))
+
+-   `Post` 모델은 `title`, `content` 필드와 함께 작성자(`author`)를 `User` 모델에 대한 외래 키(ForeignKey)로 지정하여 데이터 무결성을 보장합니다.
+-   데이터를 실제로 삭제하지 않고 삭제 시간만 기록하는 '소프트 삭제(Soft Delete)' 방식을 위해 `removed_at` 필드를 추가했습니다.
+
+#### 2. 게시글 API 구현 ([`news/apis/v1/post.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/post.py))
+
+`PostListView`는 `GET`과 `POST` 요청을 모두 처리합니다.
+
+-   **`GET /api/v1/posts/`**:
+    -   삭제되지 않은(`removed_at__isnull=True`) 게시글만 조회합니다.
+    -   URL 쿼리 파라미터 `q`를 사용하여, `title` 또는 `content`에 검색어가 포함된 게시글을 필터링하는 검색 기능을 제공합니다.
+-   **`POST /api/v1/posts/`**:
+    -   `request.user.is_authenticated`를 확인하여 로그인된 사용자만 게시글을 작성할 수 있도록 제한합니다.
+    -   `author` 필드는 현재 로그인된 사용자인 `request.user`로 자동 설정하여, 게시글이 항상 실제 작성자와 연결되도록 합니다.
+
+-   **데이터 모델링 ([`news/models/post.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/post.py))**:
+    -   `Post` 모델은 `title`(CharField), `content`(TextField), `author`(ForeignKey to User), `removed_at`(DateTimeField) 필드로 
+    구성됩니다.
+    -   `author` 필드는 `User` 모델과 다대일 관계(ForeignKey)를 맺어, 각 게시글의 작성자를 명확하게 지정하고 데이터베이스 수준에서 참조 
+    무결성을 보장합니다.
+    -   `removed_at` 필드는 실제 데이터를 삭제하는 대신 삭제 시간을 기록하는 '소프트 삭제(Soft Delete)' 방식을 위해 추가되었습니다. `GET` 
+    요청 처리 시 이 필드가 `null`인 데이터만 조회합니다.
+
+```python
+# [news/apis/v1/post.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/post.py)
+class PostListView(APIView):
+    def get(self, request):
+        query = request.query_params.get("q", "")
+        posts = Post.objects.filter(
+            Q(removed_at__isnull=True)
+            & (Q(title__icontains=query) | Q(content__icontains=query))
+        )
+        # ... serializer ...
+        return JsonResponse(...)
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return JsonResponse(...)
+        # ...
+        post = Post.objects.create(
+            title=title, content=content, author=request.user
+        )
+        # ... serializer ...
+        return JsonResponse(...)
+```
 
 ---
 
