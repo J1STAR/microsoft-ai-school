@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { router } from "expo-router";
 import {
   View,
   YStack,
@@ -14,6 +14,8 @@ import {
   Spinner,
 } from "tamagui";
 
+import { useAuth } from "./hooks/useAuth";
+
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -22,6 +24,13 @@ export default function SignInScreen() {
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off",
   );
+  const { signIn, isSignedIn, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.replace("/");
+    }
+  }, [isSignedIn]);
 
   const handleSignIn = async () => {
     if (!isEmailValid || !isPasswordValid) {
@@ -32,22 +41,8 @@ export default function SignInScreen() {
 
     setStatus("submitting");
 
-    let signInResponse = await fetch(`${process.env.API_BASE_URL}/api/v1/users/sign-in`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    let signInData = await signInResponse.json();
-
-    if (!signInResponse.ok) {
-      setStatus("off");
-      alert(signInData.message)
-      return;
-    }
-
+    await signIn(email, password);
+    
     setStatus("submitted");
   };
 
@@ -78,6 +73,19 @@ export default function SignInScreen() {
   useEffect(() => {
     setIsPasswordValid(validatePassword(password));
   }, [password]);
+  
+  if (isLoading || isSignedIn) {
+    return (
+      <View
+        width={"100%"}
+        height={"100%"}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Spinner size="large" />
+      </View>
+    );
+  }
 
   return (
     <View

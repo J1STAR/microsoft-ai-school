@@ -16,8 +16,9 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 import { TamaguiProvider } from "tamagui";
-
 import { tamaguiConfig } from "../tamagui.config";
+
+import { AuthProvider } from "./providers/auth";
 
 /**
  * RootLayout 컴포넌트
@@ -51,18 +52,20 @@ export default function RootLayout() {
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-            {/* Stack: Expo Router의 스택 네비게이터입니다. 화면들을 스택처럼 쌓아 관리합니다. */}
-            <Stack screenOptions={{ headerShown: false }}>
+          <AuthProvider>
+            <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
+              {/* Stack: Expo Router의 스택 네비게이터입니다. 화면들을 스택처럼 쌓아 관리합니다. */}
+              <Stack screenOptions={{ headerShown: false }}>
 
-              {/* 일치하는 경로가 없을 때 보여줄 404 에러 화면을 스택에 추가합니다. */}
-              <Stack.Screen name="+not-found" />
-            </Stack>
+                {/* 일치하는 경로가 없을 때 보여줄 404 에러 화면을 스택에 추가합니다. */}
+                <Stack.Screen name="+not-found" />
+              </Stack>
 
-            {/* StatusBar: 디바이스 상단 상태 표시줄의 스타일을 설정합니다. */}
-            {/* style="auto"는 현재 테마(dark/light)에 맞춰 아이콘 색상을 자동으로 조정합니다. */}
-            <StatusBar style="auto" />
-          </SafeAreaView>
+              {/* StatusBar: 디바이스 상단 상태 표시줄의 스타일을 설정합니다. */}
+              {/* style="auto"는 현재 테마(dark/light)에 맞춰 아이콘 색상을 자동으로 조정합니다. */}
+              <StatusBar style="auto" />
+            </SafeAreaView>
+          </AuthProvider>
         </ThemeProvider>
       </TamaguiProvider>
     </SafeAreaProvider>
