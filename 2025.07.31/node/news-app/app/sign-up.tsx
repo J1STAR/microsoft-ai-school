@@ -40,10 +40,14 @@ export default function SignUpScreen() {
   const { signUp, isSignedIn, isLoading } = useAuth();
 
   useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     if (isSignedIn) {
       router.replace("/");
     }
-  }, [isSignedIn]);
+  }, [isLoading, isSignedIn]);
 
   const handleSignUp = async () => {
     if (

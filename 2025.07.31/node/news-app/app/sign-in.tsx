@@ -27,10 +27,14 @@ export default function SignInScreen() {
   const { signIn, isSignedIn, isLoading } = useAuth();
 
   useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     if (isSignedIn) {
       router.replace("/");
     }
-  }, [isSignedIn]);
+  }, [isLoading, isSignedIn]);
 
   const handleSignIn = async () => {
     if (!isEmailValid || !isPasswordValid) {
