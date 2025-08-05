@@ -18,7 +18,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { TamaguiProvider } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";
 
-import { AuthProvider } from "./providers/auth";
+import { AuthProvider } from "../providers/auth";
 
 /**
  * RootLayout 컴포넌트

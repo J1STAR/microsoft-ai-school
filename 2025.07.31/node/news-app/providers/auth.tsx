@@ -6,6 +6,7 @@ interface AuthContextType {
   signOut: () => void;
   isSignedIn?: boolean | null;
   isLoading: boolean;
+  csrfToken: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -15,6 +16,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
   useEffect(() => {
     const checkSignedInUser = async () => {
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         );
 
         if (response.ok) {
+          setCsrfToken(getCsrfToken());
           setIsSignedIn(true);
         } else {
           setIsSignedIn(false);
@@ -62,6 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
+    setCsrfToken(getCsrfToken());
     setIsSignedIn(true);
   };
 
@@ -86,6 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 회원가입 성공 시, 바로 로그인 상태로 만들어줍니다.
     alert(`환영합니다! ${name}님`);
+    setCsrfToken(getCsrfToken());
     setIsSignedIn(true);
   };
 
@@ -93,8 +98,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsSignedIn(false);
   };
 
+  const getCsrfToken = () => {
+    let cookieValue = null;
+    const key = "csrftoken";
+
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.substring(0, key.length + 1) === key + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(key.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  };
+
   return (
-    <AuthContext.Provider value={{ signIn, signUp, signOut, isSignedIn, isLoading }}>
+    <AuthContext.Provider
+      value={{ signIn, signUp, signOut, isSignedIn, isLoading, csrfToken }}
+    >
       {children}
     </AuthContext.Provider>
   );

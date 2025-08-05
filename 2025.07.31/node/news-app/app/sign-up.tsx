@@ -13,7 +13,7 @@ import {
   Label,
   XStack,
 } from "tamagui";
-import { useAuth } from "./hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 const AnimatedYStack = (props: any) => (
   <YStack
