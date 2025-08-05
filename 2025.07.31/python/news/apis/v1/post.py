@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from django.db.models import Q
 
 from news.models import Post
+from news.serializers.post import PostSerializer
 
 
 class PostListView(APIView):
@@ -13,9 +14,14 @@ class PostListView(APIView):
             Q(removed_at__isnull=True)
             & (Q(title__icontains=query) | Q(content__icontains=query))
         )
+        serializer = PostSerializer(posts, many=True)
 
         return JsonResponse(
-            {"status": "ok", "message": "게시글 목록을 조회하였습니다.", "data": data}
+            {
+                "status": "ok",
+                "message": "게시글 목록을 조회하였습니다.",
+                "data": serializer.data,
+            }
         )
 
     def post(self, request):
@@ -38,6 +44,8 @@ class PostListView(APIView):
             post = Post.objects.create(
                 title=title, content=content, author=request.user
             )
+
+            serializer = PostSerializer(post)
         except Exception as e:
             print(e)
             return JsonResponse(
@@ -46,5 +54,9 @@ class PostListView(APIView):
             )
 
         return JsonResponse(
-            {"status": "ok", "message": "게시글을 생성하였습니다.", "data": post}
+            {
+                "status": "ok",
+                "message": "게시글을 생성하였습니다.",
+                "data": serializer.data,
+            }
         )
