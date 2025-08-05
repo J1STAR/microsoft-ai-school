@@ -4,6 +4,7 @@ API 엔드포인트를 정의합니다.
 """
 import datetime
 from typing import Dict, Any
+from email_validator import validate_email, EmailNotValidError
 
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, JsonResponse
@@ -31,6 +32,21 @@ class UserSignUpView(APIView):
                 "message": "이메일, 비밀번호, 이름은 필수 항목입니다."
             }, status=400)
         
+        try:
+            validate_email(email)
+        except EmailNotValidError as e:
+            return JsonResponse({
+                "status": "BAD_REQUEST",
+                "message": "이메일 형식이 올바르지 않습니다."
+            }, status=400)
+
+
+        if len(password) < 8:
+            return JsonResponse({
+                "status": "BAD_REQUEST",
+                "message": "비밀번호는 8자 이상이어야 합니다."
+            }, status=400)
+
         try:
             user = User.objects.create_user(email=email, password=password, name=name)
         except Exception as e:
