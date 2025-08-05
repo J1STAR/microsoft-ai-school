@@ -193,4 +193,4 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | Team Project |
 | 2025.07.16 ~ 2025.07.29 | **[Project] AI 뉴스 트렌드 분석 및 챗봇 서비스 (News GPT)**<br/>- **프론트엔드**: `Remix`와 `TypeScript`를 활용한 뉴스 분석 대시보드 개발 ([news-gpt-frontend](https://github.com/J1STAR/news-gpt-frontend))<br/>- **백엔드**: 뉴스 수집, 키워드 추출, `GPT-4o` 기반 분석 및 챗봇 API 서버 구축 ([news_gpt_v2](https://github.com/nnfct/news_gpt_v2)) | `Remix`, `TypeScript`, `FastAPI`, `Azure OpenAI` |
 | Web Application Development | 
-| [2025.07.31, 2025.08.04](./2025.07.31/) | **[React Native, Django]** `React Native`와 `Django`를 활용한 풀스택 뉴스 앱 개발 | `React Native`, `Django` |
+| [2025.07.31 ~ 진행중](./2025.07.31/) | **[React Native, Django]** `React Native`와 `Django`를 활용한 풀스택 뉴스 앱 개발 | `React Native`, `Django` |
