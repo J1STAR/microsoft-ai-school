@@ -53,10 +53,7 @@ export default function RootLayout() {
         >
           <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
             {/* Stack: Expo Router의 스택 네비게이터입니다. 화면들을 스택처럼 쌓아 관리합니다. */}
-            <Stack>
-              {/* (tabs) 경로에 해당하는 화면 그룹을 스택에 추가합니다. */}
-              {/* headerShown: false 옵션으로 탭 화면 자체의 헤더는 숨깁니다. */}
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack screenOptions={{ headerShown: false }}>
 
               {/* 일치하는 경로가 없을 때 보여줄 404 에러 화면을 스택에 추가합니다. */}
               <Stack.Screen name="+not-found" />
