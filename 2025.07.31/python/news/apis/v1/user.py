@@ -12,6 +12,43 @@ from rest_framework.views import APIView
 from news.models.user import User
 
 
+class UserSignUpView(APIView):
+    """
+    사용자 회원가입을 처리하는 API 뷰입니다.
+    """
+    def post(self, request: HttpRequest) -> JsonResponse:
+        """
+        POST 요청을 처리하여 사용자를 회원가입시킵니다.
+        """
+
+        email: str = request.data.get("email", '')
+        password: str = request.data.get("password", '')
+        name: str = request.data.get("name", '')
+        
+        if not email or not password or not name:
+            return JsonResponse({
+                "status": "BAD_REQUEST",
+                "message": "이메일, 비밀번호, 이름은 필수 항목입니다."
+            }, status=400)
+        
+        try:
+            user = User.objects.create_user(email=email, password=password, name=name)
+        except Exception as e:
+            print(e)
+            return JsonResponse({
+                "status": "INTERNAL_SERVER_ERROR",
+                "message": "회원가입 실패"
+            }, status=500)
+        
+        user.save()
+        login(request, user)
+        
+        return JsonResponse({
+            "status": "OK",
+            "message": "회원가입 성공"
+        })
+
+
 class UserSignInView(APIView):
     """
     사용자 로그인을 처리하는 API 뷰입니다.

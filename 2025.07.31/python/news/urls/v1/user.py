@@ -5,9 +5,14 @@
 전체 URL 경로는 `api/v1/users/`가 됩니다.
 """
 from django.urls import path
-from news.apis.v1.user import UserSignInView, UserMySelfView, UserSignOutView
+from news.apis.v1.user import UserSignInView, UserMySelfView, UserSignOutView, UserSignUpView
 
 urlpatterns = [
+    # /v1/users/sign-up
+    # 사용자 회원가입을 처리하는 엔드포인트입니다.
+    # POST 요청을 통해 이메일, 비밀번호, 이름을 받아 회원가입을 수행합니다.
+    path("sign-up", UserSignUpView.as_view(), name="user-sign-up"),
+
     # /v1/users/sign-in
     # 사용자 로그인을 처리하는 엔드포인트입니다.
     # POST 요청을 통해 이메일과 비밀번호를 받아 인증을 수행합니다.
