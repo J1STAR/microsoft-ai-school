@@ -16,7 +16,7 @@ class UserSignInView(APIView):
     """
     사용자 로그인을 처리하는 API 뷰입니다.
 
-    POST 요청을 통해 사용자로부터 이메일(username)과 비밀번호를 받아
+    POST 요청을 통해 사용자로부터 이메일(email)과 비밀번호를 받아
     인증을 시도하고, 성공 시 세션을 생성(로그인)합니다.
     """
     # 이 뷰는 인증되지 않은 사용자도 접근할 수 있어야 하므로,
@@ -30,7 +30,7 @@ class UserSignInView(APIView):
 
         Args:
             request (HttpRequest): 클라이언트로부터 받은 HTTP 요청 객체.
-                                   요청 본문(body)에 `username`과 `password`가
+                                   요청 본문(body)에 `email`과 `password`가
                                    포함되어야 합니다.
 
         Returns:
@@ -38,10 +38,10 @@ class UserSignInView(APIView):
                 - 성공 시: status "OK"와 함께 사용자 정보를 반환합니다.
                 - 실패 시: 401 Unauthorized 상태 코드와 함께 오류 메시지를 반환합니다.
         """
-        username: str = request.data.get("username", '')
+        email: str = request.data.get("email", '')
         password: str = request.data.get("password", '')
 
-        if not username or not password:
+        if not email or not password:
             return JsonResponse({
                 "status": "BAD_REQUEST",
                 "message": "이메일과 비밀번호는 필수 항목입니다."
@@ -49,7 +49,7 @@ class UserSignInView(APIView):
 
         # `authenticate` 함수는 제공된 자격 증명이 유효하면 사용자 객체를,
         # 그렇지 않으면 None을 반환합니다.
-        user: User | None = authenticate(request, username=username, password=password)
+        user: User | None = authenticate(request, email=email, password=password)
 
         if user is None:
             return JsonResponse({
@@ -64,7 +64,7 @@ class UserSignInView(APIView):
         return JsonResponse({
             "status": "OK",
             "message": "로그인 성공",
-            "data": {"username": user.username}
+            "data": {"email": user.email}
         })
 
 
@@ -99,7 +99,7 @@ class UserMySelfView(APIView):
             user.save(update_fields=['last_login'])
 
             user_dict: Dict[str, Any] = {
-                "username": user.username,
+                "email": user.email,
                 "name": user.name,
                 "last_login": user.last_login.strftime("%Y-%m-%d %H:%M:%S")
             }
