@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
+  signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => void;
   isSignedIn?: boolean | null;
   isLoading: boolean;
@@ -64,12 +65,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsSignedIn(true);
   };
 
+  const signUp = async (name: string, email: string, password: string) => {
+    const signUpResponse = await fetch(
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/sign-up`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+        credentials: "include",
+      },
+    );
+
+    if (!signUpResponse.ok) {
+      const signUpData = await signUpResponse.json();
+      alert(signUpData.message);
+      return;
+    }
+
+    // 회원가입 성공 시, 바로 로그인 상태로 만들어줍니다.
+    alert(`환영합니다! ${name}님`);
+    setIsSignedIn(true);
+  };
+
   const signOut = () => {
     setIsSignedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ signIn, signOut, isSignedIn, isLoading }}>
+    <AuthContext.Provider value={{ signIn, signUp, signOut, isSignedIn, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
