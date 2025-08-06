@@ -64,6 +64,27 @@
   - **목록 및 작성**: 백엔드 API와 연동하여 게시글 목록 조회(`posts.tsx`) 및 새 글 작성(`posts/write.tsx`) 화면을 구현했습니다.
   - **인증 기반 UI**: 로그인 상태(`isSignedIn`)에 따라 '글쓰기' 버튼을 조건부로 렌더링하여 인증된 사용자에게만 기능이 노출되도록 구현했습니다.
 
+### 2025년 8월 6일
+
+#### 🐍 Python (Django)
+- **게시글 상세 CRUD API 구현**:
+  - `GET`, `PUT`, `PATCH`, `DELETE` 요청을 처리하는 `PostDetailView`를 구현하여, `api/v1/posts/<uuid:pk>/` 엔드포인트를 통해 단일 게시글의 조회, 수정, 삭제 기능을 완성했습니다.
+  - **소프트 삭제(Soft Delete)**: `DELETE` 요청 시 데이터를 실제로 삭제하지 않고 `removed_at` 필드에 시간만 기록하여 복구 가능성을 열어두었습니다.
+- **API 권한 검증 강화**: 게시글 수정 및 삭제 시, 요청을 보낸 사용자가 실제 작성자인지 확인하는 권한 검증 로직을 추가하여 데이터 무결성을 강화했습니다.
+- **모델 구조 리팩토링**:
+  - **UUID 기본 키 적용**: 모든 모델의 기본 키를 `UUID`로 변경하여 API 엔드포인트 보안을 강화하고 데이터베이스 확장성을 확보했습니다.
+  - **공용 모델(`BaseModel`) 개선**: `created_at`, `updated_at`, `removed_at` 필드를 추가하여 모든 데이터의 생성/수정/삭제 시각을 자동으로 기록하도록 개선했습니다.
+  - **`User` 모델 확장**: `address`, `phone_number` 필드를 추가하여 사용자 정보 모델을 확장했습니다.
+
+#### 📱 Node.js (React Native)
+- **게시글 상세/수정 페이지 구현**:
+  - **동적 라우팅**: `expo-router`를 활용하여 `app/posts/[id].tsx`(상세)와 `app/posts/[id]/edit.tsx`(수정) 페이지를 구현했습니다.
+  - **상세 정보 표시**: 상세 페이지에서 백엔드 API를 호출하여 게시글의 제목, 내용, 작성자, 작성/수정 시간을 모두 표시합니다.
+- **프론트엔드 권한 처리**:
+  - **조건부 UI 렌더링**: 상세 페이지에서 현재 로그인한 사용자가 작성자일 경우에만 '수정' 버튼이 보이도록 구현했습니다.
+  - **접근 제어**: 수정 페이지 로딩 시, 한 번 더 작성자 권한을 확인하여 URL을 통한 직접 접근을 차단하고 비인가 사용자를 이전 페이지로 리디렉션합니다.
+- **전체적인 CRUD 흐름 완성**: 게시글 목록 -> 상세 조회 -> 수정 페이지 이동 -> 수정 완료 후 상세 페이지로 복귀하는 자연스러운 사용자 경험(UX) 흐름을 완성했습니다.
+
 ---
 
 ## 👨‍💻 About Me
@@ -74,4 +95,4 @@
 <a href="https://www.linkedin.com/in/hanbyeol-jang-44174a199/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
 
 ## Contact
-<a href="mailto:j.1star.0726@gmail.com" style="display:flex; align-items:center; gap:8px"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>j.1star.0726@gmail.com</a> 
+<a href="mailto:j.1star.0726@gmail.com" style="display:flex; align-items:center; gap:8px"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>j.1star.0726@gmail.com</a>

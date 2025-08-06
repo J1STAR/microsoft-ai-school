@@ -144,7 +144,9 @@
 
 ### 📅 2025년 7월 31일: 초기 API 및 커스텀 사용자 모델 구현
 
-#### 1. 커스텀 사용자 모델 ([`news/models/user.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/user.py))
+#### 1. 커스텀 사용자 모델
+
+[**`news/models/user.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/user.py)
 
 Django의 기본 `User` 모델 대신 이메일을 `USERNAME_FIELD`로 사용하는 커스텀 `User` 모델을 정의하여, 현대 웹 서비스의 일반적인 인증 방식을 따릅니다. `BaseUserManager`를 상속받은 `UserManager`를 구현하여 `create_user`, `create_superuser` 명령을 처리합니다.
 
@@ -169,7 +171,9 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 ```
 
-#### 2. 뉴스 목록 API 뷰 ([`news/apis/v1/news.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/news.py))
+#### 2. 뉴스 목록 API 뷰
+
+[**`news/apis/v1/news.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/news.py)
 
 `APIView`를 상속받아 뉴스 기사 목록을 조회하는 `GET` 요청을 처리합니다. `NewsItem` 모델에서 모든 객체를 가져와 `NewsItemSerializer`로 직렬화한 후, 표준화된 JSON 형식으로 응답합니다.
 
@@ -197,7 +201,9 @@ class NewsItemListAPIView(APIView):
 
 ### 📅 2025년 7월 31일: 외부 뉴스 데이터 수집 기능 추가
 
-#### 1. RSS 피드 크롤러 ([`news/crawlers/news.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/crawlers/news.py))
+#### 1. RSS 피드 크롤러
+
+[**`news/crawlers/news.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/crawlers/news.py)
 
 외부 뉴스 데이터를 수집하기 위해 `feedparser` 라이브러리를 사용한 RSS 피드 크롤러를 구현했습니다. 이 스크립트는 독립적으로 실행되어 주기적으로 외부 뉴스 데이터를 가져와 데이터베이스에 저장하는 역할을 합니다.
 
@@ -205,8 +211,6 @@ class NewsItemListAPIView(APIView):
 -   **독립 실행 환경**: Django의 모델을 사용하지만, 웹 서버와는 별개로 실행될 수 있도록 `django.setup()`을 통해 환경을 구성합니다. `crontab`과 같은 스케줄러와 연동하여 특정 시간마다 자동으로 뉴스를 수집하는 배치(batch) 작업에 활용할 수 있습니다.
 
 ```python
-# [news/crawlers/news.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/crawlers/news.py)
-
 def prase_and_save_rss_feed(rss_url: str):
     feed = feedparser.parse(rss_url)
     
@@ -236,23 +240,27 @@ if __name__ == "__main__":
 
 API의 확장성과 유지보수성을 높이기 위해 URL 구조를 개선했습니다. 모든 API 경로에 `/api` 접두사를 추가하고, URL 설정을 계층적으로 분리했습니다.
 
--   **[`project/urls.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/urls.py)**: 최상위 라우터로서, `api/` 경로로 들어오는 모든 요청을 `news.urls` 모듈로 위임합니다.
--   **[`news/urls/__init__.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/__init__.py)**: API 버전별 라우팅을 담당합니다. `v1/` 요청을 하위 URL 설정으로 분기합니다.
--   **[`news/urls/v1/__init__.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/v1/__init__.py)**: `v1` API 내에서 기능별(`users/`, `news/`, `posts/`) 라우팅을 담당합니다.
+-   [**`project/urls.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/urls.py): 최상위 라우터로서, `api/` 경로로 들어오는 모든 요청을 `news.urls` 모듈로 위임합니다.
+-   [**`news/urls/__init__.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/__init__.py): API 버전별 라우팅을 담당합니다. `v1/` 요청을 하위 URL 설정으로 분기합니다.
+-   [**`news/urls/v1/__init__.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/v1/__init__.py): `v1` API 내에서 기능별(`users/`, `news/`, `posts/`) 라우팅을 담당합니다.
 
+[**`project/urls.py` (변경 후)**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/urls.py)
 ```python
-# [project/urls.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/project/urls.py) (변경 후)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('news.urls')), # 'api/' 관련 모든 요청을 news.urls로 위임
 ]
+```
 
-# [news/urls/__init__.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/__init__.py) (신규)
+[**`news/urls/__init__.py` (신규)**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/__init__.py)
+```python
 urlpatterns = [
     path("v1/", include("news.urls.v1")), # 'v1/' 요청은 v1 API URL 설정으로 위임
 ]
+```
 
-# [news/urls/v1/__init__.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/v1/__init__.py) (신규)
+[**`news/urls/v1/__init__.py` (신규)**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/urls/v1/__init__.py)
+```python
 urlpatterns = [
     path("users/", include("news.urls.v1.user")),
     path("news/", include("news.urls.v1.news")),
@@ -279,8 +287,8 @@ urlpatterns = [
 -   **자동 로그인 처리**:
     -   사용자 객체가 성공적으로 데이터베이스에 저장된 후, `django.contrib.auth.login` 함수를 호출합니다. 이 함수는 현재 요청(request)에 세션 데이터를 생성하고, 클라이언트에게 세션 ID가 포함된 쿠키를 발급하여 즉시 로그인 상태로 만듭니다. 이를 통해 사용자는 회원가입 후 별도의 로그인 절차 없이 서비스를 바로 이용할 수 있습니다.
 
+[**`news/apis/v1/user.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/user.py)
 ```python
-# [news/apis/v1/user.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/user.py)
 class UserSignUpView(APIView):
     def post(self, request: HttpRequest) -> JsonResponse:
         # ... 데이터 유효성 검사 ...
@@ -304,12 +312,19 @@ class UserSignUpView(APIView):
 
 사용자 참여를 위한 기본적인 게시판 기능을 구현했습니다.
 
-#### 1. 데이터 모델링 ([`news/models/post.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/post.py))
+#### 1. 데이터 모델링
+
+[**`news/models/post.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/post.py)
 
 -   `Post` 모델은 `title`, `content` 필드와 함께 작성자(`author`)를 `User` 모델에 대한 외래 키(ForeignKey)로 지정하여 데이터 무결성을 보장합니다.
 -   데이터를 실제로 삭제하지 않고 삭제 시간만 기록하는 '소프트 삭제(Soft Delete)' 방식을 위해 `removed_at` 필드를 추가했습니다.
+-   `Post` 모델은 `title`(CharField), `content`(TextField), `author`(ForeignKey to User), `removed_at`(DateTimeField) 필드로 구성됩니다.
+-   `author` 필드는 `User` 모델과 다대일 관계(ForeignKey)를 맺어, 각 게시글의 작성자를 명확하게 지정하고 데이터베이스 수준에서 참조 무결성을 보장합니다.
+-   `removed_at` 필드는 실제 데이터를 삭제하는 대신 삭제 시간을 기록하는 '소프트 삭제(Soft Delete)' 방식을 위해 추가되었습니다. `GET` 요청 처리 시 이 필드가 `null`인 데이터만 조회합니다.
 
-#### 2. 게시글 API 구현 ([`news/apis/v1/post.py`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/post.py))
+#### 2. 게시글 API 구현
+
+[**`news/apis/v1/post.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/post.py)
 
 `PostListView`는 `GET`과 `POST` 요청을 모두 처리합니다.
 
@@ -329,7 +344,6 @@ class UserSignUpView(APIView):
     요청 처리 시 이 필드가 `null`인 데이터만 조회합니다.
 
 ```python
-# [news/apis/v1/post.py](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/post.py)
 class PostListView(APIView):
     def get(self, request):
         query = request.query_params.get("q", "")
@@ -349,6 +363,93 @@ class PostListView(APIView):
         )
         # ... serializer ...
         return JsonResponse(...)
+```
+
+---
+
+### 📅 2025년 8월 6일: 게시글 기능 고도화 및 모델 리팩토링
+
+#### 1. 게시글 상세 API(CRUD) 구현 및 권한 검증
+
+기존 게시글 목록/생성 API(`PostListView`) 외에, 특정 게시글 하나를 조회(GET), 수정(PUT/PATCH), 삭제(DELETE)할 수 있는 상세 API `PostDetailView`를 구현했습니다.
+
+-   **엔드포인트**: `GET, PUT, PATCH, DELETE /api/v1/posts/<uuid:pk>/`
+-   **주요 기능**:
+    -   **조회 (`GET`)**: `<uuid:pk>`에 해당하는 게시글의 상세 정보를 반환합니다.
+    -   **수정 (`PUT`, `PATCH`)**: 게시글의 정보를 전체 또는 부분적으로 수정합니다.
+    -   **삭제 (`DELETE`)**: 실제 데이터베이스에서 로우를 삭제하는 대신, `removed_at` 필드에 현재 시간을 기록하는 '소프트 삭제(Soft Delete)' 방식으로 처리하여 데이터 복구 가능성을 열어두었습니다.
+
+-   **권한 검증 로직**:
+    -   데이터의 무결성과 보안을 위해, 수정 및 삭제 요청 시 **요청을 보낸 사용자(`request.user`)가 해당 게시글의 작성자(`post.author`)와 일치하는지 확인**하는 검증 절차를 추가했습니다.
+    -   만약 일치하지 않는다면, `403 Forbidden` 상태 코드와 함께 "수정 권한이 없습니다." 또는 "삭제 권한이 없습니다." 라는 명확한 에러 메시지를 반환하여 비인가 접근을 차단합니다.
+
+[**`news/apis/v1/post.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/post.py)
+```python
+class PostDetailView(PostObjectMixin, APIView):
+    def put(self, request, pk, partial=False):
+        post = self.get_object(pk)
+        
+        # 로그인 여부 및 작성자 일치 여부 확인
+        if not request.user.is_authenticated:
+            return JsonResponse({"status": "error", "message": "로그인이 필요합니다."}, status=401)
+        if post.author != request.user:
+            return JsonResponse({"status": "error", "message": "수정 권한이 없습니다."}, status=403)
+
+        serializer = PostSerializer(post, data=request.data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({"status": "ok", "message": "게시글을 수정하였습니다.", "data": serializer.data})
+        return JsonResponse({"status": "error", "message": serializer.errors}, status=400)
+
+    def delete(self, request, pk):
+        post = self.get_object(pk)
+
+        if post.author != request.user:
+            return JsonResponse({"status": "error", "message": "삭제 권한이 없습니다."}, status=403)
+            
+        post.removed_at = timezone.now()
+        post.save()
+        return JsonResponse({"status": "ok", "message": "게시글을 삭제하였습니다."}, status=204)
+```
+
+#### 2. 데이터 모델 리팩토링 및 확장
+
+데이터 구조의 일관성과 확장성을 개선하기 위해 모델을 리팩토링했습니다.
+
+-   **UUID 기본 키(Primary Key) 도입**:
+    -   모든 모델의 기본이 되는 `BaseModel`의 `id` 필드를 기존 AutoField에서 `UUIDField`로 변경했습니다. 이는 추측하기 어려운 고유 식별자를 사용하여 API 엔드포인트의 보안을 강화하고, 분산 환경에서의 데이터 통합을 용이하게 합니다.
+    -   이에 따라 `Post` 모델을 포함한 모든 하위 모델의 기본 키가 `UUID` 타입으로 변경되었습니다.
+
+-   **공통 필드 및 매니저 추가**:
+    -   `BaseModel`에 `created_at`(생성일시), `updated_at`(수정일시), `removed_at`(삭제일시) 필드를 추가하여 모든 데이터의 생성/수정/삭제 시간을 자동으로 기록하도록 개선했습니다.
+    -   소프트 삭제된 데이터를 기본적으로 제외하고 조회하는 커스텀 `ModelManager`를 `BaseModel`에 적용하여, 별도의 필터링 코드 없이도 삭제된 데이터를 제외한 결과만을 안전하게 가져올 수 있도록 기본 동작을 변경했습니다.
+
+-   **`User` 모델 필드 확장**:
+    -   향후 사용자 관련 기능 확장을 고려하여, `User` 모델에 `address`(주소)와 `phone_number`(전화번호) 필드를 추가했습니다.
+    -   Django 관리자(admin) 페이지에서 커스텀 `User` 모델을 원활하게 사용하기 위해, 기존 `AbstractBaseUser` 상속 구조에서 `AbstractUser`를 상속받도록 변경하고 관련 설정을 수정했습니다.
+
+[**`news/models/common.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/common.py)
+
+```python
+class BaseModel(models.Model):
+    # ...
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True, verbose_name="ID")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="생성일시")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="수정일시")
+    removed_at = models.DateTimeField(null=True, blank=True, verbose_name="삭제일시")
+    # ...
+    class Meta:
+        abstract = True
+```
+
+[**`news/models/user.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/models/user.py)
+
+```python
+class User(BaseModel, AbstractUser, PermissionsMixin):
+    # ...
+    address = models.CharField(max_length=255, null=True, blank=True, verbose_name="주소")
+    phone_number = models.CharField(max_length=20, null=True, blank=True, verbose_name="전화번호")
+    # ...
 ```
 
 ---

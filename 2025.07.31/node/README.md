@@ -136,10 +136,8 @@
 -   **기존**: `http://127.0.0.1:8000/v1/news`
 -   **변경**: `http://127.0.0.1:8000/api/v1/news`
 
-[`app/news.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/news.tsx) 파일의 `fetch` 요청 URL이 아래와 같이 업데이트되었습니다.
-
+[**`app/news.tsx` (변경 후)**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/news.tsx)
 ```tsx
-// [app/news.tsx](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/news.tsx) (변경 후)
 useEffect(() => {
     // 백엔드 API에 GET 요청을 보내 뉴스 데이터를 가져옵니다.
     fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/news`)
@@ -164,27 +162,27 @@ useEffect(() => {
 
 `React Context API`를 사용하여 앱 전반의 사용자 인증 상태를 관리하는 아키텍처를 구현했습니다. 이를 통해 여러 컴포넌트에서 인증 상태를 공유하고 관련 로직을 일관되게 처리할 수 있습니다.
 
--   **`AuthProvider` 및 `AuthContext` ([`providers/auth.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/providers/auth.tsx))**:
+-   **`AuthProvider` 및 `AuthContext`** ([`providers/auth.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/providers/auth.tsx)):
     -   `AuthContext`는 `signIn`, `signUp`, `signOut` 함수와 `isSignedIn`, `isLoading` 상태 값을 포함하는 컨텍스트 객체를 생성합니다.
     -   `AuthProvider`는 이 컨텍스트의 `Provider` 컴포넌트로서, 실제 함수 로직과 상태 관리를 담당합니다.
         -   `useEffect` 훅을 사용하여 컴포넌트가 마운트될 때, 백엔드의 `/api/v1/users/me` 엔드포인트를 호출하여 서버에 저장된 세션을 기반으로 사용자의 로그인 상태를 확인하고 `isSignedIn` 상태를 초기화합니다.
-        -   `signIn`, `signUp` 함수는 각각 백엔드의 로그인, 회원가입 API를 호출하고, 성공 시 `isSignedIn` 상태를 `true`로 설정합니다.
+        -   `signIn`, `signUp` 함수는 각각 백엔드의 로그인, 회원가입 API를 호출하고, 성공 시 `isSignedIn` 상태가 `true`로 설정합니다.
 
--   **`useAuth` 커스텀 훅 ([`hooks/useAuth.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/hooks/useAuth.tsx))**:
+-   **`useAuth` 커스텀 훅** ([`hooks/useAuth.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/hooks/useAuth.tsx)):
     -   `useContext(AuthContext)`를 직접 사용하는 대신 `useAuth` 훅을 만들어 한 단계 추상화했습니다. 컴포넌트에서는 이 훅을 호출하여 간결하게 `AuthContext`의 값들에 접근할 수 있습니다.
 
--   **전역 적용 ([`app/_layout.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/_layout.tsx))**:
+-   **전역 적용** ([`app/_layout.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/_layout.tsx)):
     -   앱의 최상위 레이아웃 컴포넌트에서 `AuthProvider`로 전체 앱을 감싸줍니다. 이를 통해 앱 내의 모든 화면과 컴포넌트가 `useAuth` 훅을 통해 동일한 인증 컨텍스트를 공유하게 됩니다.
 
 ### 2. 로그인 및 회원가입 페이지 구현
 
 백엔드 인증 API와 연동하여 사용자가 계정을 생성하고 로그인할 수 있는 화면들을 구현했습니다.
 
--   **로그인 페이지 ([`app/sign-in.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/sign-in.tsx))**:
+-   **로그인 페이지** ([`app/sign-in.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/sign-in.tsx)):
     -   이메일과 비밀번호 입력을 위한 `Input` 컴포넌트와 `signIn` 함수를 호출하는 `Button` 컴포넌트로 구성됩니다.
     -   `useEffect` 훅을 사용하여 `useAuth`의 `isSignedIn` 상태를 구독하고, 이 값이 `true`로 변경되면 `expo-router`의 `router.replace('/')`를 호출하여 사용자를 메인 화면으로 이동시킵니다.
 
--   **회원가입 페이지 ([`app/sign-up.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/sign-up.tsx))**:
+-   **회원가입 페이지** ([`app/sign-up.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/sign-up.tsx)):
     -   **단계별 폼 렌더링**: 각 입력 필드(`name`, `email`, `password`, `confirmPassword`)의 유효성 상태(`isNameValid` 등)를 `useState`로 관리합니다. 이전 단계의 필드가 유효할 때만(`isNameValid &&`, `isNameValid && isEmailValid && ...`) 다음 단계의 입력 필드 컴포넌트가 조건부로 렌더링됩니다.
     -   **실시간 유효성 검사**: `useEffect` 훅을 사용하여 각 입력 값이 변경될 때마다 정해진 유효성 검사 함수(예: `validateEmail`)를 실행하고, 그 결과를 유효성 상태에 반영합니다. 유효하지 않을 경우, 입력 필드 하단에 에러 메시지를 조건부로 표시합니다.
     -   **회원가입 처리 및 자동 로그인**: 모든 필드의 유효성 검사가 통과되면 'Sign Up' 버튼이 활성화됩니다. 버튼 클릭 시 `useAuth`의 `signUp` 함수를 호출하며, `signUp` 함수 내부 로직에 의해 회원가입 성공 후 `isSignedIn` 상태가 `true`로 설정되어 자동 로그인 및 메인 화면 이동이 처리됩니다.
@@ -193,16 +191,140 @@ useEffect(() => {
 
 인증된 사용자를 위한 게시글 조회 및 작성 기능을 구현했습니다.
 
--   **게시글 목록 화면 ([`app/posts.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/posts.tsx))**:
+-   **게시글 목록 화면** ([`app/posts.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/posts.tsx)):
     -   `useAuth` 훅을 통해 `isSignedIn` 상태를 확인하고, `useEffect` 훅 내에서 이 값이 `true`일 때만 백엔드의 `/api/v1/posts` API를 `fetch`를 통해 호출합니다.
     -   API 응답으로 받은 게시글 목록 데이터를 `useState`로 관리되는 `posts` 상태 변수에 저장하고, `map` 함수를 사용하여 각 게시글을 화면에 렌더링합니다.
     -   'Write Post' 버튼 클릭 시, `expo-router`의 `router.push('/posts/write')`를 호출하여 게시글 작성 화면으로 이동합니다.
 
--   **게시글 작성 화면 ([`app/posts/write.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/posts/write.tsx))**:
+-   **게시글 작성 화면** ([`app/posts/write.tsx`](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/posts/write.tsx)):
     -   `title`과 `content`를 입력받기 위한 `Input` 컴포넌트들로 구성됩니다. 각 `Input`의 `value`와 `onChangeText`는 `useState`로 관리되는 `title`, `content` 상태와 바인딩됩니다.
     -   '작성 완료' 버튼 클릭 시, `handleCreatePost` 함수가 실행됩니다. 이 함수는 `fetch`를 사용하여 `/api/v1/posts/` 엔드포인트에 `POST` 요청을 보냅니다.
     -   요청 본문에는 `JSON.stringify`를 통해 `title`과 `content` 상태 값을 담고, `X-CSRFToken` 헤더를 포함하여 CSRF 공격을 방지합니다.
     -   API 요청이 성공하면 `router.push('/posts')`를 통해 사용자를 다시 게시글 목록 화면으로 이동시킵니다.
+
+---
+
+## 📅 2025년 8월 6일: 게시글 상세 조회 및 수정 기능 구현
+
+백엔드에 게시글 상세 API가 추가됨에 따라, 프론트엔드에서도 관련 기능을 구현하여 사용자 경험을 개선했습니다.
+
+### 1. 동적 라우팅을 이용한 상세 및 수정 페이지 구현
+
+`expo-router`의 동적 라우팅(dynamic routing) 기능을 활용하여, 각 게시글에 대한 고유한 상세 페이지와 수정 페이지를 생성했습니다.
+
+-   **파일 구조**:
+    -   `app/posts/[id].tsx`: 게시글 목록에서 특정 게시글을 선택했을 때, 해당 게시글의 `id`를 URL 파라미터로 받아 상세 내용을 보여주는 페이지입니다.
+    -   `app/posts/[id]/edit.tsx`: 상세 페이지에서 '수정' 버튼을 눌렀을 때, 동일한 `id`를 받아 해당 게시글의 내용을 수정하는 폼을 제공하는 페이지입니다.
+
+-   **라우팅 및 파라미터 전달**:
+    -   게시글 목록 화면에서 각 게시글 컴포넌트를 누르면(`onPress`), `expo-router`의 `router.push` 함수가 다음과 같이 호출됩니다.
+    -   URL 경로에 동적으로 `id`를 포함시켜, 사용자를 해당 게시글의 상세 페이지로 이동시킵니다.
+
+    [**`app/posts.tsx`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/posts.tsx)
+    
+    ```tsx
+    <YStack
+      onPress={() =>
+        router.push({
+          pathname: "/posts/[id]",
+          params: { id: post.id },
+        })
+      }
+    >
+      {/* ... */}
+    </YStack>
+    ```
+
+### 2. 게시글 상세 정보 조회 기능
+
+[**`app/posts/[id].tsx`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/posts/[id].tsx)
+
+상세 페이지에서는 `useLocalSearchParams` 훅을 사용하여 URL로부터 `id` 값을 추출하고, 이를 이용해 백엔드 API를 호출하여 게시글의 전체 데이터를 가져옵니다.
+
+-   **API 호출**: `useEffect` 훅 내부에서 `fetch`를 사용하여 `GET /api/v1/posts/${id}`를 호출하고, 응답 데이터를 `post` 상태에 저장합니다.
+-   **작성자 정보 표시**: 백엔드로부터 받은 데이터에 `created_at`(작성일)과 `updated_at`(수정일)이 포함되어, 이를 `toLocaleString()` 메소드를 사용해 사용자 친화적인 형식으로 변환하여 화면에 표시합니다.
+-   **조건부 UI 렌더링 (권한 확인)**:
+    -   `useAuth()` 훅을 통해 현재 로그인된 사용자 정보(`currentUser`)를 가져옵니다.
+    -   `isAuthor` 변수에 `currentUser.id === post.author_id` 비교 결과를 저장합니다.
+    -   이 `isAuthor` 값이 `true`일 경우에만, 즉 현재 사용자가 게시글 작성자일 때만 '수정' 버튼이 화면에 보이도록 조건부로 렌더링(`{isAuthor && <Button>...`}`)하여 인가되지 않은 수정을 방지합니다.
+
+```tsx
+export default function PostDetailScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [post, setPost] = useState<Post | null>(null);
+  const { currentUser } = useAuth();
+  
+  // ... useEffect post fetch ...
+
+  const isAuthor = currentUser && post && currentUser.id === post.author_id;
+
+  return (
+    <YStack>
+      {/* ... post content ... */}
+      <Text>작성일자: {new Date(post.created_at).toLocaleString()}</Text>
+      <Text>수정일자: {new Date(post.updated_at).toLocaleString()}</Text>
+      
+      <XStack>
+        <Button>목록으로</Button>
+        {isAuthor && <Button onPress={handleEdit}>수정</Button>}
+      </XStack>
+    </YStack>
+  );
+}
+```
+
+### 3. 게시글 수정 기능 및 권한 검증
+
+[**`app/posts/[id]/edit.tsx`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/node/news-app/app/posts/[id]/edit.tsx)
+
+수정 페이지는 상세 페이지와 유사하게 `id`를 기반으로 기존 데이터를 불러오지만, 데이터를 '수정'하여 서버에 다시 보내는 데 초점을 맞춥니다.
+
+-   **데이터 로딩 및 권한 검증**:
+    -   페이지가 로드될 때 `useEffect`를 통해 게시글 데이터를 가져온 후, `useState`로 관리되는 `title`과 `content` 상태를 API 응답값으로 초기화하여 입력 필드에 기존 내용을 채워줍니다.
+    -   **데이터를 불러온 직후, 프론트엔드 단에서 한 번 더 사용자 권한을 검증**합니다. 만약 현재 로그인한 사용자의 ID(`currentUser.id`)와 게시글 작성자의 ID(`data.data.author_id`)가 일치하지 않으면, 사용자에게 "수정할 권한이 없습니다."라는 경고를 표시하고 즉시 이전 페이지로 돌려보냅니다. 이는 URL을 직접 입력하여 수정 페이지에 접근하는 경우를 방지하는 중요한 보안 장치입니다.
+
+-   **데이터 업데이트**:
+    -   '수정 완료' 버튼을 누르면 `handleUpdatePost` 함수가 실행됩니다.
+    -   이 함수는 `fetch`를 사용하여 `PUT /api/v1/posts/${id}/` 엔드포인트에 `PUT` 요청을 보냅니다. `body`에는 수정된 `title`과 `content`를, `headers`에는 `X-CSRFToken`을 포함하여 안전하게 데이터를 전송합니다.
+    -   업데이트가 성공하면, `router.push`를 통해 수정된 내용이 반영된 해당 게시글의 상세 페이지로 사용자를 이동시킵니다.
+
+```tsx
+export default function EditPostScreen() {
+  // ...
+  useEffect(() => {
+    const fetchPost = async () => {
+      // ...
+      if (response.ok) {
+        const data = await response.json();
+        // 프론트엔드에서 2차 권한 검증
+        if (currentUser && data.data.author_id !== currentUser.id) {
+          alert("수정할 권한이 없습니다.");
+          router.replace("/posts");
+        }
+        // ...
+      }
+    };
+    fetchPost();
+  }, [id, isSignedIn, currentUser]);
+
+  const handleUpdatePost = async () => {
+    // ...
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/posts/${id}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({ title, content }),
+      }
+    );
+    // ...
+  };
+  // ...
+}
+```
 
 ---
 
