@@ -2,6 +2,8 @@
 게시물 관련 API 뷰입니다.
 """
 
+import uuid
+
 from django.db.models import Q
 from django.http import HttpRequest, JsonResponse
 from django.utils import timezone
@@ -15,7 +17,7 @@ from news.serializers.post import PostSerializer
 class PostObjectMixin:
     """게시물 객체를 가져오는 Mixin입니다."""
 
-    def get_object(self, pk: int) -> Post:
+    def get_object(self, pk: uuid.UUID) -> Post:
         """
         게시물 객체를 가져오거나 404 에러를 발생시키는 헬퍼 메서드입니다.
 
@@ -35,8 +37,9 @@ class PostObjectMixin:
 
 
 # C: Create
-class PostCreateView(APIView):
-    """새로운 게시물을 생성합니다."""
+# R: Retrieve (List)
+class PostListView(APIView):
+    """게시물을 생성하거나 게시물 목록을 조회합니다."""
 
     def post(self, request: HttpRequest) -> JsonResponse:
         """새로운 게시물을 생성합니다."""
@@ -75,11 +78,6 @@ class PostCreateView(APIView):
             }
         )
 
-
-# R: Retrieve (List)
-class PostListView(APIView):
-    """게시물 목록을 조회합니다."""
-
     def get(self, request: HttpRequest) -> JsonResponse:
         """
         게시물 목록을 조회합니다.
@@ -104,10 +102,12 @@ class PostListView(APIView):
 
 
 # R: Retrieve (Detail)
-class PostRetrieveView(PostObjectMixin, APIView):
-    """단일 게시물을 조회합니다."""
+# U: Update
+# D: Destroy
+class PostDetailView(PostObjectMixin, APIView):
+    """단일 게시물을 조회, 수정, 삭제합니다."""
 
-    def get(self, request: HttpRequest, pk: int) -> JsonResponse:
+    def get(self, request: HttpRequest, pk: uuid.UUID) -> JsonResponse:
         """
         단일 게시물을 조회합니다.
 
@@ -128,12 +128,7 @@ class PostRetrieveView(PostObjectMixin, APIView):
             }
         )
 
-
-# U: Update
-class PostUpdateView(PostObjectMixin, APIView):
-    """게시물을 업데이트합니다."""
-
-    def put(self, request: HttpRequest, pk: int) -> JsonResponse:
+    def put(self, request: HttpRequest, pk: uuid.UUID) -> JsonResponse:
         """
         게시물을 업데이트합니다 (전체 업데이트).
 
@@ -146,7 +141,7 @@ class PostUpdateView(PostObjectMixin, APIView):
         """
         return self._update(request, pk, partial=False)
 
-    def patch(self, request: HttpRequest, pk: int) -> JsonResponse:
+    def patch(self, request: HttpRequest, pk: uuid.UUID) -> JsonResponse:
         """
         게시물을 부분적으로 업데이트합니다.
 
@@ -159,7 +154,9 @@ class PostUpdateView(PostObjectMixin, APIView):
         """
         return self._update(request, pk, partial=True)
 
-    def _update(self, request: HttpRequest, pk: int, partial: bool) -> JsonResponse:
+    def _update(
+        self, request: HttpRequest, pk: uuid.UUID, partial: bool
+    ) -> JsonResponse:
         post = self.get_object(pk)
 
         if not request.user.is_authenticated:
@@ -186,12 +183,7 @@ class PostUpdateView(PostObjectMixin, APIView):
             {"status": "error", "message": serializer.errors}, status=400
         )
 
-
-# D: Destroy
-class PostDestroyView(PostObjectMixin, APIView):
-    """게시물을 삭제합니다."""
-
-    def delete(self, request: HttpRequest, pk: int) -> JsonResponse:
+    def delete(self, request: HttpRequest, pk: uuid.UUID) -> JsonResponse:
         """
         게시물을 소프트 삭제합니다.
 

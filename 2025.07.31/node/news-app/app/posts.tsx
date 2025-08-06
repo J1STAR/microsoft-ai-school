@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import { useAuth } from "../hooks/useAuth";
 
 interface Post {
-  id: number;
+  id: string;
   title: string;
   content: string;
   author_id: number;
