@@ -10,6 +10,8 @@ interface Post {
   content: string;
   author: string;
   author_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function PostDetailScreen(): React.ReactNode {
@@ -104,7 +106,18 @@ export default function PostDetailScreen(): React.ReactNode {
       alignSelf="center"
     >
       <H2>{post.title}</H2>
-      <Text>{post.author}</Text>
+      <YStack gap="$2">
+        <Text>{post.author}</Text>
+
+        <YStack>
+          <Text fontSize="$2">
+            작성일자: {new Date(post.created_at).toLocaleString()}
+          </Text>
+          <Text fontSize="$2">
+            수정일자: {new Date(post.updated_at).toLocaleString()}
+          </Text>
+        </YStack>
+      </YStack>
       <Paragraph height="$20">{post.content}</Paragraph>
       <XStack gap="$4" justifyContent="flex-end">
         <Button onPress={handleGoBack}>목록으로</Button>
