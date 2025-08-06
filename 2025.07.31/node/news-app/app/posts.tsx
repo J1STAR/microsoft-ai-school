@@ -8,7 +8,9 @@ interface Post {
   id: string;
   title: string;
   content: string;
-  author_id: number;
+  author: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function PostsScreen(): React.ReactNode {
@@ -75,6 +77,13 @@ export default function PostsScreen(): React.ReactNode {
             </Text>
             <Text numberOfLines={2} ellipse>
               {post.content}
+            </Text>
+
+            <Text textAlign="right" fontSize="$4" ellipse>
+              {post.author}
+            </Text>
+            <Text textAlign="right" fontSize="$4" ellipse>
+              {new Date(post.created_at).toLocaleString()}
             </Text>
           </YStack>
         ))}
