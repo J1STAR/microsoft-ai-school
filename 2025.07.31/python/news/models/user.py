@@ -6,8 +6,7 @@ Django의 기본 사용자 모델(`AbstractBaseUser`)을 확장하여,
 """
 from typing import Any
 
-from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import BaseUserManager, AbstractUser, PermissionsMixin
 from django.db import models
 
 from news.models.common import BaseModel
@@ -62,6 +61,7 @@ class UserManager(BaseUserManager):
             User: 생성된 일반 사용자 객체.
         """
         extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_staff", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email: str, password: str, **extra_fields: Any) -> "User":
@@ -69,6 +69,7 @@ class UserManager(BaseUserManager):
         관리자(superuser)를 생성합니다.
 
         `is_superuser` 필드를 `True`로 설정합니다.
+        `is_staff` 필드를 `True`로 설정합니다.
 
         Args:
             email (str): 관리자의 이메일 주소.
@@ -82,6 +83,7 @@ class UserManager(BaseUserManager):
             User: 생성된 관리자 객체.
         """
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_staff", True)
 
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
@@ -89,7 +91,7 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class User(BaseModel, AbstractBaseUser, PermissionsMixin):
+class User(BaseModel, AbstractUser, PermissionsMixin):
     """
     애플리케이션의 커스텀 사용자 모델입니다.
 
