@@ -1,26 +1,40 @@
 """
 이 파일은 데이터베이스 모델에서 공통적으로 사용될 기본 필드와 설정을 정의합니다.
 """
+import uuid
+
 from django.db import models
+
+class ModelManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(removed_at__isnull=True)
 
 
 class BaseModel(models.Model):
     """
     모든 모델이 공통적으로 상속받는 추상 기본 모델 클래스입니다.
     
-    이 모델은 생성 시간(`created_at`)과 수정 시간(`updated_at`) 필드를 자동으로
+    이 모델은 id(UUIDField), 생성 시간(`created_at`)과 수정 시간(`updated_at`) 필드, 삭제 시간(`removed_at`) 필드를 자동으로
     관리하여, 모든 데이터 레코드의 생성 및 마지막 수정 시점을 기록합니다.
     `abstract = True`로 설정되어 있어, 이 모델은 자체적으로 데이터베이스 테이블을
     생성하지 않고 다른 모델에 상속 용도로만 사용됩니다.
 
     Attributes:
+        id (UUIDField): 객체의 고유 식별자를 저장합니다.
+                        UUID 형식으로 생성되며, 데이터베이스에서 유니크한 값을 보장합니다.
         created_at (DateTimeField): 객체가 처음 생성된 날짜와 시간을 저장합니다.
                                   자동으로 현재 시간이 추가됩니다.
         updated_at (DateTimeField): 객체가 마지막으로 수정된 날짜와 시간을 저장합니다.
                                   객체가 저장될 때마다 현재 시간으로 갱신됩니다.
+        removed_at (DateTimeField): 객체가 삭제된 날짜와 시간을 저장합니다.
+                                  객체가 삭제될 때 현재 시간이 추가됩니다.
     """
+    objects = ModelManager()
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True, verbose_name="ID")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="생성일시")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="수정일시")
+    removed_at = models.DateTimeField(null=True, blank=True, verbose_name="삭제일시")
 
     class Meta:
         """
