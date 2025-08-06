@@ -50,14 +50,32 @@ export default function PostsScreen(): React.ReactNode {
 
   return (
     <ScrollView>
-      <YStack gap="$4" p="$4">
+      <YStack gap="$4" p="$4" maxWidth={960} width="100%" alignSelf="center">
         <Button onPress={() => router.push("/posts/write")}>Write Post</Button>
         {posts.map((post) => (
-          <YStack key={post.id} gap="$2" p="$4" backgroundColor="$background">
+          <YStack
+            key={post.id}
+            gap="$2"
+            p="$4"
+            borderWidth={1}
+            borderColor="$borderColor"
+            borderRadius="$4"
+            backgroundColor="$background"
+            hoverStyle={{ backgroundColor: "$backgroundHover" }}
+            pressStyle={{ backgroundColor: "$backgroundPress" }}
+            onPress={() =>
+              router.push({
+                pathname: "/posts/[id]",
+                params: { id: post.id },
+              })
+            }
+          >
             <Text fontSize="$6" fontWeight="bold">
               {post.title}
             </Text>
-            <Text>{post.content}</Text>
+            <Text numberOfLines={2} ellipse>
+              {post.content}
+            </Text>
           </YStack>
         ))}
       </YStack>
