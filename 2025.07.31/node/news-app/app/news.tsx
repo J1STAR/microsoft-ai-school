@@ -80,7 +80,7 @@ export default function NewsScreen(): React.ReactNode {
   // 컴포넌트가 처음 마운트될 때 한 번만 실행되는 효과(Effect)입니다.
   useEffect(() => {
     // 백엔드 API에 GET 요청을 보내 뉴스 데이터를 가져옵니다.
-    fetch("http://127.0.0.1:8000/api/v1/news")
+    fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/news`)
       .then((res) => res.json()) // 응답을 JSON 형태로 파싱합니다.
       .then((responseJson) => {
         // API 응답 데이터 구조에 맞게 실제 뉴스 목록을 추출합니다.
