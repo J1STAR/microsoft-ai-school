@@ -9,13 +9,18 @@ interface Post {
   title: string;
   content: string;
   author: string;
+  author_id: string;
 }
 
 export default function PostDetailScreen(): React.ReactNode {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [isLoadingPost, setIsLoadingPost] = useState(true);
-  const { isSignedIn, isLoading: isAuthLoading } = useAuth();
+  const {
+    isSignedIn,
+    isLoading: isAuthLoading,
+    currentUser,
+  } = useAuth();
 
   useEffect(() => {
     if (isAuthLoading) {
@@ -71,6 +76,8 @@ export default function PostDetailScreen(): React.ReactNode {
     router.push("/posts");
   };
 
+  const isAuthor = currentUser && post && currentUser.id === post.author_id;
+
   if (isAuthLoading || isLoadingPost) {
     return (
       <YStack flex={1} justifyContent="center" alignItems="center">
@@ -101,7 +108,7 @@ export default function PostDetailScreen(): React.ReactNode {
       <Paragraph height="$20">{post.content}</Paragraph>
       <XStack gap="$4" justifyContent="flex-end">
         <Button onPress={handleGoBack}>목록으로</Button>
-        <Button onPress={handleEdit}>수정</Button>
+        {isAuthor && <Button onPress={handleEdit}>수정</Button>}
       </XStack>
     </YStack>
   );

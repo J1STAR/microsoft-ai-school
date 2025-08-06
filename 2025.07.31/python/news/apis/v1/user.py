@@ -152,6 +152,7 @@ class UserMySelfView(APIView):
             user.save(update_fields=['last_login'])
 
             user_dict: Dict[str, Any] = {
+                "id": user.id,
                 "email": user.email,
                 "name": user.name,
                 "last_login": user.last_login.strftime("%Y-%m-%d %H:%M:%S")

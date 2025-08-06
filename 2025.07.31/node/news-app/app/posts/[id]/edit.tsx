@@ -4,12 +4,25 @@ import { useLocalSearchParams, router } from "expo-router";
 
 import { useAuth } from "../../../hooks/useAuth";
 
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  author_id: string;
+}
+
 export default function EditPostScreen(): React.ReactNode {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const [post, setPost] = useState<Post | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isLoadingPost, setIsLoadingPost] = useState(true);
-  const { isSignedIn, isLoading: isAuthLoading, csrfToken } = useAuth();
+  const {
+    isSignedIn,
+    isLoading: isAuthLoading,
+    csrfToken,
+    currentUser,
+  } = useAuth();
 
   useEffect(() => {
     if (isAuthLoading) {
@@ -33,8 +46,14 @@ export default function EditPostScreen(): React.ReactNode {
         );
         if (response.ok) {
           const data = await response.json();
+          setPost(data.data);
           setTitle(data.data.title);
           setContent(data.data.content);
+
+          if (currentUser && data.data.author_id !== currentUser.id) {
+            alert("수정할 권한이 없습니다.");
+            router.replace("/posts");
+          }
         } else {
           alert("Failed to load post.");
           router.back();
@@ -47,14 +66,20 @@ export default function EditPostScreen(): React.ReactNode {
       }
     };
 
-    if (isSignedIn) {
+    if (isSignedIn && currentUser) {
       fetchPost();
     }
-  }, [id, isSignedIn]);
+  }, [id, isSignedIn, currentUser]);
 
   const handleUpdatePost = async () => {
     if (!csrfToken) {
       alert("Could not verify session. Please log in again.");
+      return;
+    }
+
+    if (currentUser && post && currentUser.id !== post.author_id) {
+      alert("수정할 권한이 없습니다.");
+      router.replace("/posts");
       return;
     }
 
@@ -127,9 +152,7 @@ export default function EditPostScreen(): React.ReactNode {
       />
       <XStack gap="$4" justifyContent="flex-end">
         <Button onPress={handleCancel}>취소</Button>
-        <Button onPress={handleUpdatePost}>
-          수정 완료
-        </Button>
+        <Button onPress={handleUpdatePost}>수정 완료</Button>
       </XStack>
     </YStack>
   );

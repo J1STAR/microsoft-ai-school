@@ -1,5 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
 
+interface User {
+  id: string;
+  username: string;
+  email: string;
+}
+
 interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
@@ -7,6 +13,7 @@ interface AuthContextType {
   isSignedIn?: boolean | null;
   isLoading: boolean;
   csrfToken: string | null;
+  currentUser: User | null;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -17,6 +24,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
     const checkSignedInUser = async () => {
@@ -31,13 +39,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         );
 
         if (response.ok) {
+          const userData = await response.json();
+          setCurrentUser(userData.data);
           setCsrfToken(getCsrfToken());
           setIsSignedIn(true);
         } else {
           setIsSignedIn(false);
+          setCurrentUser(null);
         }
       } catch {
         setIsSignedIn(false);
+        setCurrentUser(null);
       } finally {
         setIsLoading(false);
       }
@@ -47,7 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    let signInResponse = await fetch(
+    const signInResponse = await fetch(
       `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/sign-in`,
       {
         method: "POST",
@@ -63,6 +75,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const signInData = await signInResponse.json();
       alert(signInData.message);
       return;
+    }
+
+    // 로그인 성공 후 사용자 정보 다시 가져오기
+    const userResponse = await fetch(
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/me`,
+      { credentials: "include" },
+    );
+    if (userResponse.ok) {
+      const userData = await userResponse.json();
+      setCurrentUser(userData.data);
     }
 
     setCsrfToken(getCsrfToken());
@@ -90,12 +112,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 회원가입 성공 시, 바로 로그인 상태로 만들어줍니다.
     alert(`환영합니다! ${name}님`);
+    
+    const userResponse = await fetch(
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/me`,
+      { credentials: "include" },
+    );
+    if (userResponse.ok) {
+      const userData = await userResponse.json();
+      setCurrentUser(userData.data);
+    }
+    
     setCsrfToken(getCsrfToken());
     setIsSignedIn(true);
   };
-
+  
   const signOut = () => {
     setIsSignedIn(false);
+    setCurrentUser(null);
   };
 
   const getCsrfToken = () => {
@@ -117,7 +150,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signIn, signUp, signOut, isSignedIn, isLoading, csrfToken }}
+      value={{
+        signIn,
+        signUp,
+        signOut,
+        isSignedIn,
+        isLoading,
+        csrfToken,
+        currentUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
