@@ -3,7 +3,6 @@
 API 엔드포인트를 정의합니다.
 """
 import datetime
-from typing import Dict, Any
 from email_validator import validate_email, EmailNotValidError
 
 from django.contrib.auth import authenticate, login, logout
@@ -11,7 +10,7 @@ from django.http import HttpRequest, JsonResponse
 from rest_framework.views import APIView
 
 from news.models.user import User
-
+from news.serializers.user import UserSerializer
 
 class UserSignUpView(APIView):
     """
@@ -25,6 +24,8 @@ class UserSignUpView(APIView):
         email: str = request.data.get("email", '')
         password: str = request.data.get("password", '')
         name: str = request.data.get("name", '')
+        address: str = request.data.get("address", '')
+        phone_number: str = request.data.get("phone_number", '')
         
         if not email or not password or not name:
             return JsonResponse({
@@ -46,9 +47,35 @@ class UserSignUpView(APIView):
                 "status": "BAD_REQUEST",
                 "message": "비밀번호는 8자 이상이어야 합니다."
             }, status=400)
+        
+
+        if address is not None:
+            if len(address) > 255:
+                return JsonResponse({
+                    "status": "BAD_REQUEST",
+                    "message": "주소는 255자 이하여야 합니다."
+                }, status=400)
+        else:
+            return JsonResponse({
+                "status": "BAD_REQUEST",
+                "message": "주소는 필수 항목입니다."
+            }, status=400)
+        
+
+        if phone_number is not None:
+            if len(phone_number) > 20:
+                return JsonResponse({
+                    "status": "BAD_REQUEST",
+                    "message": "전화번호는 20자 이하여야 합니다."
+                }, status=400)
+        else:
+            return JsonResponse({
+                "status": "BAD_REQUEST",
+                "message": "전화번호는 필수 항목입니다."
+            }, status=400)
 
         try:
-            user = User.objects.create_user(email=email, password=password, name=name)
+            user = User.objects.create_user(email=email, password=password, name=name, address=address, phone_number=phone_number)
         except Exception as e:
             print(e)
             return JsonResponse({
@@ -58,10 +85,13 @@ class UserSignUpView(APIView):
         
         user.save()
         login(request, user)
+
+        user_data = UserSerializer(user).data
         
         return JsonResponse({
             "status": "OK",
-            "message": "회원가입 성공"
+            "message": "회원가입 성공",
+            "data": user_data
         })
 
 
@@ -114,10 +144,12 @@ class UserSignInView(APIView):
         # 이로써 후속 요청에서 `request.user`로 사용자 정보에 접근할 수 있게 됩니다.
         login(request, user)
 
+        user_data = UserSerializer(user).data
+
         return JsonResponse({
             "status": "OK",
             "message": "로그인 성공",
-            "data": {"email": user.email}
+            "data": user_data
         })
 
 
@@ -151,17 +183,12 @@ class UserMySelfView(APIView):
             user.last_login = datetime.datetime.now()
             user.save(update_fields=['last_login'])
 
-            user_dict: Dict[str, Any] = {
-                "id": user.id,
-                "email": user.email,
-                "name": user.name,
-                "last_login": user.last_login.strftime("%Y-%m-%d %H:%M:%S")
-            }
+            user_data = UserSerializer(user).data
 
             return JsonResponse({
                 "status": "OK",
                 "message": "유저 정보를 조회하였습니다.",
-                "data": user_dict
+                "data": user_data
             })
         else:
             # 이 코드는 IsAuthenticated 설정 상 도달하기 어렵지만,

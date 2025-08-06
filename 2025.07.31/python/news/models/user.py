@@ -102,6 +102,8 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     Attributes:
         email (EmailField): 사용자의 이메일 주소. 고유해야 합니다.
         name (CharField): 사용자의 이름.
+        address (CharField): 사용자의 주소.
+        phone_number (CharField): 사용자의 전화번호.
         objects (UserManager): 커스텀 사용자 매니저.
     """
     USERNAME_FIELD = 'email'
@@ -117,7 +119,15 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         max_length=30, null=True, blank=True, verbose_name="이름",
         help_text="사용자의 실명 또는 별명입니다."
     )
-    
+    address = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="주소",
+        help_text="사용자의 주소입니다."
+    )
+    phone_number = models.CharField(
+        max_length=20, null=True, blank=True, verbose_name="전화번호",
+        help_text="사용자의 전화번호입니다."
+    )
+
     objects = UserManager()
 
     class Meta:

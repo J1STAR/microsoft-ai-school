@@ -1,0 +1,29 @@
+# /api/v1/users/sign-up
+# email should be valid email address
+# password should be at least 8 characters long
+# name should be at least 1 character long
+
+POST http://localhost:8000/api/v1/users/sign-up
+Content-Type: application/json
+
+{
+    "email": "j.1star.0726@gmail.com",
+    "password": "valid_password",
+    "name": "장한별"
+}
+
+###
+
+# /api/v1/users/sign-in
+# email should be valid email address
+# password should be at least 8 characters long
+
+POST http://localhost:8000/api/v1/users/sign-in
+Content-Type: application/json
+
+{
+    "email": "j.1star.0726@gmail.com",
+    "password": "valid_password"
+}
+
+###

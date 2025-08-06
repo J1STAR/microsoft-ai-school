@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { router } from "expo-router";
 import {
   View,
@@ -10,8 +10,6 @@ import {
   Input,
   Text,
   Spinner,
-  Label,
-  XStack,
 } from "tamagui";
 import { useAuth } from "../hooks/useAuth";
 
@@ -33,6 +31,10 @@ export default function SignUpScreen() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
+  const [address, setAddress] = useState("");
+  const [isAddressValid, setIsAddressValid] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
 
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off",
@@ -54,14 +56,16 @@ export default function SignUpScreen() {
       !isNameValid ||
       !isEmailValid ||
       !isPasswordValid ||
-      !isConfirmPasswordValid
+      !isConfirmPasswordValid ||
+      !isAddressValid ||
+      !isPhoneNumberValid
     ) {
       alert("Please fill all fields correctly.");
       return;
     }
 
     setStatus("submitting");
-    await signUp(name, email, password);
+    await signUp(name, email, password, address, phoneNumber);
     setStatus("submitted");
   };
 
@@ -74,18 +78,35 @@ export default function SignUpScreen() {
     return emailRegex.test(text);
   };
   const validatePassword = (text: string) => text.length >= 8;
-  const validateConfirmPassword = (text: string) => text === password;
+  const validateConfirmPassword = useCallback(
+    (text: string) => text === password,
+    [password],
+  );
+  const validateAddress = (text: string) =>
+    text.length > 0 && text.length <= 255;
+  const validatePhoneNumber = (text: string) =>
+    text.length > 0 && text.length <= 20;
 
   useEffect(() => setIsNameValid(validateName(name)), [name]);
   useEffect(() => setIsEmailValid(validateEmail(email)), [email]);
   useEffect(() => setIsPasswordValid(validatePassword(password)), [password]);
   useEffect(
     () => setIsConfirmPasswordValid(validateConfirmPassword(confirmPassword)),
-    [confirmPassword, password],
+    [confirmPassword, validateConfirmPassword],
+  );
+  useEffect(() => setIsAddressValid(validateAddress(address)), [address]);
+  useEffect(
+    () => setIsPhoneNumberValid(validatePhoneNumber(phoneNumber)),
+    [phoneNumber],
   );
 
   const allFieldsValid =
-    isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid;
+    isNameValid &&
+    isEmailValid &&
+    isPasswordValid &&
+    isConfirmPasswordValid &&
+    isAddressValid &&
+    isPhoneNumberValid;
 
   if (isLoading || isSignedIn) {
     return (
@@ -163,6 +184,44 @@ export default function SignUpScreen() {
               )}
             </AnimatedYStack>
           )}
+
+          {isNameValid &&
+            isEmailValid &&
+            isPasswordValid &&
+            isConfirmPasswordValid && (
+              <AnimatedYStack>
+                <Input
+                  placeholder="Address"
+                  value={address}
+                  onChangeText={setAddress}
+                />
+                {address.length > 0 && !isAddressValid && (
+                  <Text color="$red10" fontSize={12}>
+                    Address must be less than 255 characters.
+                  </Text>
+                )}
+              </AnimatedYStack>
+            )}
+
+          {isNameValid &&
+            isEmailValid &&
+            isPasswordValid &&
+            isConfirmPasswordValid &&
+            isAddressValid && (
+              <AnimatedYStack>
+                <Input
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChangeText={setPhoneNumber}
+                  keyboardType="phone-pad"
+                />
+                {phoneNumber.length > 0 && !isPhoneNumberValid && (
+                  <Text color="$red10" fontSize={12}>
+                    Phone number must be less than 20 characters.
+                  </Text>
+                )}
+              </AnimatedYStack>
+            )}
 
           {allFieldsValid && (
             <AnimatedYStack>

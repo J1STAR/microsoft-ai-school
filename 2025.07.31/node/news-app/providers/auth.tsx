@@ -8,7 +8,13 @@ interface User {
 
 interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (name: string, email: string, password: string) => Promise<void>;
+  signUp: (
+    name: string,
+    email: string,
+    password: string,
+    address: string,
+    phone_number: string,
+  ) => Promise<void>;
   signOut: () => void;
   isSignedIn?: boolean | null;
   isLoading: boolean;
@@ -91,7 +97,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsSignedIn(true);
   };
 
-  const signUp = async (name: string, email: string, password: string) => {
+  const signUp = async (
+    name: string,
+    email: string,
+    password: string,
+    address: string,
+    phone_number: string,
+  ) => {
     const signUpResponse = await fetch(
       `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/sign-up`,
       {
@@ -99,7 +111,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          address,
+          phone_number,
+        }),
         credentials: "include",
       },
     );
@@ -112,7 +130,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 회원가입 성공 시, 바로 로그인 상태로 만들어줍니다.
     alert(`환영합니다! ${name}님`);
-    
+
     const userResponse = await fetch(
       `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/me`,
       { credentials: "include" },
@@ -121,11 +139,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const userData = await userResponse.json();
       setCurrentUser(userData.data);
     }
-    
+
     setCsrfToken(getCsrfToken());
     setIsSignedIn(true);
   };
-  
+
   const signOut = () => {
     setIsSignedIn(false);
     setCurrentUser(null);
