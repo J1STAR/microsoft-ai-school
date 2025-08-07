@@ -39,17 +39,18 @@ export default function SignUpScreen() {
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off",
   );
-  const { signUp, isSignedIn, isLoading } = useAuth();
+  const { signUp, session, isLoading } = useAuth();
+  const { user } = session;
 
   useEffect(() => {
     if (isLoading) {
       return;
     }
 
-    if (isSignedIn) {
+    if (user) {
       router.replace("/");
     }
-  }, [isLoading, isSignedIn]);
+  }, [isLoading, user]);
 
   const handleSignUp = async () => {
     if (
@@ -108,7 +109,7 @@ export default function SignUpScreen() {
     isAddressValid &&
     isPhoneNumberValid;
 
-  if (isLoading || isSignedIn) {
+  if (isLoading || user) {
     return (
       <View flex={1} justifyContent="center" alignItems="center">
         <Spinner size="large" />

@@ -24,17 +24,18 @@ export default function SignInScreen() {
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off",
   );
-  const { signIn, isSignedIn, isLoading } = useAuth();
+  const { signIn, session, isLoading } = useAuth();
+  const { user } = session;
 
   useEffect(() => {
     if (isLoading) {
       return;
     }
 
-    if (isSignedIn) {
+    if (user) {
       router.replace("/");
     }
-  }, [isLoading, isSignedIn]);
+  }, [isLoading, user]);
 
   const handleSignIn = async () => {
     if (!isEmailValid || !isPasswordValid) {
@@ -78,7 +79,7 @@ export default function SignInScreen() {
     setIsPasswordValid(validatePassword(password));
   }, [password]);
   
-  if (isLoading || isSignedIn) {
+  if (isLoading || user) {
     return (
       <View
         width={"100%"}

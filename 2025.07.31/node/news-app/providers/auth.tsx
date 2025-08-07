@@ -1,10 +1,7 @@
-import React, { createContext, useState, useEffect } from "react";
-
-interface User {
-  id: string;
-  username: string;
-  email: string;
-}
+import { createContext, useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import useSessionStore, { SessionState } from "../store/session";
+import api from "../utils/api";
 
 interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
@@ -15,11 +12,9 @@ interface AuthContextType {
     address: string,
     phone_number: string,
   ) => Promise<void>;
-  signOut: () => void;
-  isSignedIn?: boolean | null;
+  signOut: () => Promise<void>;
+  session: SessionState;
   isLoading: boolean;
-  csrfToken: string | null;
-  currentUser: User | null;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -27,74 +22,58 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
+  const session = useSessionStore();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [csrfToken, setCsrfToken] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const checkSignedInUser = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/me`,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-          },
-        );
+    const unsubscribe = useSessionStore.persist.onFinishHydration(() => {
+      setIsLoading(false);
+    });
 
-        if (response.ok) {
-          const userData = await response.json();
-          setCurrentUser(userData.data);
-          setCsrfToken(getCsrfToken());
-          setIsSignedIn(true);
-        } else {
-          setIsSignedIn(false);
-          setCurrentUser(null);
-        }
-      } catch {
-        setIsSignedIn(false);
-        setCurrentUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // Check if hydration is already finished
+    if (useSessionStore.persist.hasHydrated()) {
+      setIsLoading(false);
+    }
 
-    checkSignedInUser();
+    return unsubscribe;
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const signInResponse = await fetch(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/sign-in`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      const signInResponse = await api(
+        `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/sign-in`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
         },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
-      },
-    );
+      );
 
-    if (!signInResponse.ok) {
-      const signInData = await signInResponse.json();
-      alert(signInData.message);
-      return;
+      if (!signInResponse.ok) {
+        const signInData = await signInResponse.json();
+        alert(signInData.message);
+        return;
+      }
+
+      // 로그인 성공 후 응답 본문에서 사용자 정보와 JWT 토큰을 추출
+      const { data } = await signInResponse.json();
+
+      if (data.access_token && data.refresh_token) {
+        session.setTokens(data.access_token, data.refresh_token);
+      }
+
+      if (data.user) {
+        session.setUser(data.user);
+      }
+
+      router.replace("/");
+    } catch (error) {
+      console.error("Sign in failed:", error);
+      alert("로그인에 실패했습니다.");
     }
-
-    // 로그인 성공 후 사용자 정보 다시 가져오기
-    const userResponse = await fetch(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/me`,
-      { credentials: "include" },
-    );
-    if (userResponse.ok) {
-      const userData = await userResponse.json();
-      setCurrentUser(userData.data);
-    }
-
-    setCsrfToken(getCsrfToken());
-    setIsSignedIn(true);
   };
 
   const signUp = async (
@@ -104,66 +83,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     address: string,
     phone_number: string,
   ) => {
-    const signUpResponse = await fetch(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/sign-up`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      const signUpResponse = await api(
+        `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/sign-up`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            address,
+            phone_number,
+          }),
         },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          address,
-          phone_number,
-        }),
-        credentials: "include",
-      },
-    );
+      );
 
-    if (!signUpResponse.ok) {
-      const signUpData = await signUpResponse.json();
-      alert(signUpData.message);
-      return;
-    }
-
-    // 회원가입 성공 시, 바로 로그인 상태로 만들어줍니다.
-    alert(`환영합니다! ${name}님`);
-
-    const userResponse = await fetch(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/users/me`,
-      { credentials: "include" },
-    );
-    if (userResponse.ok) {
-      const userData = await userResponse.json();
-      setCurrentUser(userData.data);
-    }
-
-    setCsrfToken(getCsrfToken());
-    setIsSignedIn(true);
-  };
-
-  const signOut = () => {
-    setIsSignedIn(false);
-    setCurrentUser(null);
-  };
-
-  const getCsrfToken = () => {
-    let cookieValue = null;
-    const key = "csrftoken";
-
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].trim();
-        if (cookie.substring(0, key.length + 1) === key + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(key.length + 1));
-          break;
-        }
+      if (!signUpResponse.ok) {
+        const signUpData = await signUpResponse.json();
+        alert(signUpData.message);
+        return;
       }
+
+      alert(`환영합니다! ${name}님. 로그인 페이지로 이동합니다.`);
+
+      // 회원가입 성공 시, 로그인 페이지로 이동하여 로그인을 유도합니다.
+      router.replace("/sign-in");
+    } catch (error) {
+      console.error("Sign up failed:", error);
+      alert("회원가입에 실패했습니다.");
     }
-    return cookieValue;
+  };
+
+  const signOut = async () => {
+    session.clearSession();
+    router.replace("/sign-in");
   };
 
   return (
@@ -172,10 +128,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         signIn,
         signUp,
         signOut,
-        isSignedIn,
+        session,
         isLoading,
-        csrfToken,
-        currentUser,
       }}
     >
       {children}

@@ -3,21 +3,22 @@ import { YStack, Input, Button, Text } from "tamagui";
 import { router } from "expo-router";
 
 import { useAuth } from "../../hooks/useAuth";
+import api from "../../utils/api";
 
 export default function CreatePostScreen(): React.ReactNode {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const { isSignedIn, isLoading, csrfToken } = useAuth();
+  const { session, isLoading } = useAuth();
+  const { user } = session;
 
   const handleCreatePost = async () => {
     try {
-      const response = await fetch(
+      const response = await api(
         `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/posts/`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
           },
           credentials: "include",
           body: JSON.stringify({ title, content }),
@@ -39,10 +40,10 @@ export default function CreatePostScreen(): React.ReactNode {
   useEffect(() => {
     if (isLoading) { return; }
 
-    if (!isSignedIn) {
+    if (!user) {
       router.replace("/");
     }
-  }, [isLoading, isSignedIn]);
+  }, [isLoading, user]);
 
   return (
     <YStack gap="$4" p="$4" flex={1}>

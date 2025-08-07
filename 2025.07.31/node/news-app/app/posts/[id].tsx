@@ -3,6 +3,7 @@ import { YStack, Text, Button, Spinner, H2, Paragraph, XStack } from "tamagui";
 import { useLocalSearchParams, router } from "expo-router";
 
 import { useAuth } from "../../hooks/useAuth";
+import api from "../../utils/api";
 
 interface Post {
   id: string;
@@ -18,27 +19,24 @@ export default function PostDetailScreen(): React.ReactNode {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [isLoadingPost, setIsLoadingPost] = useState(true);
-  const {
-    isSignedIn,
-    isLoading: isAuthLoading,
-    currentUser,
-  } = useAuth();
+  const { session, isLoading } = useAuth();
+  const { user } = session;
 
   useEffect(() => {
-    if (isAuthLoading) {
+    if (isLoading) {
       return;
     }
-    if (!isSignedIn) {
+    if (!user) {
       router.replace("/");
     }
-  }, [isAuthLoading, isSignedIn]);
+  }, [isLoading, user]);
 
   useEffect(() => {
     const fetchPost = async () => {
       if (!id) return;
       setIsLoadingPost(true);
       try {
-        const response = await fetch(
+        const response = await api(
           `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/posts/${id}`,
           {
             method: "GET",
@@ -62,10 +60,10 @@ export default function PostDetailScreen(): React.ReactNode {
       }
     };
 
-    if (isSignedIn) {
+    if (user) {
       fetchPost();
     }
-  }, [id, isSignedIn]);
+  }, [id, user]);
 
   const handleEdit = (): void => {
     router.push({
@@ -78,9 +76,9 @@ export default function PostDetailScreen(): React.ReactNode {
     router.push("/posts");
   };
 
-  const isAuthor = currentUser && post && currentUser.id === post.author_id;
+  const isAuthor = user && post && user.id === post.author_id;
 
-  if (isAuthLoading || isLoadingPost) {
+  if (isLoading || isLoadingPost) {
     return (
       <YStack flex={1} justifyContent="center" alignItems="center">
         <Spinner size="large" />

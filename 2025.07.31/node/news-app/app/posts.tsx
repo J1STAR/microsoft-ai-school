@@ -15,7 +15,8 @@ interface Post {
 
 export default function PostsScreen(): React.ReactNode {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { isSignedIn, isLoading } = useAuth();
+  const { session, isLoading } = useAuth();
+  const { user } = session;
 
   const fetchPosts = async () => {
     try {
@@ -43,12 +44,12 @@ export default function PostsScreen(): React.ReactNode {
       return;
     }
 
-    if (!isSignedIn) {
+    if (!user) {
       router.replace("/");
     } else {
       fetchPosts();
     }
-  }, [isLoading, isSignedIn]);
+  }, [isLoading, user]);
 
   return (
     <ScrollView>

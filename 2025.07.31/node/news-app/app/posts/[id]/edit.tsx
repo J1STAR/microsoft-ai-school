@@ -3,6 +3,7 @@ import { YStack, Input, Button, Spinner, TextArea, H2, XStack } from "tamagui";
 import { useLocalSearchParams, router } from "expo-router";
 
 import { useAuth } from "../../../hooks/useAuth";
+import api from "../../../utils/api";
 
 interface Post {
   id: string;
@@ -17,30 +18,28 @@ export default function EditPostScreen(): React.ReactNode {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isLoadingPost, setIsLoadingPost] = useState(true);
-  const {
-    isSignedIn,
-    isLoading: isAuthLoading,
-    csrfToken,
-    currentUser,
-  } = useAuth();
+  const { session, isLoading } = useAuth();
+  const { user } = session;
 
   useEffect(() => {
-    if (isAuthLoading) {
+    if (isLoading) {
       return;
     }
-    if (!isSignedIn) {
+    if (!user) {
       router.replace("/");
     }
-  }, [isAuthLoading, isSignedIn]);
+  }, [isLoading, user]);
 
   useEffect(() => {
     const fetchPost = async () => {
       if (!id) return;
       setIsLoadingPost(true);
       try {
-        const response = await fetch(
+        const response = await api(
           `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/posts/${id}`,
           {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
             credentials: "include",
           },
         );
@@ -50,7 +49,7 @@ export default function EditPostScreen(): React.ReactNode {
           setTitle(data.data.title);
           setContent(data.data.content);
 
-          if (currentUser && data.data.author_id !== currentUser.id) {
+          if (user && data.data.author_id !== user.id) {
             alert("수정할 권한이 없습니다.");
             router.replace("/posts");
           }
@@ -66,31 +65,30 @@ export default function EditPostScreen(): React.ReactNode {
       }
     };
 
-    if (isSignedIn && currentUser) {
+    if (user) {
       fetchPost();
     }
-  }, [id, isSignedIn, currentUser]);
+  }, [id, user]);
 
   const handleUpdatePost = async () => {
-    if (!csrfToken) {
+    if (!user) {
       alert("Could not verify session. Please log in again.");
       return;
     }
 
-    if (currentUser && post && currentUser.id !== post.author_id) {
+    if (user && post && user.id !== post.author_id) {
       alert("수정할 권한이 없습니다.");
       router.replace("/posts");
       return;
     }
 
     try {
-      const response = await fetch(
+      const response = await api(
         `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/v1/posts/${id}/`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
           },
           credentials: "include",
           body: JSON.stringify({ title, content }),
@@ -116,7 +114,7 @@ export default function EditPostScreen(): React.ReactNode {
     router.back();
   };
 
-  if (isAuthLoading || isLoadingPost) {
+  if (isLoading || isLoadingPost) {
     return (
       <YStack flex={1} justifyContent="center" alignItems="center">
         <Spinner size="large" />
