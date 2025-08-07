@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - EXPO_PUBLIC_API_BASE_URL=http://localhost:8081
+

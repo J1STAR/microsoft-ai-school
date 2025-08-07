@@ -1,0 +1,38 @@
+# Docker 이미지에 포함되지 않아야 할 파일 및 디렉토리 목록
+
+# Git
+.git
+.gitignore
+
+# Python 가상 환경
+.venv/
+venv/
+env/
+
+# Python 캐시 파일
+__pycache__/
+*.pyc
+*.pyo
+
+# 데이터베이스 파일
+db/
+*.sqlite3
+db.sqlite3
+
+# OS 특정 파일
+.DS_Store
+Thumbs.db
+
+# Mise 설정 파일
+.mise.toml
+mise.toml
+
+# 민감한 정보
+.env
+*.env
+
+# 테스트 관련
+.pytest_cache/
+.coverage
+htmlcov/
+

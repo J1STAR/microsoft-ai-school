@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # 소스코드 마운트
+      - .:/app
+      # 가상환경 마운트 제외
+      - /app/.venv
+      # db.sqlite3 파일이 담길 디렉토리를 네임드 볼륨과 연결합니다.
+      - db_data:/app/db
+    command: >
+      sh -c "uv run python manage.py migrate &&
+             uv run python manage.py runserver 0.0.0.0:8000"
+
+# 최상위 레벨에 volumes를 정의하여 네임드 볼륨을 선언합니다.
+volumes:
+  # 'db_data'라는 이름의 볼륨을 선언합니다. 이 볼륨은 컨테이너가 삭제되어도 유지됩니다.
+  db_data:

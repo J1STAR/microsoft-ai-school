@@ -25,9 +25,26 @@ SECRET_KEY = 'django-insecure-cmtu!6__o!a8te1!p%1*&zs7i$l6=-s&5vm7bm0hynqtnse$#f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    '121.139.43.99',
+    '192.168.50.80',
+    'localhost',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8081',
+    'http://localhost:8081',
+    'http://121.139.43.99:8081',
+    'http://192.168.50.80:8081',
+]
 
 # CORS
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:8081',
+    'http://localhost:8081',
+    'http://121.139.43.99:8081',
+    'http://192.168.50.80:8081',
+]
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
@@ -91,7 +108,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db' / 'db.sqlite3',
     }
 }
 
