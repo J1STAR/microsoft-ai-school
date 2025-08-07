@@ -14,4 +14,5 @@ dependencies = [
     "markdown>=3.8.2",
     "pytz>=2025.2",
     "djangorestframework-simplejwt>=5.3.1",
+    "gunicorn>=23.0.0",
 ]
