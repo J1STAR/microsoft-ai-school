@@ -6,7 +6,7 @@ Django의 기본 사용자 모델(`AbstractBaseUser`)을 확장하여,
 """
 from typing import Any
 
-from django.contrib.auth.models import BaseUserManager, AbstractUser, PermissionsMixin
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
 
 from news.models.common import BaseModel
@@ -91,7 +91,7 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class User(BaseModel, AbstractUser, PermissionsMixin):
+class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     """
     애플리케이션의 커스텀 사용자 모델입니다.
 
@@ -129,6 +129,8 @@ class User(BaseModel, AbstractUser, PermissionsMixin):
         max_length=20, null=True, blank=True, verbose_name="전화번호",
         help_text="사용자의 전화번호입니다."
     )
+
+    is_staff = models.BooleanField(default=False)
 
     objects = UserManager()
 
