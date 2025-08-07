@@ -197,28 +197,3 @@ class UserMySelfView(APIView):
                 "status": "UNAUTHORIZED",
                 "message": "인증되지 않은 사용자입니다."
             }, status=401)
-
-
-class UserSignOutView(APIView):
-    """
-    사용자 로그아웃을 처리하는 API 뷰입니다.
-    """
-
-    def post(self, request: HttpRequest) -> JsonResponse:
-        """
-        POST 요청을 처리하여 현재 사용자를 로그아웃시킵니다.
-
-        `logout` 함수를 호출하여 현재 요청과 연결된 세션 데이터를 삭제합니다.
-
-        Args:
-            request (HttpRequest): 클라이언트로부터 받은 HTTP 요청 객체.
-
-        Returns:
-            JsonResponse: 로그아웃 성공 메시지를 담은 JSON 응답.
-        """
-        logout(request)
-
-        return JsonResponse({
-            "status": "OK",
-            "message": "로그아웃 되었습니다."
-        })
