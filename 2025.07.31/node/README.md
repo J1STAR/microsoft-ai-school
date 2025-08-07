@@ -1,6 +1,6 @@
 ### 📂 GitHub에서 보기: [microsoft-ai-school/2025.07.31/node/news-app](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.07.31/node/news-app)
 
-# 📅 2025년 7월 31일: React Native & Expo 기반 뉴스 애플리케이션
+# 📅 2025년 7월 31일 - 8월 7일: React Native & Expo 기반 뉴스 애플리케이션
 
 ## 🖥️ 화면 예시
 
@@ -325,6 +325,115 @@ export default function EditPostScreen() {
   // ...
 }
 ```
+
+---
+
+### 📅 2025년 8월 7일: JWT 인증 도입 및 상태 관리 시스템 개편
+
+기존의 세션 기반 인증 방식에서 벗어나, 모바일 환경에 더 적합하고 확장성이 뛰어난 JWT(JSON Web Token) 기반 인증 시스템으로 전면 개편했습니다. 이를 위해 상태 관리 라이브러리 `Zustand`와 보안 스토리지 `expo-secure-store`를 도입하여 앱의 아키텍처를 크게 개선했습니다.
+
+#### 1. 새로운 시스템 아키텍처
+
+JWT 인증 도입으로 클라이언트의 아키텍처가 다음과 같이 변경되었습니다. 더 이상 서버 세션에 의존하지 않고, 클라이언트가 자체적으로 토큰을 관리하고 API 요청 시 첨부합니다.
+
+1.  **로그인 및 토큰 저장**: 사용자가 로그인하면, 서버로부터 `access_token`과 `refresh_token`을 발급받습니다. 클라이언트는 이 토큰들을 `Zustand` 스토어에 저장하고, `expo-secure-store`를 통해 디바이스의 안전한 공간에 영속적으로 보관합니다.
+2.  **API 요청 시 토큰 첨부**: 인증이 필요한 API를 호출할 때, `api` 유틸리티 함수가 `Zustand` 스토어에서 `access_token`을 자동으로 가져와 `Authorization: Bearer <token>` 헤더에 담아 요청을 보냅니다.
+3.  **토큰 기반 상태 관리**: `useAuth` 훅은 이제 `Zustand` 스토어의 토큰 존재 여부를 기반으로 사용자의 로그인 상태를 판단합니다.
+
+#### 2. 주요 파일 구성 변경
+
+| 경로 | 파일명/디렉토리 | 설명 |
+| :--- | :--- | :--- |
+| `store/` | `session.ts` | **(신규)** `Zustand`를 사용하여 JWT 토큰과 사용자 정보를 관리하는 전역 세션 스토어입니다. `persist` 미들웨어를 통해 `expo-secure-store`와 연동됩니다. |
+| `utils/` | `api.ts` | **(신규)** 모든 `fetch` 요청을 감싸는 래퍼 함수입니다. API 요청 시 자동으로 `Authorization` 헤더에 Access Token을 추가하는 역할을 담당합니다. |
+| `providers/` | `auth.tsx` | **(수정)** 내부 로직이 세션 기반에서 `Zustand` 스토어를 사용하는 방식으로 변경되었습니다. `signIn` 함수는 토큰을 스토어에 저장하고, `signOut`은 스토어를 비우는 역할을 합니다. |
+| `app/` | `index.tsx` | **(수정)** `useAuth` 훅에서 가져온 `session.user` 정보의 유무에 따라 로그인/로그아웃 상태의 UI를 동적으로 렌더링하도록 수정되었습니다. |
+
+
+#### 3. 핵심 코드 변경 사항
+
+-   **안전한 토큰 저장을 위한 스토어 구현 (`store/session.ts`)**:
+    `Zustand`의 `persist` 미들웨어와 `expo-secure-store`를 결합하여, 플랫폼(Web/Mobile)에 따라 적절한 스토리지에 토큰을 안전하게 저장하는 로직을 구현했습니다.
+
+    ```typescript
+    const storage: StateStorage = {
+      setItem: (name, value) => {
+        if (Platform.OS === 'web') {
+          return localStorage.setItem(name, value);
+        }
+        return SecureStore.setItemAsync(name, value);
+      },
+      // ... getItem, removeItem 구현
+    };
+
+    const useSessionStore = create<SessionState>()(
+      persist(
+        (set) => ({ /* ... state and actions ... */ }),
+        {
+          name: 'session-storage',
+          storage: createJSONStorage(() => storage),
+        },
+      ),
+    );
+    ```
+
+-   **API 요청 자동화 (`utils/api.ts`)**:
+    `fetch`를 감싸는 `api` 함수를 만들어, 모든 요청에 `Authorization` 헤더를 자동으로 추가함으로써 코드 중복을 제거하고 유지보수성을 높였습니다.
+
+    ```typescript
+    const api = async (url: string, options: RequestInit = {}): Promise<Response> => {
+      const { accessToken } = useSessionStore.getState();
+      // ... 헤더 추가 로직 ...
+      const response = await fetch(url, { ...options, headers });
+      return response;
+    };
+    ```
+
+-   **로그인 상태에 따른 UI 분기 처리 (`app/index.tsx`)**:
+    메인 화면에서 `useAuth` 훅을 통해 `session` 객체를 가져와, `user` 정보의 존재 여부로 로그인 상태를 판단하고 그에 맞는 UI를 보여줍니다.
+
+    ```tsx
+    const { session, signOut } = useAuth();
+    const { user } = session;
+
+    // ...
+    {user ? (
+      <YStack>
+        <H1>Welcome, {user.name}!</H1>
+        <Text>Email: {user.email}</Text>
+        <Button onPress={() => signOut()}>Logout</Button>
+      </YStack>
+    ) : (
+      <Paragraph>Please log in</Paragraph>
+    )}
+    ```
+
+#### 4. 🖥️ 화면 결과 (2025년 8월 7일)
+
+**로그인 및 메인 화면**
+
+-   **로그인 전 메인페이지**: 앱 실행 시 처음으로 보게 되는 화면입니다. 로그인/회원가입 버튼이 표시됩니다.
+    <img src="./results/2025-08-07/1_메인페이지_로그인전.png" alt="로그인 전 메인페이지" width="400"/>
+-   **로그인 페이지**: 이메일과 비밀번호를 입력하여 로그인을 시도하는 화면입니다.
+    <img src="./results/2025-08-07/2_로그인페이지.png" alt="로그인 페이지" width="400"/>
+-   **로그인 후 메인페이지**: 로그인에 성공하면 사용자 이름과 정보가 표시되며, 'Posts' 메뉴와 'Logout' 버튼이 활성화됩니다.
+    <img src="./results/2025-08-07/3_메인페이지_로그인후.png" alt="로그인 후 메인페이지" width="400"/>
+
+**뉴스 및 게시글 기능 화면**
+
+-   **뉴스 목록 페이지**: 외부 RSS 피드에서 가져온 뉴스 목록을 보여주는 화면입니다.
+    <img src="./results/2025-08-07/4_뉴스목록페이지.png" alt="뉴스 목록 페이지" width="400"/>
+-   **게시글 목록 페이지**: 사용자들이 작성한 게시글 목록을 최신순으로 보여주는 화면입니다.
+    <img src="./results/2025-08-07/5_글목록페이지.png" alt="글 목록 페이지" width="400"/>
+
+**게시글 CRUD 기능 화면**
+
+-   **글 작성 페이지**: 새로운 게시글의 제목과 내용을 입력하여 서버에 등록하는 화면입니다.
+    <img src="./results/2025-08-07/6_글작성페이지.png" alt="글 작성 페이지" width="400"/>
+-   **글 상세보기 페이지**: 특정 게시글의 전체 내용과 작성일, 수정일을 보여주는 화면입니다. 작성자일 경우 '수정' 버튼이 보입니다.
+    <img src="./results/2025-08-07/7_글상세보기페이지.png" alt="글 상세보기 페이지" width="400"/>
+-   **글 수정 페이지**: 기존 게시글의 제목과 내용을 수정하여 서버에 업데이트하는 화면입니다.
+    <img src="./results/2025-08-07/8_글수정페이지.png" alt="글 수정 페이지" width="400"/>
 
 ---
 

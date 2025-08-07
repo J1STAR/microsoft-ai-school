@@ -1,6 +1,6 @@
 ### 📂 GitHub에서 보기: [microsoft-ai-school/2025.07.31/python](https://github.com/J1STAR/microsoft-ai-school/tree/main/2025.07.31/python)
 
-# 📅 2025년 7월 31일: Django REST Framework 기반 뉴스 API 서버 구축
+# 📅 2025년 7월 31일 - 8월 7일: Django REST Framework 기반 뉴스 API 서버 구축
 
 ## 🛠️ 개발 환경 설정 및 실행
 
@@ -450,6 +450,73 @@ class User(BaseModel, AbstractUser, PermissionsMixin):
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name="주소")
     phone_number = models.CharField(max_length=20, null=True, blank=True, verbose_name="전화번호")
     # ...
+```
+
+### 📅 2025년 8월 7일: JWT 기반 인증 시스템 도입 및 기능 개선
+
+#### 1. 인증 시스템 교체: 세션 인증에서 JWT(JSON Web Token)로 전환
+
+기존의 Django 세션 기반 인증 시스템을 상태 비저장(Stateless) 아키텍처에 더 적합하고 모바일 클라이언트 환경에서 유연하게 사용될 수 있는 JWT(JSON Web Token) 인증 방식으로 전면 교체했습니다. 이 변경은 `djangorestframework-simplejwt` 라이브러리를 통해 구현되었습니다.
+
+-   **상태 비저장(Stateless) 인증**: 서버가 클라이언트의 세션 상태를 저장할 필요가 없어지므로, 서버의 확장성(Scalability)이 향상되고, 여러 서버로 구성된 분산 환경에서도 인증 상태를 쉽게 공유할 수 있습니다.
+-   **유연한 클라이언트 지원**: JWT는 HTTP 헤더에 토큰을 담아 보내는 방식으로, 웹 브라우저의 쿠키 정책에 제약을 받지 않습니다. 따라서 React Native와 같은 모바일 앱 클라이언트와의 호환성이 매우 뛰어납니다.
+
+##### 주요 변경 사항
+
+-   **로그인 API 수정 (`POST /api/v1/users/sign-in`)**:
+    -   [**`news/apis/v1/user.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/user.py) 파일의 `UserSignInView`가 수정되었습니다.
+    -   사용자 인증(authenticate)에 성공하면, 더 이상 서버 세션을 생성(`login(request, user)`)하지 않습니다.
+    -   대신, `djangorestframework-simplejwt`의 `RefreshToken.for_user()` 메소드를 사용하여 해당 사용자에 대한 `access_token`과 `refresh_token`을 생성합니다.
+    -   응답 본문(body)에 사용자 정보와 함께 생성된 두 토큰을 포함하여 클라이언트에 전달합니다. 클라이언트는 이 토큰들을 안전한 곳에 저장해두고, 이후 API 요청 시 `Authorization` 헤더에 `access_token`을 포함하여 보내야 합니다.
+
+    ```python
+    # news/apis/v1/user.py 내 UserSignInView의 변경된 부분
+    class UserSignInView(APIView):
+        def post(self, request: HttpRequest) -> JsonResponse:
+            # ... 사용자 인증 로직 ...
+            user: User | None = authenticate(request, email=email, password=password)
+
+            if user is None:
+                # ... 인증 실패 처리 ...
+
+            # JWT 토큰 생성
+            refresh = RefreshToken.for_user(user)
+            user_data = UserSerializer(user).data
+
+            return JsonResponse(
+                {
+                    "status": "OK",
+                    "message": "로그인 성공",
+                    "data": {
+                        "user": user_data,
+                        "access_token": str(refresh.access_token),
+                        "refresh_token": str(refresh),
+                    },
+                }
+            )
+    ```
+
+-   **로그아웃 API 제거**:
+    -   세션 기반 인증에서는 서버에 저장된 세션 정보를 삭제하기 위한 로그아웃 API가 필요했지만, JWT는 클라이언트 측에서 토큰을 삭제하는 것만으로 로그아웃이 처리됩니다.
+    -   따라서 불필요해진 `UserSignOutView`와 관련 URL 설정(`path("sign-out", ...)` )이 모두 제거되어 서버 코드베이스가 간결해졌습니다.
+
+#### 2. 게시글 목록 조회 기능 개선
+
+-   [**`news/apis/v1/post.py`**](https://github.com/J1STAR/microsoft-ai-school/blob/main/2025.07.31/python/news/apis/v1/post.py)
+-   `PostListView`의 `get` 메소드에서 게시글을 조회할 때, `order_by("-created_at")`를 추가하여 항상 최신 게시글이 목록의 맨 위에 오도록 정렬 순서를 변경했습니다. 이를 통해 사용자 경험을 개선했습니다.
+
+```python
+# news/apis/v1/post.py 내 PostListView의 변경된 부분
+class PostListView(APIView):
+    def get(self, request: HttpRequest) -> JsonResponse:
+        # ... 검색 쿼리 처리 ...
+        posts = Post.objects.filter(
+            Q(removed_at__isnull=True)
+            & (Q(title__icontains=query) | Q(content__icontains=query))
+        ).order_by("-created_at") # 최신순 정렬 추가
+        
+        serializer = PostSerializer(posts, many=True)
+        # ... 응답 반환 ...
 ```
 
 ---
