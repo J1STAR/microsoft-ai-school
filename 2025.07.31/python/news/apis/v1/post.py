@@ -89,7 +89,8 @@ class PostListView(APIView):
         posts = Post.objects.filter(
             Q(removed_at__isnull=True)
             & (Q(title__icontains=query) | Q(content__icontains=query))
-        )
+        ).order_by("-created_at")
+        
         serializer = PostSerializer(posts, many=True)
 
         return JsonResponse(
