@@ -36,6 +36,13 @@
 
 ---
 
+## CERTIFICATIONS
+
+- **2025.08.21**
+  - **Microsoft Certified: Azure AI Fundamentals** (Microsoft)
+
+---
+
 ## EXPERIENCE
 
 ### **주식회사 앵커리어 (자소설닷컴) | 웹 개발자**
