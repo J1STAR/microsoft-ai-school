@@ -196,3 +196,4 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.07.31 ~ 2025.08.07](./2025.07.31/) | **[React Native, Django]** `React Native`와 `Django`를 활용한 풀스택 뉴스 앱 개발 | `React Native`, `Django` |
 | Team Project - Third |
 | [2025.08.27](./2025.08.27/) | **[Django, DRF]** `ares-backend` 프로젝트 설계: 개발 환경 표준화, 보안 및 확장성 높은 아키텍처 구축 | `Django`, `DRF`, `mise`, `uv`, `dotenvx` |
+| [2025.08.28](./2025.08.28/) | **[React Native, Expo]** `ares-frontend` 프로젝트 설계: 개발 환경 표준화, 아키텍처 구축 | `React Native`, `Expo`, `mise`, `yarn` |

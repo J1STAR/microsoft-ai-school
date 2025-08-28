@@ -1,0 +1,8 @@
+{
+    "card": {
+        "first": "CARD WITH DIVIDER",
+        "second": "FONTS",
+        "third": "HELLO WORLD"
+    },
+    "welcome": "Hello React Native"
+}
