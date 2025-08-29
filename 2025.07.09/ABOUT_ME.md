@@ -1,4 +1,4 @@
-# 장한별
+# 장한별 HanByeol Jang
 > JavaScript / TypeScript, Ruby 기반의 풀스택 개발자
 
 ---
@@ -146,4 +146,4 @@
     - Azure OpenAI, Speech Services, Document Intelligence 등 클라우드 AI 서비스 활용
     - 멀티모달 AI 애플리케이션 개발 (실시간 객체 탐지, 음성 인터페이스, 이미지 분석)
 - **삼성 청년 SW 아카데미 (SSAFY) 1기 수료** (2018.12 - 2019.12)
-- **충남대학교 컴퓨터공학과 졸업** (2010.03 - 2016.08)
+- **충남대학교 컴퓨터공학과 학사 졸업** (2010.03 - 2016.08)
