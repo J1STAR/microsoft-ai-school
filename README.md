@@ -199,3 +199,4 @@ DOCUEMNT_INTELLIGENCE_API_KEY = os.getenv("DOCUEMNT_INTELLIGENCE_API_KEY")
 | [2025.08.28](./2025.08.28/) | **[React Native, Expo]** `ares-frontend` 프로젝트 설계: 개발 환경 표준화, 아키텍처 구축 | `React Native`, `Expo`, `mise`, `yarn` |
 | [2025.09.03](./2025.09.03/) | **[Django, React Native]** `ares` 인증 시스템 구축: JWT 기반 `Django` 백엔드 API와 `React Native` 프론트엔드 연동 및 상태 관리 리팩토링 | `Django`, `DRF`, `simple-jwt`, `React Native`, `Zustand` |
 | [2025.09.05](./2025.09.05/) | **[Django, React Native]** `ares` 상세 프로필 관리 시스템: 모듈화된 백엔드 API와 계층형 프론트엔드 아키텍처를 통한 기능 확장 | `Django`, `DRF`, `React Native`, `Zustand` |
+| [2025.09.09](./2025.09.09/) | **[Django, React Native]** `ares` 이력서/자소서 API, 페이지 작성 | `Django`, `DRF`, `django-ordered-model`, `React Native` |
