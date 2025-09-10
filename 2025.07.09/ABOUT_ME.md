@@ -142,8 +142,8 @@
     - AI 면접 솔루션 'Project Ares' 개발 참여 (2025.08.27 ~)
       - 지원자 맞춤형 시나리오와 동적 상호작용을 통해 실전과 유사한 모의 면접 환경 제공
       - Azure AI 서비스를 기반으로 답변 내용(언어)과 표정, 시선, 제스처(비언어)를 종합 분석하여 개인화된 피드백 제공
-      - https://github.com/7-MSAI-7/ares-backend
-      - https://github.com/7-MSAI-7/ares-frontend
+      - https://github.com/project-ares-interview/ares-backend
+      - https://github.com/project-ares-interview/ares-frontend
     - 대규모 이커머스 데이터 기반 추천 시스템 개발 / GRU 기반 세션 추천 모델 구현 (2025.05.30 ~ 06.13)
       - https://github.com/7-MSAI-7/GRU4Rec-Mercari
       - https://github.com/7-MSAI-7/mercari-recommender-backend
