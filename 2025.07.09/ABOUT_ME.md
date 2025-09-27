@@ -43,6 +43,13 @@
 
 ---
 
+## AWARDS
+
+- **2025.09.26**
+  - **Microsoft AI School 장려상** (AI 가상 면접 솔루션)
+
+---
+
 ## EXPERIENCE
 
 ### **주식회사 앵커리어 (자소설닷컴) | 웹 개발자**
@@ -75,6 +82,20 @@
 ---
 
 ## PROJECTS
+
+### AI 가상 면접 솔루션 (Project Ares)
+*(2025.08.27 - 2025.09.25)*
+- **Overview:** AI 기반의 가상 면접 플랫폼으로, 지원자 맞춤형 시나리오와 동적 상호작용을 통해 실전과 유사한 모의 면접 환경을 제공합니다. Azure AI 서비스를 활용하여 사용자의 언어적, 비언어적 요소를 종합적으로 분석하고 개인화된 피드백을 제공합니다.
+- **My Role & Contributions:**
+    - Django REST Framework를 사용해 백엔드 시스템을 설계하고 JWT 기반의 인증 시스템을 포함한 핵심 API를 개발했습니다.
+    - React Native와 Expo를 활용하여 크로스플랫폼 프론트엔드 애플리케이션을 구축했습니다.
+    - RAG(Retrieval-Augmented Generation) 기술을 도입하여 이력서 기반의 맞춤형 질문을 생성하는 기능을 구현했습니다.
+    - Azure AI Speech (STT/TTS) 및 Vision 서비스를 연동하여 사용자의 음성 답변과 비언어적 요소(표정, 시선)를 분석하는 모듈을 개발했습니다.
+    - Microsoft의 가상 아바타를 활용하여 실제 면접관과 대화하는 듯한 몰입감 있는 경험을 제공하는 UI를 구현했습니다.
+- **Tech Stack:** Python, Django, DRF, React Native, Expo, Azure AI (OpenAI, Speech, Vision, Avatar), RAG, Docker
+- **GitHub:**
+    - [Backend Repository](https://github.com/project-ares-interview/ares-backend)
+    - [Frontend Repository](https://github.com/project-ares-interview/ares-frontend)
 
 ### 세션 기반 상품 추천 시스템 개발
 *(2025.05.30 - 2025.06.13)*
@@ -137,9 +158,9 @@
 
 ## ACTIVITIES & EDUCATION
 
-- **Microsoft AI School** (2025.04 - 현재)
+- **Microsoft AI School** (2025.04.07 - 2025.09.26)
   - https://j1star.github.io/microsoft-ai-school/ 
-    - AI 면접 솔루션 'Project Ares' 개발 참여 (2025.08.27 ~)
+    - AI 면접 솔루션 'Project Ares' 개발 참여 (2025.08.27 ~ 2025.09.25)
       - 지원자 맞춤형 시나리오와 동적 상호작용을 통해 실전과 유사한 모의 면접 환경 제공
       - Azure AI 서비스를 기반으로 답변 내용(언어)과 표정, 시선, 제스처(비언어)를 종합 분석하여 개인화된 피드백 제공
       - https://github.com/project-ares-interview/ares-backend
