@@ -38,6 +38,9 @@
 
 ## CERTIFICATIONS
 
+- **2026.08.20**
+  - **ISTQB® Certified Tester Foundation Level (CTFL)** (ISTQB® - International Software Testing Qualifications Board)
+    - Certificate No.: #ISTQBKr-FL-261102
 - **2025.08.21**
   - **Microsoft Certified: Azure AI Fundamentals** (Microsoft)
 
